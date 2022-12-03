@@ -95,7 +95,7 @@ const Game = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Button variant={"ghost"}>
+            <Button variant={"ghost"} colorScheme={"none"}>
               <Image
                 src={"/assets/leaderboard.png"}
                 alt={"Gloppa Leaderboard"}
@@ -112,7 +112,7 @@ const Game = () => {
               />
               <Text color={"white"}>{coins}</Text>
             </Flex>
-            <Button variant={"ghost"}>
+            <Button variant={"ghost"} colorScheme={"none"}>
               <Image
                 src={"/assets/shop.png"}
                 alt={"Gloppa Shop"}
