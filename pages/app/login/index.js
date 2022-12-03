@@ -158,6 +158,9 @@ const Login = () => {
             </NextLink>
             <Text color={"white"}>.</Text>
           </Flex>
+          <NextLink href={"/app/register"}>
+            <Link color={"#5686E1"}>Forgot your password?</Link>
+          </NextLink>
         </Flex>
       </form>
     </Flex>

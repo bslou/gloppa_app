@@ -22,6 +22,7 @@ const StartupList = () => {
 
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
   const dataFetchedRef = useRef(false);
 
   const fetchData = () => {
@@ -57,6 +58,7 @@ const StartupList = () => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
     fetchData();
+    setLoading(false);
   }, []);
 
   const Logout = () => {
@@ -154,23 +156,16 @@ const StartupList = () => {
           direction={"column"}
           alignItems={"center"}
         >
-          {rows.length > 0 ? (
-            rows
+          {loading ? (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="white.200"
+              color="blue.500"
+              size="xl"
+            />
           ) : (
-            <Flex
-              width={500}
-              height={500}
-              marginTop={"5vh"}
-              borderRadius={"50%"}
-            >
-              <Image
-                src={"/assets/nsh.png"}
-                alt={"Nothing Here Gloppa"}
-                width={500}
-                height={500}
-                layout="responsive"
-              />
-            </Flex>
+            rows
           )}
           {/* {StartupComponent("/assets/spacer.png", "13", "DreamMate")}
           {StartupComponent("/assets/spacer.png", "13", "Krunker")}
