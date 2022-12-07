@@ -1,8 +1,13 @@
 import {
   Button,
+  Checkbox,
   Flex,
   Link,
   ListItem,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   OrderedList,
   Text,
   UnorderedList,
@@ -12,6 +17,8 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
+import BrainstormComponent from "./brainstormcomponent";
+import ToDoComponent from "./todocomponent";
 
 const Game = () => {
   const [lvl, setLvl] = useState("0");
@@ -212,6 +219,127 @@ const Game = () => {
               </Flex>
             </ListItem>
           </UnorderedList>
+        </Flex>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        marginTop={"2vh"}
+      >
+        <Flex
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          width={"50vw"}
+        >
+          <Flex direction={"row"} alignItems={"center"}>
+            <Text
+              fontWeight={400}
+              color={"white"}
+              fontSize={{ base: "20pt", md: "24pt", lg: "28pt" }}
+            >
+              Startups
+            </Text>
+            <Button colorScheme="transparent">
+              <Image
+                src={"/assets/plus.png"}
+                alt={"Gloppa plus"}
+                width={30}
+                height={30}
+              />
+            </Button>
+          </Flex>
+          <Flex
+            direction={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"1.3vh"}
+            width={"100%"}
+            height={"25vh"}
+            marginTop={"1vh"}
+            overflowY={"scroll"}
+          >
+            {ToDoComponent(
+              "Publish Version 2.0",
+              "Urgent",
+              "12/5",
+              "red",
+              true
+            )}
+            {ToDoComponent(
+              "Publish Version 2.0",
+              "Urgent",
+              "12/5",
+              "red",
+              false
+            )}
+            {ToDoComponent(
+              "Publish Version 2.0",
+              "Urgent",
+              "12/5",
+              "red",
+              true
+            )}
+            {ToDoComponent(
+              "Publish Version 2.0",
+              "Urgent",
+              "12/5",
+              "red",
+              false
+            )}
+            {ToDoComponent(
+              "Publish Version 2.0",
+              "Urgent",
+              "12/5",
+              "red",
+              true
+            )}
+          </Flex>
+        </Flex>
+        <Flex
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          width={"50vw"}
+        >
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Text
+              fontWeight={400}
+              color={"white"}
+              fontSize={{ base: "20pt", md: "24pt", lg: "28pt" }}
+            >
+              Brainstorming
+            </Text>
+            <Button colorScheme="transparent">
+              <Image
+                src={"/assets/plus.png"}
+                alt={"Gloppa plus"}
+                width={30}
+                height={30}
+              />
+            </Button>
+          </Flex>
+          <Flex
+            direction={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"1.3vh"}
+            width={"100%"}
+            marginTop={"1vh"}
+            height={"25vh"}
+            overflowY={"scroll"}
+          >
+            {BrainstormComponent("Publish Version 2.0", "Urgent", "red", false)}
+            {BrainstormComponent("Publish Version 2.0", "Urgent", "red", true)}
+            {BrainstormComponent("Publish Version 2.0", "Urgent", "red", false)}
+            {BrainstormComponent("Publish Version 2.0", "Urgent", "red", true)}
+            {BrainstormComponent("Publish Version 2.0", "Urgent", "red", false)}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

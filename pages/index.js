@@ -3,12 +3,24 @@ import { Button, Flex, Text, Link, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const router = useRouter();
   const [display, changeDisplay] = useState("none");
   const [display2, changeDisplay2] = useState("none");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("we are running on the client");
+      if (localStorage.getItem("id") !== null) {
+        router.push("/app/startuplist");
+      }
+    } else {
+      console.log("we are running on the server");
+    }
+  });
+
   return (
     <Flex direction={"column"} alignItems={"center"} width={"100vw"}>
       {/**Desktop */}

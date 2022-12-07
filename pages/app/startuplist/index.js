@@ -34,6 +34,7 @@ const StartupList = () => {
         if (!val.exists) return;
         if (rows.length > 0) return;
         let n = val.get("startups");
+        n.reverse();
         n.forEach((document) => {
           db.collection("startups")
             .doc(document)
