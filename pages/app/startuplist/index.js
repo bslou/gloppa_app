@@ -32,14 +32,8 @@ const StartupList = () => {
       .doc(id)
       .get()
       .then((val) => {
-        if (!val.exists) {
-          setLoading(false);
-          return;
-        }
-        if (rows.length > 0) {
-          setLoading(false);
-          return;
-        }
+        if (!val.exists) return;
+        if (rows.length > 0) return;
         let n = val.get("startups");
         n.reverse();
         n.forEach((document) => {
@@ -57,9 +51,9 @@ const StartupList = () => {
                 ...prevRows,
                 StartupComponent(img, lvl, startupName, String(document)),
               ]);
-              setLoading(false);
             });
         });
+        setLoading(false);
       });
   };
 
