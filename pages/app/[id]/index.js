@@ -94,7 +94,7 @@ const Game = () => {
             }
             setRowsTask((prevTasks) => [
               ...prevTasks,
-              ToDoComponent(orr[0], orr[1], orr[2], color, i),
+              ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id),
             ]);
           }
           let brainstorm = val.get("brainstorm");
@@ -102,16 +102,16 @@ const Game = () => {
             console.log(brainstorm[i]);
             let err = JSON.parse(brainstorm[i]);
             let color = "red";
-            if (err[1] == "Urgent") {
-              color = "red";
+            if (err[1] == "High") {
+              color = "lightgreen";
             } else if (err[1] == "Medium") {
               color = "yellow";
             } else {
-              color = "lightgreen";
+              color = "red";
             }
             setRowsBrainstorm((prevBrainstorm) => [
               ...prevBrainstorm,
-              BrainstormComponent(err[0], err[1], color, i),
+              BrainstormComponent(err[0], err[1], color, i, router.query.id),
             ]);
           }
           setLoading(false);
@@ -284,7 +284,7 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text>Urgency</Text>
+                  <Text>Probability of Reality</Text>
                   <Select
                     required
                     onChange={(val) => setUrgency2(val.value)}
@@ -292,16 +292,16 @@ const Game = () => {
                     defaultValue={"Urgent"}
                     options={[
                       {
-                        label: "Urgent",
-                        value: "Urgent",
+                        label: "High",
+                        value: "High",
                       },
                       {
                         label: "Medium",
                         value: "Medium",
                       },
                       {
-                        label: "No Urgency",
-                        value: "No Urgency",
+                        label: "Low",
+                        value: "Low",
                       },
                     ]}
                   />
