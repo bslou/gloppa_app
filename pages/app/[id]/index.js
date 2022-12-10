@@ -244,7 +244,7 @@ const Game = () => {
                   <Input
                     value={date}
                     type="date"
-                    max={maxDate}
+                    min={maxDate}
                     required
                     onChange={(e) => setDate(e.target.value)}
                     width={"20vw"}
