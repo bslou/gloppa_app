@@ -18,17 +18,17 @@ import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 
-const BrainstormComponent = (task, probability, color, checked) => {
+const BrainstormComponent = (task, probability, color, index) => {
   return (
     <Flex
       direction={"row"}
       alignItems={"center"}
       justifyContent={"space-between"}
-      backgroundColor={"#1C1C1C"}
+      borderTop={"1px solid white"}
+      borderBottom={"1px solid white"}
       width={"45vw"}
       paddingTop={5}
       paddingBottom={5}
-      borderRadius={10}
     >
       <Flex>
         <Menu>
@@ -50,12 +50,7 @@ const BrainstormComponent = (task, probability, color, checked) => {
             <MenuItem>Remove</MenuItem>
           </MenuList>
         </Menu>
-        <Text
-          as={checked ? "s" : "normal"}
-          color={"white"}
-          fontWeight={500}
-          fontSize={"18pt"}
-        >
+        <Text color={"white"} fontWeight={500} fontSize={"18pt"}>
           {task}
         </Text>
       </Flex>
@@ -63,7 +58,7 @@ const BrainstormComponent = (task, probability, color, checked) => {
         <Text color={color} fontSize={"15pt"} fontWeight={700}>
           {probability}
         </Text>
-        <Checkbox defaultChecked={checked} size={"lg"} marginRight={"1vw"} />
+        <Checkbox size={"lg"} marginRight={"1vw"} />
       </Flex>
     </Flex>
   );

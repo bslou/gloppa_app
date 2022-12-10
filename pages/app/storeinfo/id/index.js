@@ -1,6 +1,7 @@
 import Router, { useRouter } from "next/router";
 import { auth, db } from "../../../api/firebaseconfig";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import MyLoadingScreen from "./myloadingscreen";
 
 const ProcessPayment = () => {
   const PRICE = 10;
@@ -18,6 +19,8 @@ const ProcessPayment = () => {
       .update({ premium: ["parttime", today] });
     Router.push("/app/startuplist");
   }, []);
+
+  return <MyLoadingScreen />;
 };
 
 export default ProcessPayment;

@@ -41,8 +41,9 @@ const StartupList = () => {
         accessories: {},
         tasks: {},
         brainstorm: {},
-        completedTasks: {},
-        completedBrainstorm: {},
+        completed: {},
+        //completedTasks: {},
+        //completedBrainstorm: {},
       })
       .then(function (docRef) {
         console.log("Document written with ID: ", docRef.id);
@@ -60,6 +61,17 @@ const StartupList = () => {
     localStorage.removeItem("id");
     router.push("/");
   };
+
+  var dtToday = new Date();
+
+  var month = dtToday.getMonth() + 1;
+  var day = dtToday.getDate();
+  var year = dtToday.getFullYear();
+
+  if (month < 10) month = "0" + month.toString();
+  if (day < 10) day = "0" + day.toString();
+
+  var maxDate = year + "-" + month + "-" + day;
 
   return (
     <Flex
@@ -158,6 +170,8 @@ const StartupList = () => {
               backgroundColor={"white"}
               borderRadius={5}
               required
+              type={"date"}
+              max={maxDate}
               onChange={(e) => {
                 setFoundedDate(e.target.value);
               }}

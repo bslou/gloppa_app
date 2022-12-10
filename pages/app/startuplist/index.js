@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import StartupComponent from "./startupcomponent";
+import MyLoadingScreen from "./myloadingscreen";
 
 const StartupList = () => {
   const router = useRouter();
@@ -31,8 +32,14 @@ const StartupList = () => {
       .doc(id)
       .get()
       .then((val) => {
-        if (!val.exists) return;
-        if (rows.length > 0) return;
+        if (!val.exists) {
+          setLoading(false);
+          return;
+        }
+        if (rows.length > 0) {
+          setLoading(false);
+          return;
+        }
         let n = val.get("startups");
         n.reverse();
         n.forEach((document) => {
@@ -50,6 +57,7 @@ const StartupList = () => {
                 ...prevRows,
                 StartupComponent(img, lvl, startupName, String(document)),
               ]);
+              setLoading(false);
             });
         });
       });
@@ -59,8 +67,11 @@ const StartupList = () => {
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
     fetchData();
-    setLoading(false);
   }, []);
+
+  if (loading) {
+    return <MyLoadingScreen />;
+  }
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -99,6 +110,7 @@ const StartupList = () => {
             />
           </MenuButton>
           <MenuList>
+            <MenuItem>Update Info</MenuItem>
             <MenuItem onClick={Logout}>Logout</MenuItem>
           </MenuList>
         </Menu>
@@ -141,15 +153,6 @@ const StartupList = () => {
             />
           </Button>
         </Flex>
-        <Input
-          border={"none"}
-          backgroundColor={"#505050"}
-          borderRadius={0}
-          color={"white"}
-          textAlign={"center"}
-          placeholder={"Search Here..."}
-          onChange={(e) => setSearch(e.target.value)}
-        />
         <Flex
           width={"100%"}
           height={"100%"}
@@ -157,14 +160,25 @@ const StartupList = () => {
           direction={"column"}
           alignItems={"center"}
         >
-          {loading ? (
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="white.200"
-              color="blue.500"
-              size="xl"
-            />
+          {rows.length < 1 ? (
+            <Flex
+              direction={"column"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              width={"90%"}
+              height={"90%"}
+            >
+              <Image
+                src={"/assets/nodata.png"}
+                alt={"No data"}
+                width={400}
+                height={400}
+              />
+              <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
+                No startups <br />
+                found here... 😔
+              </Text>
+            </Flex>
           ) : (
             rows
           )}

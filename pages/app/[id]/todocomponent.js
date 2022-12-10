@@ -18,18 +18,17 @@ import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 
-const ToDoComponent = (task, urgency, date, color, checked) => {
-  const [check, setCheck] = useState(checked);
+const ToDoComponent = (task, urgency, date, color, index) => {
   return (
     <Flex
       direction={"row"}
       alignItems={"center"}
       justifyContent={"space-between"}
-      backgroundColor={"#1C1C1C"}
+      borderTop={"1px solid white"}
+      borderBottom={"1px solid white"}
       width={"45vw"}
       paddingTop={2}
       paddingBottom={2}
-      borderRadius={10}
     >
       <Flex>
         <Menu>
@@ -51,12 +50,7 @@ const ToDoComponent = (task, urgency, date, color, checked) => {
             <MenuItem>Remove</MenuItem>
           </MenuList>
         </Menu>
-        <Text
-          as={check ? "s" : null}
-          color={"white"}
-          fontWeight={500}
-          fontSize={"18pt"}
-        >
+        <Text color={"white"} fontWeight={500} fontSize={"18pt"}>
           {task}
         </Text>
       </Flex>
@@ -73,12 +67,7 @@ const ToDoComponent = (task, urgency, date, color, checked) => {
             {date}
           </Text>
         </Flex>
-        <Checkbox
-          onChange={(e) => setCheck(e.target.checked)}
-          defaultChecked={check}
-          size={"lg"}
-          marginRight={"1vw"}
-        />
+        <Checkbox size={"lg"} marginRight={"1vw"} />
       </Flex>
     </Flex>
   );
