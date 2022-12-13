@@ -1,5 +1,6 @@
 import { Button, Flex, Input, Link, Text, useToast } from "@chakra-ui/react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { arrayRemove } from "firebase/firestore";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -19,7 +20,42 @@ const Login = () => {
         //uncomment below thingy later
         //localStorage.setItem("id", user.uid)
         localStorage.setItem("id", user.uid);
-        router.push("/app/pricing");
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            if (typeof val.get("premium")[0] !== "undefined") {
+              // does not exist
+              if (val.get("premium")[0] == "fulltime") {
+                router.push("/app/startuplist");
+              } else if (val.get("premium")[0] == "parttime") {
+                const date1 = new Date(String(val.get("premium")[1]));
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 31) {
+                  router.push("/app/startuplist");
+                } else {
+                  db.collection("users")
+                    .doc(user.uid)
+                    .update({
+                      premium: arrayRemove([
+                        String(val.get("premium")[0]),
+                        String(val.get("premium")[1]),
+                      ]),
+                    });
+                  router.push("/app/pricing");
+                }
+              }
+            }
+          });
         // ...
       })
       .catch((error) => {

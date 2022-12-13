@@ -42,7 +42,7 @@ const StartupList = () => {
             .get()
             .then((res) => {
               let startupName = String(res.get("startupName"));
-              let lvl = String(res.get("level"));
+              let lvl = String(Math.floor(res.get("level") / 100) + 1);
               let img = "/assets/spacer.png";
               console.log(
                 "Name " + startupName + " Level " + lvl + " Image " + img
@@ -154,7 +154,7 @@ const StartupList = () => {
           direction={"column"}
           alignItems={"center"}
         >
-          {rows.length < 1 ? (
+          {rows.length > 1 && loading == false ? (
             <Flex
               direction={"column"}
               alignItems={"center"}

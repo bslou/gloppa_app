@@ -17,7 +17,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
-import { arrayRemove } from "firebase/firestore";
+import { arrayRemove, arrayUnion, increment } from "firebase/firestore";
 
 const ToDoComponent = (task, urgency, date, color, index, id) => {
   const deleteIt = () => {
@@ -28,6 +28,38 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
       console.log("timer completed");
       window.location.reload();
     }, 500);
+  };
+
+  const finished = (e) => {
+    e.preventDefault();
+    if (
+      window.confirm(
+        'Are you sure you are done with this task: "' + task + '"?'
+      )
+    ) {
+      db.collection("startups")
+        .doc(id)
+        .update({
+          completed: arrayUnion(JSON.stringify([task, urgency, date])),
+        });
+      db.collection("startups")
+        .doc(id)
+        .update({
+          level: increment(5),
+        });
+      db.collection("startups")
+        .doc(id)
+        .update({
+          coins: increment(5),
+        });
+      db.collection("startups")
+        .doc(id)
+        .update({ tasks: arrayRemove(JSON.stringify([task, urgency, date])) });
+      setTimeout(() => {
+        console.log("timer completed");
+        window.location.reload();
+      }, 500);
+    }
   };
 
   return (
@@ -78,7 +110,11 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
             {date}
           </Text>
         </Flex>
-        <Checkbox size={"lg"} marginRight={"1vw"} />
+        <Checkbox
+          size={"lg"}
+          marginRight={"1vw"}
+          onChange={(e) => finished(e)}
+        />
       </Flex>
     </Flex>
   );

@@ -20,10 +20,13 @@ import NextLink from "next/link";
 import { useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 const Product = () => {
   const [display, changeDisplay] = useState("none");
   const [display2, changeDisplay2] = useState("none");
+
+  const router = useRouter();
   return (
     <Flex
       direction={"column"}
@@ -80,6 +83,7 @@ const Product = () => {
             paddingBottom={2}
             color={"black"}
             borderRadius={20}
+            onClick={() => router.push("/app/register")}
           >
             Join
           </Button>
@@ -194,6 +198,7 @@ const Product = () => {
               paddingBottom={2}
               color={"black"}
               borderRadius={20}
+              onClick={() => router.push("/app/register")}
             >
               Join
             </Button>

@@ -22,9 +22,11 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useState } from "react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 const Contact = () => {
   const toast2 = useToast();
+  const router = useRouter();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -123,6 +125,7 @@ const Contact = () => {
             paddingBottom={2}
             color={"black"}
             borderRadius={20}
+            onClick={() => router.push("/app/register")}
           >
             Join
           </Button>
@@ -237,6 +240,7 @@ const Contact = () => {
               paddingBottom={2}
               color={"black"}
               borderRadius={20}
+              onClick={() => router.push("/app/register")}
             >
               Join
             </Button>

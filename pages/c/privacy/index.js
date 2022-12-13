@@ -22,6 +22,7 @@ import { useState } from "react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { loadStripe } from "@stripe/stripe-js";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
+import { useRouter } from "next/router";
 
 const Privacy = () => {
   const PUBLIC_KEY =
@@ -32,6 +33,7 @@ const Privacy = () => {
 
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
   return (
     <Flex direction={"column"} alignItems={"center"} width={"100vw"}>
       {/**Desktop */}
@@ -83,6 +85,7 @@ const Privacy = () => {
             paddingBottom={2}
             color={"black"}
             borderRadius={20}
+            onClick={() => router.push("/app/register")}
           >
             Join
           </Button>
@@ -197,6 +200,7 @@ const Privacy = () => {
               paddingBottom={2}
               color={"black"}
               borderRadius={20}
+              onClick={() => router.push("/app/register")}
             >
               Join
             </Button>

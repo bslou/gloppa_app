@@ -20,8 +20,10 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useState } from "react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 const Partners = () => {
+  const router = useRouter();
   const {
     isOpen: isOpen2,
     onOpen: onOpen2,
@@ -151,6 +153,7 @@ const Partners = () => {
             paddingBottom={2}
             color={"black"}
             borderRadius={20}
+            onClick={() => router.push("/app/register")}
           >
             Join
           </Button>
@@ -265,6 +268,7 @@ const Partners = () => {
               paddingBottom={2}
               color={"black"}
               borderRadius={20}
+              onClick={() => router.push("/app/register")}
             >
               Join
             </Button>

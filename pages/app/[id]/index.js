@@ -15,6 +15,8 @@ import {
   Lorem,
   Input,
   useToast,
+  Box,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   AsyncCreatableSelect,
@@ -40,6 +42,7 @@ import BrainstormComponent from "./brainstormcomponent";
 import ToDoComponent from "./todocomponent";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
+import Achievements from "./achievements";
 
 const Game = () => {
   const [lvl, setLvl] = useState("0");
@@ -54,12 +57,19 @@ const Game = () => {
   console.log("ID " + router.query.id);
   const [rowsTask, setRowsTask] = useState([]);
   const [rowsBrainstorm, setRowsBrainstorm] = useState([]);
+  const [rowsAchievements, setRowsAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quota, setQuota] = useState(quotes[getRandomInt(quotes.length)]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpen2,
     onOpen: onOpen2,
     onClose: onClose2,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen3,
+    onOpen: onOpen3,
+    onClose: onClose3,
   } = useDisclosure();
   const toast = useToast();
   const toast2 = useToast();
@@ -77,7 +87,7 @@ const Game = () => {
         .doc(router.query.id)
         .get()
         .then((val) => {
-          setLvl(String(val.get("level")));
+          setLvl(String(Math.floor(val.get("level") / 100) + 1));
           setStartupName(String(val.get("startupName")));
           setCoins(String(val.get("coins")));
           let tasks = val.get("tasks");
@@ -95,6 +105,17 @@ const Game = () => {
             setRowsTask((prevTasks) => [
               ...prevTasks,
               ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id),
+            ]);
+          }
+          let achs = val.get("completed");
+          for (let o = achs.length - 1; o >= achs.length - 4; o--) {
+            if (typeof achs[o] === "undefined") {
+              break;
+            }
+            let urr = JSON.parse(achs[o]);
+            setRowsAchievements((prevAchs) => [
+              ...prevAchs,
+              Achievements(urr[0], 5),
             ]);
           }
           let brainstorm = val.get("brainstorm");
@@ -314,6 +335,20 @@ const Game = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      <Modal isOpen={isOpen3} onClose={onClose3}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Leaderboards</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody></ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose3}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Flex
         direction={"row"}
         alignItems={"center"}
@@ -334,28 +369,30 @@ const Game = () => {
           gap={"1vw"}
         >
           <Flex>
-            <Flex>
-              <Image
-                src={"/assets/award.png"}
-                alt={"Award Gloppa"}
+            <Box position="relative" display="flex">
+              <Box
+                as="img"
                 width={50}
-                height={50}
+                src={"/assets/award.png"}
+                alt="My Image"
               />
-            </Flex>
-            <Flex
-              position={"absolute"}
-              marginLeft={"1.1vw"}
-              marginTop={"0.5vh"}
-            >
-              <Text
-                color={"black"}
-                fontSize={"20pt"}
-                fontWeight={800}
-                zIndex={10000}
+              <Box
+                position="absolute"
+                top="45%"
+                right={"37%"}
+                transform="translateY(-50%)"
+                textAlign="center"
               >
-                {lvl}
-              </Text>
-            </Flex>
+                <Text fontWeight={900} fontSize={"20pt"}>
+                  <Tooltip
+                    label={"You are currently level " + lvl + "!"}
+                    aria-label="A tooltip"
+                  >
+                    {lvl}
+                  </Tooltip>
+                </Text>
+              </Box>
+            </Box>
           </Flex>
           <Text color={"white"} fontSize={"22pt"} fontWeight={700}>
             {startupName}
@@ -367,7 +404,7 @@ const Game = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Button variant={"ghost"} colorScheme={"none"}>
+            <Button variant={"ghost"} colorScheme={"none"} onClick={onOpen3}>
               <Image
                 src={"/assets/leaderboard.png"}
                 alt={"Gloppa Leaderboard"}
@@ -430,59 +467,23 @@ const Game = () => {
           gap={"1.4vh"}
         >
           <Text color={"white"} fontSize={"25pt"} marginBottom={"2vh"}>
-            {quotes[getRandomInt(quotes.length)]}
+            {quota}
           </Text>
           <Text color={"white"} fontSize={"18pt"} fontWeight={900}>
             Achievements:
           </Text>
           <UnorderedList color={"white"}>
-            <ListItem>
-              <Flex direction={"row"} alignItems={"center"}>
-                <Text color={"white"} marginRight={"1vw"}>
-                  5 new customers
-                </Text>
-                <Image
-                  src={"/assets/coin.png"}
-                  alt={"Gloppa coin"}
-                  width={25}
-                  height={25}
-                  marginRight={"0.2vw"}
-                />
-                <Text>+5</Text>
-              </Flex>
-            </ListItem>
-
-            <ListItem>
-              <Flex direction={"row"} alignItems={"center"}>
-                <Text color={"white"} marginRight={"1vw"}>
-                  Idea refinement complete
-                </Text>
-                <Image
-                  src={"/assets/coin.png"}
-                  alt={"Gloppa coin"}
-                  width={25}
-                  height={25}
-                  marginRight={"0.2vw"}
-                />
-                <Text>+5</Text>
-              </Flex>
-            </ListItem>
-
-            <ListItem>
-              <Flex direction={"row"} alignItems={"center"}>
-                <Text color={"white"} marginRight={"1vw"}>
-                  PR complete
-                </Text>
-                <Image
-                  src={"/assets/coin.png"}
-                  alt={"Gloppa coin"}
-                  width={25}
-                  height={25}
-                  marginRight={"0.2vw"}
-                />
-                <Text>+5</Text>
-              </Flex>
-            </ListItem>
+            {rowsAchievements.length < 1 ? (
+              <ListItem>
+                <Flex direction={"row"} alignItems={"center"}>
+                  <Text color={"white"} marginRight={"1vw"}>
+                    No achievements are here yet... 🙁
+                  </Text>
+                </Flex>
+              </ListItem>
+            ) : (
+              rowsAchievements
+            )}
           </UnorderedList>
         </Flex>
       </Flex>

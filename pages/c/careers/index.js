@@ -20,10 +20,13 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useState } from "react";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 const Careers = () => {
   const [display2, changeDisplay2] = useState("none");
   const [display, changeDisplay] = useState("none");
+
+  const router = useRouter();
   return (
     <Flex direction={"column"} alignItems={"center"} width={"100vw"}>
       {/**Desktop */}
@@ -75,6 +78,7 @@ const Careers = () => {
             paddingBottom={2}
             color={"black"}
             borderRadius={20}
+            onClick={() => router.push("/app/register")}
           >
             Join
           </Button>
@@ -189,6 +193,7 @@ const Careers = () => {
               paddingBottom={2}
               color={"black"}
               borderRadius={20}
+              onClick={() => router.push("/app/register")}
             >
               Join
             </Button>
