@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
@@ -24,6 +24,43 @@ const StartupList = () => {
   const [foundedDate, setFoundedDate] = useState();
   const [startupLocation, setStartupLocation] = useState();
   const [description, setDescription] = useState();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            if (typeof val.get("premium")[0] !== "undefined") {
+              // does not exist
+              if (val.get("premium")[0] == "fulltime") {
+                // router.push("/app/startuplist");
+              } else if (val.get("premium")[0] == "parttime") {
+                const date1 = new Date(String(val.get("premium")[1]));
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 31) {
+                  // router.push("/app/startuplist");
+                } else {
+                  router.push("/app/pricing");
+                }
+              }
+            }
+          });
+      } else {
+        router.push("/c/main");
+      }
+    }
+  });
 
   const submitStartup = (e) => {
     e.preventDefault();
@@ -50,7 +87,7 @@ const StartupList = () => {
         db.collection("users")
           .doc(id)
           .update({ startups: arrayUnion(docRef.id) });
-        router.push("/app/startuplist");
+        router.push("/app/" + docRef.id);
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);
@@ -129,7 +166,7 @@ const StartupList = () => {
             top={{ base: 7, lg: 4 }}
           >
             <Text
-              textShadow={"0px 4px 1px rgba(255,255,255,0.6)"}
+              textShadow={"0px 4px 1px rgba(0,0,0,1)"}
               fontWeight={800}
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}

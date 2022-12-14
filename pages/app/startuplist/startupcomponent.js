@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Link, Text } from "@chakra-ui/react";
+import { Button, Flex, Input, Link, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -25,18 +25,23 @@ const StartupComponent = (img, level, name, id) => {
       direction={"row"}
       alignItems={"center"}
       justifyContent={"center"}
-      borderTop={"1px solid white"}
-      borderBottom={"1px solid white"}
-      width={"100%"}
+      backgroundColor={"#303030"}
+      width={"90%"}
       paddingTop={5}
       paddingBottom={5}
+      paddingLeft={5}
+      borderRadius={3}
+      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+      _hover={{
+        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+      }}
     >
       <Flex
+        position={"absolute"}
+        left={"28vw"}
         direction={"row"}
         alignItems={"center"}
         justifyContent={"center"}
-        position={"absolute"}
-        left={"24vw"}
       >
         <Image src={img} alt={"Gloppa spacer"} width={70} height={70} />
         <Text color={"white"} fontWeight={300}>
@@ -46,25 +51,27 @@ const StartupComponent = (img, level, name, id) => {
       <NextLink href={"/app/" + id}>
         <Link
           color={"white"}
-          fontWeight={900}
+          fontWeight={600}
           fontSize={{ base: "14pt", md: "18pt", lg: "25pt" }}
         >
           {name}
         </Link>
       </NextLink>
-      <Button
-        onClick={deleteIt}
-        position={"absolute"}
-        right={"22vw"}
-        colorScheme={"transparent"}
-      >
-        <Image
-          src={"/assets/trash.png"}
-          alt={"Gloppa menu"}
-          width={35}
-          height={35}
-        />
-      </Button>
+      <Tooltip label={"Delete " + name + "..."} aria-label="A tooltip">
+        <Button
+          position={"absolute"}
+          right={"28vw"}
+          onClick={deleteIt}
+          colorScheme={"transparent"}
+        >
+          <Image
+            src={"/assets/trash.png"}
+            alt={"Gloppa menu"}
+            width={35}
+            height={35}
+          />
+        </Button>
+      </Tooltip>
     </Flex>
   );
 };

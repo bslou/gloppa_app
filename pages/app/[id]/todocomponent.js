@@ -30,11 +30,10 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
     }, 500);
   };
 
-  const finished = (e) => {
-    e.preventDefault();
+  const finished = () => {
     if (
       window.confirm(
-        'Are you sure you are done with this task: "' + task + '"?'
+        'Are you sure you are done with this task: \n"' + task + '"?'
       )
     ) {
       db.collection("startups")
@@ -67,13 +66,23 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
       direction={"row"}
       alignItems={"center"}
       justifyContent={"space-between"}
-      borderTop={"1px solid white"}
-      borderBottom={"1px solid white"}
-      width={"45vw"}
-      paddingTop={2}
-      paddingBottom={2}
+      backgroundColor={"#303030"}
+      width={"90%"}
+      paddingTop={3}
+      paddingBottom={3}
+      paddingLeft={2}
+      borderRadius={2}
+      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+      _hover={{
+        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+      }}
     >
-      <Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        marginRight={2}
+      >
         <Menu>
           <MenuButton
             paddingLeft={5}
@@ -93,28 +102,43 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
             <MenuItem onClick={deleteIt}>Remove</MenuItem>
           </MenuList>
         </Menu>
-        <Text color={"white"} fontWeight={500} fontSize={"18pt"}>
+        <Text
+          color={"white"}
+          fontWeight={500}
+          fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+        >
           {task}
         </Text>
       </Flex>
-      <Flex gap={"1vw"}>
+      <Flex alignItems={"center"} justifyContent={"center"}>
         <Flex
           direction={"column"}
           alignItems={"center"}
           justifyContent={"center"}
         >
-          <Text color={color} fontSize={"15pt"} fontWeight={700}>
+          <Text
+            color={color}
+            fontSize={{ base: "12pt", md: "16pt", lg: "20pt" }}
+            fontWeight={700}
+          >
             {urgency}
           </Text>
-          <Text color={color} fontSize={"15pt"}>
+          <Text color={color} fontSize={{ base: "5pt", md: "8pt", lg: "11pt" }}>
             {date}
           </Text>
         </Flex>
-        <Checkbox
-          size={"lg"}
+        <Button
           marginRight={"1vw"}
-          onChange={(e) => finished(e)}
-        />
+          onClick={finished}
+          colorScheme={"transparent"}
+        >
+          <Checkbox
+            size={{ base: "sm", md: "md", lg: "lg" }}
+            colorScheme={color}
+            defaultChecked={true}
+            isReadOnly={true}
+          />
+        </Button>
       </Flex>
     </Flex>
   );

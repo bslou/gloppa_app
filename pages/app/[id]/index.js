@@ -17,14 +17,9 @@ import {
   useToast,
   Box,
   Tooltip,
-} from "@chakra-ui/react";
-import {
-  AsyncCreatableSelect,
-  AsyncSelect,
-  CreatableSelect,
+  Textarea,
+  Heading,
   Select,
-} from "chakra-react-select";
-import {
   Modal,
   ModalOverlay,
   ModalContent,
@@ -43,10 +38,14 @@ import ToDoComponent from "./todocomponent";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 import Achievements from "./achievements";
+import Leaderboards from "./leaderboards";
 
 const Game = () => {
   const [lvl, setLvl] = useState("0");
   const [startupName, setStartupName] = useState("Placeholder");
+  const [startupName2, setStartupName2] = useState("Placeholder");
+  const [startupLocation, setStartupLocation] = useState("Placeholder");
+  const [startupDes, setStartupDes] = useState("Placeholder");
   const [coins, setCoins] = useState("0");
   const quotes = [
     "Keep going you will reach victory soon!",
@@ -58,6 +57,7 @@ const Game = () => {
   const [rowsTask, setRowsTask] = useState([]);
   const [rowsBrainstorm, setRowsBrainstorm] = useState([]);
   const [rowsAchievements, setRowsAchievements] = useState([]);
+  const [rowsLeaderboards, setRowsLeaderboards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quota, setQuota] = useState(quotes[getRandomInt(quotes.length)]);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,15 +71,33 @@ const Game = () => {
     onOpen: onOpen3,
     onClose: onClose3,
   } = useDisclosure();
+  const {
+    isOpen: isOpen4,
+    onOpen: onOpen4,
+    onClose: onClose4,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen5,
+    onOpen: onOpen5,
+    onClose: onClose5,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen6,
+    onOpen: onOpen6,
+    onClose: onClose6,
+  } = useDisclosure();
   const toast = useToast();
   const toast2 = useToast();
 
   const [startupText2, setStartupText2] = useState("");
-  const [urgency2, setUrgency2] = useState("");
+  const [urgency2, setUrgency2] = useState("High");
 
   const [startupText, setStartupText] = useState("");
-  const [urgency, setUrgency] = useState("");
+  const [urgency, setUrgency] = useState("Urgent");
   const [date, setDate] = useState("");
+
+  const [time, setTime] = useState(900);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     if (router.isReady) {
@@ -89,6 +107,9 @@ const Game = () => {
         .then((val) => {
           setLvl(String(Math.floor(val.get("level") / 100) + 1));
           setStartupName(String(val.get("startupName")));
+          setStartupName2(String(val.get("startupName")));
+          setStartupDes(String(val.get("description")));
+          setStartupLocation(String(val.get("startupLocation")));
           setCoins(String(val.get("coins")));
           let tasks = val.get("tasks");
           for (let i = tasks.length - 1; i >= 0; i--) {
@@ -136,6 +157,35 @@ const Game = () => {
             ]);
           }
           setLoading(false);
+        });
+      let query = db.collection("startups").orderBy("level", "desc");
+      query
+        .get()
+        .then(function (querySnapshot) {
+          // Loop through the query results
+          querySnapshot.forEach(function (doc) {
+            // Get the value of the "name" field for each document
+            let ido = doc.id;
+            var stName = doc.data().startupName;
+            var stLvl = String(Math.floor(doc.data().level / 100) + 1);
+            let img = "/assets/spacer1.png";
+            console.log(startupName);
+            console.log(stLvl);
+            setRowsLeaderboards((prevLeaderboards) => [
+              ...prevLeaderboards,
+              Leaderboards(
+                img,
+                stLvl,
+                stName,
+                String(prevLeaderboards.length + 1),
+                router.query.id == ido
+              ),
+            ]);
+          });
+        })
+        .catch(function (error) {
+          // Handle any errors that occurred during the query
+          console.error(error);
         });
     }
   }, [router]);
@@ -194,6 +244,31 @@ const Game = () => {
     }, 500);
   };
 
+  const changeVal = (e) => {
+    e.preventDefault();
+    db.collection("startups").doc(router.query.id).update({
+      startupName: startupName2,
+      startupLocation: startupLocation,
+      description: startupDes,
+    });
+    setTimeout(() => {
+      console.log("timer completed");
+      window.location.reload();
+    }, 500);
+  };
+
+  const startTimer = () => {
+    setIsRunning(true);
+    setInterval(() => {
+      setTime(time - 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    setIsRunning(false);
+    clearInterval();
+  };
+
   var dtToday = new Date();
 
   var month = dtToday.getMonth() + 1;
@@ -241,24 +316,13 @@ const Game = () => {
                   <Text>Urgency</Text>
                   <Select
                     required
-                    onChange={(val) => setUrgency(val.value)}
-                    colorScheme="purple"
-                    defaultValue={"Urgent"}
-                    options={[
-                      {
-                        label: "Urgent",
-                        value: "Urgent",
-                      },
-                      {
-                        label: "Medium",
-                        value: "Medium",
-                      },
-                      {
-                        label: "No Urgency",
-                        value: "No Urgency",
-                      },
-                    ]}
-                  />
+                    onChange={(val) => setUrgency(val.target.value)}
+                    value={urgency}
+                  >
+                    <option value={"Urgent"}>Urgent</option>
+                    <option value={"Medium"}>Medium</option>
+                    <option value={"No Urgency"}>No Urgency</option>
+                  </Select>
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
                   <Text>Due Date</Text>
@@ -308,24 +372,13 @@ const Game = () => {
                   <Text>Probability of Reality</Text>
                   <Select
                     required
-                    onChange={(val) => setUrgency2(val.value)}
-                    colorScheme="purple"
-                    defaultValue={"Urgent"}
-                    options={[
-                      {
-                        label: "High",
-                        value: "High",
-                      },
-                      {
-                        label: "Medium",
-                        value: "Medium",
-                      },
-                      {
-                        label: "Low",
-                        value: "Low",
-                      },
-                    ]}
-                  />
+                    onChange={(val) => setUrgency2(val.target.value)}
+                    value={urgency2}
+                  >
+                    <option value={"High"}>High</option>
+                    <option value={"Medium"}>Medium</option>
+                    <option value={"Low"}>Low</option>
+                  </Select>
                 </Flex>
                 <Button type={"submit"} colorScheme="blue" mr={3}>
                   Submit
@@ -340,13 +393,138 @@ const Game = () => {
         <ModalContent>
           <ModalHeader>Leaderboards</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            <Flex direction={"column"} alignItems={"center"} gap={"3vh"}>
+              {rowsLeaderboards}
+            </Flex>
+          </ModalBody>
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose3}>
               Close
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen4} onClose={onClose4}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Startup Info</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form onSubmit={(e) => changeVal(e)}>
+              <Flex
+                direction={"column"}
+                gap={"3vh"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                paddingBottom={"1vh"}
+                maxHeight={"65vh"}
+              >
+                <Flex gap={"0.5vh"} direction={"column"}>
+                  <Text>Startup Name</Text>
+                  <Input
+                    minLength={3}
+                    value={startupName2}
+                    width={"20vw"}
+                    required
+                    onChange={(e) => setStartupName2(e.target.value)}
+                  />
+                </Flex>
+                <Flex gap={"0.5vh"} direction={"column"}>
+                  <Text>Startup Location</Text>
+                  <Input
+                    type="text"
+                    required
+                    value={startupLocation}
+                    width={"20vw"}
+                    minLength={3}
+                    onChange={(e) => setStartupLocation(e.target.value)}
+                  />
+                </Flex>
+                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                  <Text>Startup Description</Text>
+                  <Textarea
+                    minLength={3}
+                    value={startupDes}
+                    required
+                    width={"20vw"}
+                    minHeight={"10vh"}
+                    maxHeight={"20vh"}
+                    onChange={(e) => setStartupDes(e.target.value)}
+                  />
+                </Flex>
+
+                <Flex>
+                  <Button type={"submit"} colorScheme="blue" mr={3}>
+                    Submit Edits
+                  </Button>
+                  <Button
+                    color={"black"}
+                    colorScheme="ghost"
+                    onClick={onClose4}
+                    mr={3}
+                  >
+                    Cancel
+                  </Button>
+                </Flex>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen5} onClose={onClose5}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Work Alarm</ModalHeader>
+          <ModalBody>
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              marginTop={5}
+              marginBottom={5}
+            >
+              <Heading>Alarm Clock</Heading>
+              <Select
+                onChange={(e) => setTime(e.target.value * 60)}
+                marginTop={2}
+                disabled={isRunning}
+              >
+                <option value={15}>15 minutes</option>
+                <option value={30}>30 minutes</option>
+                <option value={45}>45 minutes</option>
+                <option value={60}>1 hour</option>
+                <option value={90}>1 hour 30 minute</option>
+              </Select>
+              <Text fontSize="4xl" marginTop={3} marginBottom={3}>
+                {time}
+              </Text>
+              <Flex alignItems={"center"} justifyContent={"center"}>
+                <Button
+                  colorScheme={"blue"}
+                  onClick={isRunning ? stopTimer : startTimer}
+                >
+                  {isRunning ? "Pause" : "Start"}
+                </Button>
+                <Button
+                  onClick={onClose5}
+                  variant={"ghost"}
+                  colorScheme={"transparent"}
+                >
+                  Close
+                </Button>
+              </Flex>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen6} onClose={onClose6}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>Shop</ModalHeader>
+          <ModalBody></ModalBody>
         </ModalContent>
       </Modal>
       <Flex
@@ -357,11 +535,27 @@ const Game = () => {
         backgroundColor={"#1C1C1C"}
         padding={5}
       >
-        <NextLink href={"/app/startuplist"}>
-          <Link color={"white"} fontSize={"20pt"}>
-            Gloppa
-          </Link>
-        </NextLink>
+        <Flex alignItems={"center"} justifyContent={"center"}>
+          <NextLink href={"/app/startuplist"}>
+            <Link color={"white"} fontSize={"20pt"}>
+              Gloppa
+            </Link>
+          </NextLink>
+          <Tooltip label={"Intense working alarm"} aria-label="A tooltip">
+            <Button
+              onClick={onOpen5}
+              colorScheme={"transparent"}
+              variant={"ghost"}
+            >
+              <Image
+                src={"/assets/lawyer.png"}
+                alt={"Gloppa lawyer"}
+                width={35}
+                height={35}
+              />
+            </Button>
+          </Tooltip>
+        </Flex>
         <Flex
           direction={"row"}
           alignItems={"center"}
@@ -383,7 +577,10 @@ const Game = () => {
                 transform="translateY(-50%)"
                 textAlign="center"
               >
-                <Text fontWeight={900} fontSize={"20pt"}>
+                <Text
+                  fontWeight={900}
+                  fontSize={{ base: "14pt", md: "17pt", lg: "20pt" }}
+                >
                   <Tooltip
                     label={"You are currently level " + lvl + "!"}
                     aria-label="A tooltip"
@@ -394,9 +591,15 @@ const Game = () => {
               </Box>
             </Box>
           </Flex>
-          <Text color={"white"} fontSize={"22pt"} fontWeight={700}>
+          <Link
+            colorScheme={"transparent"}
+            color={"white"}
+            fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
+            fontWeight={700}
+            onClick={onOpen4}
+          >
             {startupName}
-          </Text>
+          </Link>
         </Flex>
         <Flex direction={"row"} alignItems={"center"} justifyContent={"center"}>
           <Flex
@@ -404,31 +607,37 @@ const Game = () => {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Button variant={"ghost"} colorScheme={"none"} onClick={onOpen3}>
-              <Image
-                src={"/assets/leaderboard.png"}
-                alt={"Gloppa Leaderboard"}
-                width={40}
-                height={40}
-              />
-            </Button>
-            <Flex justifyContent={"center"} alignItems={"center"}>
-              <Image
-                src={"/assets/coin.png"}
-                alt={"Coin Gloppa"}
-                width={30}
-                height={30}
-              />
-              <Text color={"white"}>{coins}</Text>
-            </Flex>
-            <Button variant={"ghost"} colorScheme={"none"}>
-              <Image
-                src={"/assets/shop.png"}
-                alt={"Gloppa Shop"}
-                width={40}
-                height={40}
-              />
-            </Button>
+            <Tooltip label={"Leaderboards"} aria-label="A tooltip">
+              <Button variant={"ghost"} colorScheme={"none"} onClick={onOpen3}>
+                <Image
+                  src={"/assets/leaderboard.png"}
+                  alt={"Gloppa Leaderboard"}
+                  width={40}
+                  height={40}
+                />
+              </Button>
+            </Tooltip>
+            <Tooltip label={"Coins are all self-made."} aria-label="A tooltip">
+              <Flex justifyContent={"center"} alignItems={"center"}>
+                <Image
+                  src={"/assets/coin.png"}
+                  alt={"Coin Gloppa"}
+                  width={30}
+                  height={30}
+                />
+                <Text color={"white"}>{coins}</Text>
+              </Flex>
+            </Tooltip>
+            <Tooltip label={"Shop"} aria-label="A tooltip">
+              <Button onClick={onOpen6} variant={"ghost"} colorScheme={"none"}>
+                <Image
+                  src={"/assets/shop.png"}
+                  alt={"Gloppa Shop"}
+                  width={40}
+                  height={40}
+                />
+              </Button>
+            </Tooltip>
           </Flex>
         </Flex>
       </Flex>
@@ -452,10 +661,13 @@ const Game = () => {
           <Image
             src={"/assets/spacer.png"}
             alt={"Gloppa Spacer"}
-            width={350}
-            height={350}
+            width={300}
+            height={300}
           />
-          <Text color={"white"}>
+          <Text
+            color={"white"}
+            fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
+          >
             Semi-advanced factory (producing 1 coin an hour)
           </Text>
         </Flex>
@@ -466,10 +678,18 @@ const Game = () => {
           width={"30vw"}
           gap={"1.4vh"}
         >
-          <Text color={"white"} fontSize={"25pt"} marginBottom={"2vh"}>
+          <Text
+            color={"white"}
+            fontSize={{ base: "15pt", md: "20pt", lg: "25pt" }}
+            marginBottom={"2vh"}
+          >
             {quota}
           </Text>
-          <Text color={"white"} fontSize={"18pt"} fontWeight={900}>
+          <Text
+            color={"white"}
+            fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+            fontWeight={900}
+          >
             Achievements:
           </Text>
           <UnorderedList color={"white"}>
@@ -500,7 +720,7 @@ const Game = () => {
           justifyContent={"center"}
           width={"48vw"}
           backgroundColor={"#1c1c1c"}
-          borderRadius={10}
+          boxShadow={"0 0 5px 1px rgba(0, 0, 0, 0.9)"}
         >
           <Flex direction={"row"} alignItems={"center"}>
             <Text
@@ -510,14 +730,16 @@ const Game = () => {
             >
               To-Do List
             </Text>
-            <Button colorScheme="transparent" onClick={onOpen}>
-              <Image
-                src={"/assets/plus.png"}
-                alt={"Gloppa plus"}
-                width={30}
-                height={30}
-              />
-            </Button>
+            <Tooltip label={"Add to task list"} aria-label="A tooltip">
+              <Button colorScheme="transparent" onClick={onOpen}>
+                <Image
+                  src={"/assets/plus.png"}
+                  alt={"Gloppa plus"}
+                  width={30}
+                  height={30}
+                />
+              </Button>
+            </Tooltip>
           </Flex>
           <Flex
             direction={"column"}
@@ -526,6 +748,8 @@ const Game = () => {
             height={"25vh"}
             marginTop={"1vh"}
             overflowY={"scroll"}
+            gap={"1vh"}
+            style={{ overflowY: "scroll" }}
           >
             {rowsTask.length < 1 ? (
               <Flex
@@ -557,7 +781,7 @@ const Game = () => {
           justifyContent={"center"}
           width={"48vw"}
           backgroundColor={"#1c1c1c"}
-          borderRadius={10}
+          boxShadow={"0 0 5px 1px rgba(0, 0, 0, 0.9)"}
         >
           <Flex
             direction={"row"}
@@ -571,14 +795,16 @@ const Game = () => {
             >
               Brainstorming
             </Text>
-            <Button colorScheme="transparent" onClick={onOpen2}>
-              <Image
-                src={"/assets/plus.png"}
-                alt={"Gloppa plus"}
-                width={30}
-                height={30}
-              />
-            </Button>
+            <Tooltip label={"Add to brainstorm list"} aria-label="A tooltip">
+              <Button colorScheme="transparent" onClick={onOpen2}>
+                <Image
+                  src={"/assets/plus.png"}
+                  alt={"Gloppa plus"}
+                  width={30}
+                  height={30}
+                />
+              </Button>
+            </Tooltip>
           </Flex>
           <Flex
             direction={"column"}
@@ -587,6 +813,8 @@ const Game = () => {
             marginTop={"1vh"}
             height={"25vh"}
             overflowY={"scroll"}
+            gap={"1vh"}
+            style={{ overflowY: "scroll" }}
           >
             {rowsBrainstorm.length < 1 ? (
               <Flex

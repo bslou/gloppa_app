@@ -5,7 +5,11 @@ const Achievements = (txt, coins) => {
   return (
     <ListItem>
       <Flex direction={"row"} alignItems={"center"}>
-        <Text color={"white"} marginRight={"1vw"}>
+        <Text
+          color={"white"}
+          marginRight={"1vw"}
+          fontSize={{ base: "6pt", md: "9pt", lg: "12pt" }}
+        >
           {txt}
         </Text>
         <Image

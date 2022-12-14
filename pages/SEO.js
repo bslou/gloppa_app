@@ -13,7 +13,7 @@ const SEO = () => {
       <meta
         name="keywords"
         content={
-          "Fun, Startups, Videogames, Games, Company, Tasks, Todolist, Strategy"
+          "Fun, Startups, Videogames, Games, Company, Tasks, Todolist, Strategy, Gloppa"
         }
       />
       <title>Gloppa - Startups are now like videogames</title>

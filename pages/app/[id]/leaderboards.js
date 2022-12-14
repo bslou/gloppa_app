@@ -1,0 +1,51 @@
+import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
+import Image from "next/image";
+
+const Leaderboards = (img, lvl, startupName, index, eq) => {
+  return (
+    <Flex
+      direction={"row"}
+      alignItems={"center"}
+      justifyContent={"space-between"}
+      width={"90%"}
+      backgroundColor={eq ? "#98CCFF" : "#dfdfdf"}
+      paddingTop={3}
+      paddingBottom={3}
+      paddingLeft={5}
+      paddingRight={5}
+      borderRadius={2}
+      boxShadow={eq ? "0 0 5px 1px #004C97" : "0 0 5px 1px rgba(0, 0, 0, 0.9)"}
+      _hover={{
+        boxShadow: "0 0 5px 1px rgba(100, 100, 100, 0.9)",
+      }}
+    >
+      <Box position="relative" display="flex">
+        <Box as="img" width={50} src={"/assets/coina.png"} alt="My Image" />
+        <Box
+          position="absolute"
+          top="50%"
+          right={"38.5%"}
+          transform="translateY(-50%)"
+          textAlign="center"
+        >
+          <Text fontWeight={500} fontSize={"15pt"}>
+            <Tooltip
+              label={"Position " + index + " on leaderboard"}
+              aria-label="A tooltip"
+            >
+              {index}
+            </Tooltip>
+          </Text>
+        </Box>
+      </Box>
+
+      <Text fontWeight={700}>{startupName}</Text>
+      <Flex>
+        <Image src={img} width={30} height={30} alt={"Gloppa Image"} />
+        <Text>{lvl}</Text>
+      </Flex>
+    </Flex>
+  );
+};
+
+export default Leaderboards;

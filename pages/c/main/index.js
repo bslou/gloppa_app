@@ -1,65 +1,53 @@
-import {
-  Button,
-  Flex,
-  Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Input,
-  useDisclosure,
-  useToast,
-  Link,
-  IconButton,
-} from "@chakra-ui/react";
-import { auth, db } from "../../api/firebaseconfig";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { Button, Flex, Text, Link, IconButton } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
+import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
 
-const About = () => {
+const Home = () => {
+  const router = useRouter();
   const [display, changeDisplay] = useState("none");
   const [display2, changeDisplay2] = useState("none");
 
-  const router = useRouter();
-
   useEffect(() => {
-    if (localStorage.getItem("id") !== null) {
-      db.collection("users")
-        .doc(localStorage.getItem("id"))
-        .get()
-        .then((val) => {
-          if (!val.exists) return;
-          if (typeof val.get("premium")[0] !== "undefined") {
-            // does not exist
-            if (val.get("premium")[0] == "fulltime") {
-              router.push("/app/startuplist");
-            } else if (val.get("premium")[0] == "parttime") {
-              const date1 = new Date(String(val.get("premium")[1]));
-              var today = new Date();
-              var dd = String(today.getDate()).padStart(2, "0");
-              var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-              var yyyy = today.getFullYear();
-
-              today = mm + "/" + dd + "/" + yyyy;
-              const date2 = new Date(String(today));
-              const diffTime = Math.abs(date2 - date1);
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-              if (diffDays <= 31) {
+    if (typeof window !== "undefined") {
+      console.log("we are running on the client");
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            if (typeof val.get("premium")[0] !== "undefined") {
+              // does not exist
+              if (val.get("premium")[0] == "fulltime") {
                 router.push("/app/startuplist");
-              } else {
-                //router.push("/app/pricing");
+              } else if (val.get("premium")[0] == "parttime") {
+                const date1 = new Date(String(val.get("premium")[1]));
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 31) {
+                  router.push("/app/startuplist");
+                } else {
+                  //router.push("/app/pricing");
+                }
               }
             }
-          }
-        });
+          });
+      }
+    } else {
+      console.log("we are running on the server");
     }
   });
+
   return (
     <Flex direction={"column"} alignItems={"center"} width={"100vw"}>
       {/**Desktop */}
@@ -228,118 +216,148 @@ const About = () => {
               borderRadius={20}
               onClick={() => router.push("/app/register")}
             >
-              Join
+              Get Started
             </Button>
           </Flex>
         </Flex>
       </Flex>
+
       <Flex
-        position={"absolute"}
-        left={0}
-        top={"130vh"}
-        width={{ base: 50, md: 110, lg: 160 }}
+        direction={"column"}
+        alignItems={"center"}
+        backgroundSize={"100% 100%"}
+        width={"100vw"}
+        height={{ base: 550, md: 750, lg: 940 }}
+        marginTop={"70"}
+        backgroundImage={"url(/assets/backg.png)"}
+        gap={10}
       >
-        <Image
-          src={"/assets/leftCloud.png"}
-          alt={"Gloppa left cloud"}
-          width={160}
-          height={400}
-        />
-      </Flex>
-      <Flex
-        position={"absolute"}
-        right={0}
-        top={"20vh"}
-        width={{ base: 50, md: 110, lg: 160 }}
-      >
-        <Image
-          src={"/assets/rightCloud.png"}
-          alt={"Gloppa left cloud"}
-          width={160}
-          height={400}
-        />
-      </Flex>
-      <Flex direction={"column"} alignItems={"center"} gap={"11vh"}>
+        <Text
+          fontSize={{ base: "60pt", md: "80pt", lg: "100pt" }}
+          fontWeight={800}
+          color={"white"}
+          marginTop={10}
+          textShadow={"2px 8px 4px rgba(0,0,0,0.6)"}
+        >
+          Gloppa
+        </Text>
         <Flex
-          marginTop={"50"}
           direction={"column"}
           alignItems={"center"}
-          gap={11}
+          justifyContent={"center"}
         >
+          <Text
+            color={"white"}
+            fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
+            textAlign={"center"}
+          >
+            Launching a startup is like playing
+            <br />a video game
+          </Text>
+        </Flex>
+        <Button
+          backgroundColor={"black"}
+          color={"white"}
+          fontSize={{ base: "15pt", md: "20pt", lg: "25pt" }}
+          padding={"8"}
+          borderRadius={20}
+          fontWeight={600}
+          onClick={() => router.push("/app/register")}
+        >
+          Get Started
+        </Button>
+      </Flex>
+      <Flex marginTop={10} marginBottom={10}>
+        <Image
+          src={"/assets/pic.png"}
+          width={1000}
+          height={600}
+          alt={"Gloppa Sample"}
+        />
+      </Flex>
+      <Flex
+        direction={"column"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"80vw"}
+        gap={5}
+        marginTop={50}
+      >
+        <Text
+          fontWeight={700}
+          fontSize={{ base: "22pt", md: "32pt", lg: "42pt" }}
+        >
+          Easy and fun way of creating a startup
+        </Text>
+        <Text
+          fontWeight={200}
+          fontSize={{ base: "15pt", md: "25pt", lg: "35pt" }}
+          textAlign={"center"}
+        >
+          Gloppa makes the process of creating a startup as fun as creating a
+          video game! Having fun not only makes you happier but also helps you
+          faster progress through advancing your startup!
+        </Text>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        marginTop={75}
+        width={"100vw"}
+      >
+        <Flex width={{ base: 200, md: 250, lg: 300 }}>
           <Image
-            src={"/assets/topBent.png"}
-            alt={"Gloppa Bent"}
-            width={500}
-            height={20}
+            src={"/assets/right.png"}
+            width={300}
+            height={1000}
+            alt="Gloppa right"
           />
         </Flex>
         <Flex
           direction={"column"}
           alignItems={"center"}
           justifyContent={"center"}
-          width={"55vw"}
-          gap={"8"}
+          width={"60vw"}
+          gap={10}
         >
-          <Text
-            fontSize={{ base: "20pt", md: "26pt", lg: "33pt" }}
-            fontWeight={600}
+          <Flex direction={"column"} alignItems={"center"}>
+            <Text
+              fontWeight={700}
+              fontSize={{ base: "22pt", md: "32pt", lg: "42pt" }}
+              textAlign={"center"}
+            >
+              Do you want in?
+            </Text>
+            <Text
+              fontSize={{ base: "15pt", md: "25pt", lg: "35pt" }}
+              fontWeight={200}
+              textAlign={"center"}
+            >
+              We'll make sure
+              <br />
+              your startup experience
+              <br />
+              is better than ever!
+            </Text>
+          </Flex>
+          <Button
+            width={{ base: 100, md: 125, lg: 150 }}
+            height={{ base: 100, md: 125, lg: 150 }}
+            backgroundColor={"black"}
+            borderRadius={"50%"}
+            color={"white"}
+            fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
           >
-            We unite fun and creating startups
-          </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
-            We understand that working on startups may be a grueling and
-            difficult process, as there may be easy and hard days. Gloppa allows
-            you to enjoy the process even in the hardest of times!
-          </Text>
+            Get
+            <br />
+            Started
+          </Button>
         </Flex>
-        <Image
-          src={"/assets/work.png"}
-          alt={"Gloppa work"}
-          width={1000}
-          height={800}
-        />
-        <Flex
-          direction={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          width={"55vw"}
-          gap={"3"}
-        >
-          <Text
-            fontSize={{ base: "20pt", md: "26pt", lg: "33pt" }}
-            fontWeight={600}
-            textAlign={"center"}
-          >
-            We are startup enthusiasts and creators hoping to make it fun
-          </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
-            Initially the startup process may be fun, but as you progress, it
-            gets more tedious and consequently more discouraging. With Gloppa,
-            we hope to make the process as fun as a video game!
-          </Text>
-        </Flex>
-        <Flex
-          direction={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          width={"55vw"}
-          gap={"3"}
-          marginBottom={"10vh"}
-        >
-          <Text
-            fontSize={{ base: "20pt", md: "26pt", lg: "33pt" }}
-            fontWeight={600}
-          >
-            We are always looking for feedback!
-          </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
-            We desperately want feedback, so if you have any words of
-            recommendation or advice, please use the global.co/contact page to
-            reach out to us!
-          </Text>
+        <Flex width={{ base: 200, md: 250, lg: 300 }}>
+          <Image src={"/assets/left.png"} width={300} height={1000} />
         </Flex>
       </Flex>
-
       <Flex
         direction={"row"}
         alignItems={"center"}
@@ -498,4 +516,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Home;
