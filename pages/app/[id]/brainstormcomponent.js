@@ -70,8 +70,8 @@ const BrainstormComponent = (task, probability, color, index, id) => {
       justifyContent={"space-between"}
       backgroundColor={"#303030"}
       width={"90%"}
-      paddingTop={3}
-      paddingBottom={3}
+      paddingTop={2}
+      paddingBottom={2}
       paddingLeft={2}
       borderRadius={2}
       gap={5}

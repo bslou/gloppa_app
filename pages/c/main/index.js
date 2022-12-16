@@ -5,6 +5,8 @@ import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+//hydration error is caused by the nextlink!!!
+
 const Home = () => {
   const router = useRouter();
   const [display, changeDisplay] = useState("none");
@@ -252,7 +254,7 @@ const Home = () => {
             textAlign={"center"}
           >
             Launching a startup is like playing
-            <br />a video game
+            {"\n"}a video game
           </Text>
         </Flex>
         <Button
@@ -335,9 +337,9 @@ const Home = () => {
               textAlign={"center"}
             >
               We'll make sure
-              <br />
+              {"\n"}
               your startup experience
-              <br />
+              {"\n"}
               is better than ever!
             </Text>
           </Flex>
@@ -350,7 +352,7 @@ const Home = () => {
             fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
           >
             Get
-            <br />
+            {"\n"}
             Started
           </Button>
         </Flex>

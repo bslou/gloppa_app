@@ -28,7 +28,12 @@ const Leaderboards = (img, lvl, startupName, index, eq) => {
           transform="translateY(-50%)"
           textAlign="center"
         >
-          <Text fontWeight={500} fontSize={"15pt"}>
+          <Text
+            fontFamily={"monospace"}
+            color={eq ? "#fff" : "#000"}
+            fontWeight={500}
+            fontSize={"15pt"}
+          >
             <Tooltip
               label={"Position " + index + " on leaderboard"}
               aria-label="A tooltip"
@@ -39,10 +44,12 @@ const Leaderboards = (img, lvl, startupName, index, eq) => {
         </Box>
       </Box>
 
-      <Text fontWeight={700}>{startupName}</Text>
+      <Text color={eq ? "#fff" : "#000"} fontWeight={700}>
+        {startupName}
+      </Text>
       <Flex>
         <Image src={img} width={30} height={30} alt={"Gloppa Image"} />
-        <Text>{lvl}</Text>
+        <Text color={eq ? "#fff" : "#000"}>{lvl}</Text>
       </Flex>
     </Flex>
   );

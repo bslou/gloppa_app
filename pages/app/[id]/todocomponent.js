@@ -68,8 +68,8 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
       justifyContent={"space-between"}
       backgroundColor={"#303030"}
       width={"90%"}
-      paddingTop={3}
-      paddingBottom={3}
+      paddingTop={0.5}
+      paddingBottom={0.5}
       paddingLeft={2}
       borderRadius={2}
       boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
@@ -135,8 +135,8 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
           <Checkbox
             size={{ base: "sm", md: "md", lg: "lg" }}
             colorScheme={color}
-            defaultChecked={true}
-            isReadOnly={true}
+            defaultChecked
+            isReadOnly
           />
         </Button>
       </Flex>

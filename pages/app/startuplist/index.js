@@ -42,6 +42,39 @@ const StartupList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
+  const accessories = [
+    [
+      "/assets/spacer.png",
+      "/assets/spacer1.png",
+      "Beginner factory (producing 5 coins a day)",
+      0,
+    ],
+    [
+      "/assets/spacert.png",
+      "/assets/spacer2.png",
+      "Medium factory (producing 10 coins a day)",
+      100,
+    ],
+    [
+      "/assets/spacerth.png",
+      "/assets/spacer3.png",
+      "Comfort-Zone factory (producing 25 coins a day)",
+      1000,
+    ],
+    [
+      "/assets/spacerf.png",
+      "/assets/spacer4.png",
+      "Semi-advanced factory (producing 50 coins a day)",
+      10000,
+    ],
+    [
+      "/assets/spacerfi.png",
+      "/assets/spacer5.png",
+      "Advanced factory (producing 100 coins a day)",
+      100000,
+    ],
+  ];
+
   const fetchData = () => {
     let id = localStorage.getItem("id");
     db.collection("users")
@@ -69,7 +102,12 @@ const StartupList = () => {
               );
               setRows((prevRows) => [
                 ...prevRows,
-                StartupComponent(img, lvl, startupName, String(document)),
+                StartupComponent(
+                  accessories[res.get("selectedAccessory")][1],
+                  lvl,
+                  startupName,
+                  String(document)
+                ),
               ]);
               setLoading(false);
             });

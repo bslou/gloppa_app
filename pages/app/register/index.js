@@ -45,35 +45,54 @@ const Register = () => {
   });
   const RegSubmit = (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, eml, pwd)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        db.collection("users").doc(user.uid).set({
-          email: eml,
-          username: uname,
-          premium: {},
-          startups: {},
-        });
-        localStorage.setItem("id", user.uid);
-        //uncomment line below later
-        //localStorage.setItem("id", user.uid)
-        router.push("/app/pricing");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error " + errorMessage);
-        toast({
-          title: "Error occured!",
-          description: error.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+    let nummers = db.collection("users").where("username", "==", uname);
+    nummers
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty && uname != oguname) {
+          toast({
+            title: "Username exists.",
+            description: "The username already exists in our database.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          console.log("Doesn't exist!");
+          createUserWithEmailAndPassword(auth, eml, pwd)
+            .then((userCredential) => {
+              // Signed in
+              const user = userCredential.user;
+              db.collection("users").doc(user.uid).set({
+                email: eml,
+                username: uname,
+                premium: {},
+                startups: {},
+              });
+              localStorage.setItem("id", user.uid);
+              //uncomment line below later
+              //localStorage.setItem("id", user.uid)
+              router.push("/app/pricing");
+              // ...
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log("Error " + errorMessage);
+              toast({
+                title: "Error occured!",
+                description: error.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+              });
 
-        // ..
+              // ..
+            });
+        }
+      })
+      .catch((err) => {
+        console.log("Error " + err);
       });
   };
 

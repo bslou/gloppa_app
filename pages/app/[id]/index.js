@@ -27,15 +27,21 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 import BrainstormComponent from "./brainstormcomponent";
 import ToDoComponent from "./todocomponent";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 import Achievements from "./achievements";
 import Leaderboards from "./leaderboards";
@@ -86,8 +92,15 @@ const Game = () => {
     onOpen: onOpen6,
     onClose: onClose6,
   } = useDisclosure();
+  const {
+    isOpen: isOpen7,
+    onOpen: onOpen7,
+    onClose: onClose7,
+  } = useDisclosure();
+  const cancelRef = useRef();
   const toast = useToast();
   const toast2 = useToast();
+  const toast3 = useToast();
 
   const [startupText2, setStartupText2] = useState("");
   const [urgency2, setUrgency2] = useState("High");
@@ -98,6 +111,49 @@ const Game = () => {
 
   const [time, setTime] = useState(900);
   const [isRunning, setIsRunning] = useState(false);
+
+  const [selectedAcc, setSelectedAcc] = useState(0);
+  const [acc, setAcc] = useState([]);
+
+  const [intervalId, setIntervalId] = useState();
+
+  const accessories = [
+    [
+      "/assets/spacer.png",
+      "/assets/spacer1.png",
+      "Beginner factory (producing 5 coins a day)",
+      0,
+      5,
+    ],
+    [
+      "/assets/spacert.png",
+      "/assets/spacer2.png",
+      "Medium factory (producing 10 coins a day)",
+      100,
+      10,
+    ],
+    [
+      "/assets/spacerth.png",
+      "/assets/spacer3.png",
+      "Comfort-Zone factory (producing 25 coins a day)",
+      1000,
+      25,
+    ],
+    [
+      "/assets/spacerf.png",
+      "/assets/spacer4.png",
+      "Semi-advanced factory (producing 50 coins a day)",
+      10000,
+      50,
+    ],
+    [
+      "/assets/spacerfi.png",
+      "/assets/spacer5.png",
+      "Advanced factory (producing 100 coins a day)",
+      100000,
+      100,
+    ],
+  ];
 
   useEffect(() => {
     if (router.isReady) {
@@ -110,9 +166,46 @@ const Game = () => {
           setStartupName2(String(val.get("startupName")));
           setStartupDes(String(val.get("description")));
           setStartupLocation(String(val.get("startupLocation")));
+          setAcc(val.get("accessories"));
+          setSelectedAcc(val.get("selectedAccessory"));
           setCoins(String(val.get("coins")));
+          var today = new Date();
+          var dd = String(today.getDate()).padStart(2, "0");
+          var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+          var yyyy = today.getFullYear();
+
+          today = mm + "/" + dd + "/" + yyyy;
+
+          if (val.get("factoryCoinsDate") == "") {
+            console.log("Coins " + accessories[selectedAcc][4]);
+            db.collection("startups")
+              .doc(router.query.id)
+              .update({ coins: increment(accessories[selectedAcc][4]) });
+            setCoins(coins + accessories[selectedAcc][4]);
+            db.collection("startups")
+              .doc(router.query.id)
+              .update({ factoryCoinsDate: today });
+          } else {
+            if (val.get("factoryCoinsDate") != today) {
+              const date1 = new Date(String(val.get("factoryCoinsDate")));
+              const date2 = new Date(String(today));
+              const diffTime = Math.abs(date2 - date1);
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              db.collection("startups")
+                .doc(router.query.id)
+                .update({
+                  coins: increment(accessories[selectedAcc][4] * diffDays),
+                });
+              db.collection("startups")
+                .doc(router.query.id)
+                .update({ factoryCoinsDate: today });
+              setCoins(coins + accessories[selectedAcc][4] * diffDays);
+            }
+          }
+
           let tasks = val.get("tasks");
-          for (let i = tasks.length - 1; i >= 0; i--) {
+          //for (let i = tasks.length - 1; i >= 0; i--) {
+          for (let i = 0; i < tasks.length; i++) {
             console.log(tasks[i]);
             let orr = JSON.parse(tasks[i]);
             let color = "red";
@@ -140,7 +233,8 @@ const Game = () => {
             ]);
           }
           let brainstorm = val.get("brainstorm");
-          for (let i = brainstorm.length - 1; i >= 0; i--) {
+          //for (let i = brainstorm.length - 1; i >= 0; i--) {
+          for (let i = 0; i < brainstorm.length; i++) {
             console.log(brainstorm[i]);
             let err = JSON.parse(brainstorm[i]);
             let color = "red";
@@ -168,7 +262,7 @@ const Game = () => {
             let ido = doc.id;
             var stName = doc.data().startupName;
             var stLvl = String(Math.floor(doc.data().level / 100) + 1);
-            let img = "/assets/spacer1.png";
+            let img = accessories[doc.data().selectedAccessory][1];
             console.log(startupName);
             console.log(stLvl);
             setRowsLeaderboards((prevLeaderboards) => [
@@ -259,14 +353,87 @@ const Game = () => {
 
   const startTimer = () => {
     setIsRunning(true);
-    setInterval(() => {
-      setTime(time - 1);
+    let ot = time;
+    var intId = setInterval(() => {
+      ot--;
+      setTime((timeLeft) => timeLeft - 1);
+      //console.log("Time set: " + ot);
+      if (ot < 1) {
+        setIsRunning(false);
+        clearInterval(intId);
+        setCoins(parseInt(coins) + 5);
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ coins: increment(5) });
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ level: increment(5) });
+        toast({
+          title: "Work time finished!",
+          description:
+            "You have successfully earned 5 coins from this session.",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+        onClose5();
+      }
     }, 1000);
+    setIntervalId(intId);
   };
 
   const stopTimer = () => {
     setIsRunning(false);
-    clearInterval();
+    clearInterval(intervalId);
+  };
+
+  const buyFactory = (ind) => {
+    if (acc.includes(ind)) {
+      if (selectedAcc != ind) {
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ selectedAccessory: ind });
+        setTimeout(() => {
+          console.log("timer completed");
+          window.location.reload();
+        }, 500);
+      } else {
+        toast3({
+          title: "Factory already selected",
+          description: "This factory is already selected right now.",
+          status: "info",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    } else {
+      if (coins >= accessories[ind][3]) {
+        setCoins(coins - accessories[ind][3]);
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({
+            coins: increment(-accessories[ind][3]),
+          });
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ selectedAccessory: ind });
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ accessories: arrayUnion(ind) });
+        setTimeout(() => {
+          console.log("timer completed");
+          window.location.reload();
+        }, 500);
+      } else {
+        toast3({
+          title: "Not enough coins",
+          description: "You need to work more on the startup to afford this.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
   var dtToday = new Date();
@@ -288,6 +455,42 @@ const Game = () => {
       height={"100vh"}
       backgroundColor={"#323232"}
     >
+      <AlertDialog
+        isOpen={isOpen7}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose7}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Stop timer
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose7}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  onClose5();
+                  clearInterval(intervalId);
+                  setIsRunning(false);
+                  setTime(900);
+                  onClose7();
+                }}
+                ml={3}
+              >
+                Stop Timer
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -473,7 +676,7 @@ const Game = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isOpen5} onClose={onClose5}>
+      <Modal isOpen={isOpen5} onClose={() => {}}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Work Alarm</ModalHeader>
@@ -484,12 +687,16 @@ const Game = () => {
               justify="center"
               marginTop={5}
               marginBottom={5}
+              backgroundColor={"#efefef"}
+              padding={5}
+              borderRadius={10}
             >
-              <Heading>Alarm Clock</Heading>
+              <Heading>Work Time</Heading>
               <Select
                 onChange={(e) => setTime(e.target.value * 60)}
                 marginTop={2}
                 disabled={isRunning}
+                backgroundColor={"white"}
               >
                 <option value={15}>15 minutes</option>
                 <option value={30}>30 minutes</option>
@@ -498,17 +705,20 @@ const Game = () => {
                 <option value={90}>1 hour 30 minute</option>
               </Select>
               <Text fontSize="4xl" marginTop={3} marginBottom={3}>
-                {time}
+                {time} seconds
               </Text>
               <Flex alignItems={"center"} justifyContent={"center"}>
                 <Button
                   colorScheme={"blue"}
-                  onClick={isRunning ? stopTimer : startTimer}
+                  // onClick={isRunning ? stopTimer : startTimer}
+                  onClick={startTimer}
+                  disabled={isRunning}
                 >
-                  {isRunning ? "Pause" : "Start"}
+                  {/* {isRunning ? "Pause" : "Start"} */}
+                  Start
                 </Button>
                 <Button
-                  onClick={onClose5}
+                  onClick={isRunning ? onOpen7 : onClose5}
                   variant={"ghost"}
                   colorScheme={"transparent"}
                 >
@@ -519,12 +729,167 @@ const Game = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal isOpen={isOpen6} onClose={onClose6}>
+      <Modal size={"xl"} isOpen={isOpen6} onClose={onClose6}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent backgroundColor={"#dfdfdf"}>
           <ModalCloseButton />
           <ModalHeader>Shop</ModalHeader>
-          <ModalBody></ModalBody>
+          <ModalBody maxH={"60vh"} overflowY="scroll">
+            <Flex direction={"column"} alignItems={"center"} gap={5}>
+              <Flex
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                gap={"5%"}
+              >
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"47%"}
+                  padding={7}
+                  borderRadius={5}
+                  gap={5}
+                  backgroundColor={"#fff"}
+                >
+                  <Image src={accessories[0][0]} width={300} height={300} />
+                  <Text fontSize={"12pt"} textAlign={"center"}>
+                    {accessories[0][2]}
+                  </Text>
+                  <Button
+                    colorScheme={"blue"}
+                    width={"100%"}
+                    onClick={() => buyFactory(0)}
+                  >
+                    {acc.includes(0)
+                      ? selectedAcc == 0
+                        ? "Selected"
+                        : "Select"
+                      : "Free"}
+                  </Button>
+                </Flex>
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"47%"}
+                  padding={7}
+                  borderRadius={5}
+                  gap={5}
+                  backgroundColor={"#fff"}
+                >
+                  <Image src={accessories[1][0]} width={300} height={300} />
+                  <Text fontSize={"12pt"} textAlign={"center"}>
+                    {accessories[1][2]}
+                  </Text>
+                  <Button
+                    colorScheme={"blue"}
+                    width={"100%"}
+                    onClick={() => buyFactory(1)}
+                  >
+                    {acc.includes(1)
+                      ? selectedAcc == 1
+                        ? "Selected"
+                        : "Select"
+                      : "🌕 " + accessories[1][3]}
+                  </Button>
+                </Flex>
+              </Flex>
+              <Flex
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                gap={"5%"}
+              >
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"47%"}
+                  padding={7}
+                  borderRadius={5}
+                  gap={5}
+                  backgroundColor={"#fff"}
+                >
+                  <Image src={accessories[2][0]} width={300} height={300} />
+                  <Text fontSize={"12pt"} textAlign={"center"}>
+                    {accessories[2][2]}
+                  </Text>
+                  <Button
+                    colorScheme={"blue"}
+                    width={"100%"}
+                    onClick={() => buyFactory(2)}
+                  >
+                    {acc.includes(2)
+                      ? selectedAcc == 2
+                        ? "Selected"
+                        : "Select"
+                      : "🌕 " + accessories[2][3]}
+                  </Button>
+                </Flex>
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"47%"}
+                  padding={7}
+                  borderRadius={5}
+                  gap={5}
+                  backgroundColor={"#fff"}
+                >
+                  <Image src={accessories[3][0]} width={300} height={300} />
+                  <Text fontSize={"12pt"} textAlign={"center"}>
+                    {accessories[3][2]}
+                  </Text>
+                  <Button
+                    colorScheme={"blue"}
+                    width={"100%"}
+                    onClick={() => buyFactory(3)}
+                  >
+                    {acc.includes(3)
+                      ? selectedAcc == 3
+                        ? "Selected"
+                        : "Select"
+                      : "🌕 " + accessories[3][3]}
+                  </Button>
+                </Flex>
+              </Flex>
+              <Flex
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                gap={"5%"}
+                width={"100%"}
+              >
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  width={"47%"}
+                  padding={7}
+                  borderRadius={5}
+                  gap={5}
+                  backgroundColor={"#fff"}
+                >
+                  <Image src={accessories[4][0]} width={300} height={300} />
+                  <Text fontSize={"12pt"} textAlign={"center"}>
+                    {accessories[4][2]}
+                  </Text>
+                  <Button
+                    colorScheme={"blue"}
+                    width={"100%"}
+                    onClick={() => buyFactory(4)}
+                  >
+                    {acc.includes(4)
+                      ? selectedAcc == 4
+                        ? "Selected"
+                        : "Select"
+                      : "🌕 " + accessories[4][3]}
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+          </ModalBody>
         </ModalContent>
       </Modal>
       <Flex
@@ -659,16 +1024,16 @@ const Game = () => {
           width={"40vw"}
         >
           <Image
-            src={"/assets/spacer.png"}
+            src={accessories[selectedAcc][0]}
             alt={"Gloppa Spacer"}
-            width={300}
-            height={300}
+            width={280}
+            height={280}
           />
           <Text
             color={"white"}
             fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
           >
-            Semi-advanced factory (producing 1 coin an hour)
+            {accessories[selectedAcc][2]}
           </Text>
         </Flex>
         <Flex
