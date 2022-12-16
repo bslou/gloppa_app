@@ -505,9 +505,9 @@ const Game = () => {
       </AlertDialog>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>To Do List</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>To Do List</ModalHeader>
+          <ModalCloseButton color={"white"} />
           <ModalBody>
             <form onSubmit={(e) => submitIdea(e)}>
               <Flex
@@ -518,8 +518,9 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text>Message</Text>
+                  <Text color={"white"}>Message</Text>
                   <Input
+                    color={"white"}
                     value={startupText}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
@@ -530,11 +531,13 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text>Urgency</Text>
+                  <Text color={"white"}>Urgency</Text>
                   <Select
                     required
                     onChange={(val) => setUrgency(val.target.value)}
                     value={urgency}
+                    color={"white"}
+                    backgroundColor={"#323232"}
                   >
                     <option value={"Urgent"}>Urgent</option>
                     <option value={"Medium"}>Medium</option>
@@ -542,7 +545,7 @@ const Game = () => {
                   </Select>
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text>Due Date</Text>
+                  <Text color={"white"}>Due Date</Text>
                   <Input
                     value={date}
                     type="date"
@@ -550,6 +553,7 @@ const Game = () => {
                     required
                     onChange={(e) => setDate(e.target.value)}
                     width={"20vw"}
+                    color={"white"}
                   />
                 </Flex>
                 <Button type={"submit"} colorScheme="blue" mr={3}>
@@ -563,9 +567,9 @@ const Game = () => {
 
       <Modal isOpen={isOpen2} onClose={onClose2}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Brainstorm List</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Brainstorm List</ModalHeader>
+          <ModalCloseButton color={"white"} />
           <ModalBody>
             <form onSubmit={(e) => submitIdea2(e)}>
               <Flex
@@ -576,11 +580,12 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text>Message</Text>
+                  <Text color={"white"}>Message</Text>
                   <Input
                     value={startupText2}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
+                    color="white"
                     minLength={3}
                     maxLength={45}
                     onChange={(e) => setStartupText2(e.target.value)}
@@ -588,8 +593,10 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text>Probability of Reality</Text>
+                  <Text color={"white"}>Probability of Reality</Text>
                   <Select
+                    color={"white"}
+                    backgroundColor={"#323232"}
                     required
                     onChange={(val) => setUrgency2(val.target.value)}
                     value={urgency2}
@@ -627,9 +634,9 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen4} onClose={onClose4}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Startup Info</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Startup Info</ModalHeader>
+          <ModalCloseButton color={"white"} />
           <ModalBody>
             <form onSubmit={(e) => changeVal(e)}>
               <Flex
@@ -641,19 +648,21 @@ const Game = () => {
                 maxHeight={"65vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text>Startup Name</Text>
+                  <Text color={"white"}>Startup Name</Text>
                   <Input
                     minLength={3}
                     value={startupName2}
                     width={"20vw"}
+                    color={"white"}
                     required
                     onChange={(e) => setStartupName2(e.target.value)}
                   />
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text>Startup Location</Text>
+                  <Text color={"white"}>Startup Location</Text>
                   <Input
                     type="text"
+                    color={"white"}
                     required
                     value={startupLocation}
                     width={"20vw"}
@@ -662,10 +671,11 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text>Startup Description</Text>
+                  <Text color={"white"}>Startup Description</Text>
                   <Textarea
                     minLength={3}
                     value={startupDes}
+                    color={"white"}
                     required
                     width={"20vw"}
                     minHeight={"10vh"}
@@ -679,10 +689,10 @@ const Game = () => {
                     Submit Edits
                   </Button>
                   <Button
-                    color={"black"}
                     colorScheme="ghost"
                     onClick={onClose4}
                     mr={3}
+                    color={"white"}
                   >
                     Cancel
                   </Button>
@@ -694,8 +704,8 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen5} onClose={() => {}}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Work Alarm</ModalHeader>
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Work Alarm</ModalHeader>
           <ModalBody>
             <Flex
               direction="column"
@@ -703,7 +713,7 @@ const Game = () => {
               justify="center"
               marginTop={5}
               marginBottom={5}
-              backgroundColor={"#efefef"}
+              backgroundColor={"#cdcdcd"}
               padding={5}
               borderRadius={10}
             >
@@ -712,7 +722,8 @@ const Game = () => {
                 onChange={(e) => setTime(e.target.value * 60)}
                 marginTop={2}
                 disabled={isRunning}
-                backgroundColor={"white"}
+                backgroundColor={"#bcbcbc"}
+                borderColor={"#ababab"}
               >
                 <option value={15}>15 minutes</option>
                 <option value={30}>30 minutes</option>

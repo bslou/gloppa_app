@@ -194,6 +194,8 @@ const StartupList = () => {
               onChange={(e) => {
                 setStartupName(e.target.value);
               }}
+              minLength={2}
+              maxLength={18}
             />
           </Flex>
           <Flex
@@ -234,6 +236,7 @@ const StartupList = () => {
               onChange={(e) => {
                 setStartupLocation(e.target.value);
               }}
+              minLength={3}
             />
           </Flex>
           <Flex

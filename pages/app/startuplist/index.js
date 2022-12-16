@@ -173,9 +173,9 @@ const StartupList = () => {
       >
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>My info</ModalHeader>
-            <ModalCloseButton />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>My info</ModalHeader>
+            <ModalCloseButton color={"white"} />
             <ModalBody>
               <form onSubmit={changeData}>
                 <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
@@ -185,11 +185,13 @@ const StartupList = () => {
                     justifyContent={"center"}
                     gap={"0.3vw"}
                   >
-                    <Text>Username: </Text>
+                    <Text color={"white"}>Username: </Text>
                     <Input
+                      color={"white"}
                       value={uname}
                       onChange={(e) => setUname(e.target.value)}
                       min={4}
+                      maxLength={12}
                     />
                   </Flex>
                   <Flex
@@ -198,8 +200,9 @@ const StartupList = () => {
                     justifyContent={"center"}
                     gap={"0.3vw"}
                   >
-                    <Text>Email: </Text>
+                    <Text color={"white"}>Email: </Text>
                     <Input
+                      color={"white"}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       readOnly
@@ -218,6 +221,7 @@ const StartupList = () => {
                     </Button>
                     <Button
                       variant={"ghost"}
+                      color={"white"}
                       colorScheme={"transparent"}
                       onClick={onClose}
                     >

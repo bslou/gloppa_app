@@ -106,6 +106,7 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
           color={"white"}
           fontWeight={500}
           fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+          maxWidth={"20vw"}
         >
           {task}
         </Text>

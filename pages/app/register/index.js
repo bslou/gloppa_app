@@ -168,7 +168,8 @@ const Register = () => {
                 onChange={(e) => {
                   setUname(e.target.value);
                 }}
-                min={4}
+                minLength={4}
+                maxLength={12}
               />
             </Flex>
             <Flex
@@ -217,6 +218,7 @@ const Register = () => {
                 onChange={(e) => {
                   setPwd(e.target.value);
                 }}
+                minLength={8}
               />
             </Flex>
           </Flex>
