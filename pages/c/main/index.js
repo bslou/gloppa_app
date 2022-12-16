@@ -255,7 +255,7 @@ const Home = () => {
             textAlign={"center"}
           >
             Launching a startup is like playing
-            {"\n"}a video game
+            <br />a video game
           </Text>
         </Flex>
         <Button
@@ -270,10 +270,11 @@ const Home = () => {
           Get Started
         </Button>
       </Flex>
-      <Flex marginTop={10} marginBottom={10}>
+      <Flex marginTop={10} marginBottom={10} borderRadius={10}>
         <Image
           src={"/assets/pic.png"}
-          width={1000}
+          layout={"responsive"}
+          width={800}
           height={600}
           alt={"Gloppa Sample"}
         />
@@ -338,9 +339,9 @@ const Home = () => {
               textAlign={"center"}
             >
               We'll make sure
-              {"\n"}
+              <br />
               your startup experience
-              {"\n"}
+              <br />
               is better than ever!
             </Text>
           </Flex>
@@ -353,7 +354,7 @@ const Home = () => {
             fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
           >
             Get
-            {"\n"}
+            <br />
             Started
           </Button>
         </Flex>

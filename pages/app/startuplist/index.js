@@ -40,6 +40,11 @@ const StartupList = () => {
   const dataFetchedRef = useRef(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2,
+  } = useDisclosure();
   const toast = useToast();
 
   const accessories = [
@@ -190,7 +195,7 @@ const StartupList = () => {
                       color={"white"}
                       value={uname}
                       onChange={(e) => setUname(e.target.value)}
-                      min={4}
+                      minLength={4}
                       maxLength={12}
                     />
                   </Flex>
@@ -233,6 +238,30 @@ const StartupList = () => {
             </ModalBody>
           </ModalContent>
         </Modal>
+        <Modal isOpen={isOpen2} onClose={onClose2}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>Future Updates</ModalHeader>
+            <ModalCloseButton color={"white"} />
+            <ModalBody>
+              <Text color={"white"}>
+                In the future there is a lot of things we want to do to make
+                this be the best application for startups. First of all we would
+                like to create partnerships where you can invite people and call
+                with them to collaborate on projects. We also want to implement
+                custom backgrounds and greater responsiveness. We also have a
+                plan of creating mobile applications for both iOS and Android,
+                and web application for all operating systems in the future.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose2}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <Flex
           direction={"row"}
           alignItems={"center"}
@@ -261,7 +290,7 @@ const StartupList = () => {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Future Updates</MenuItem>
+                <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
                 <MenuItem onClick={onOpen}>Update Info</MenuItem>
                 <MenuItem onClick={Logout}>Logout</MenuItem>
               </MenuList>

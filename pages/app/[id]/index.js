@@ -204,6 +204,9 @@ const Game = () => {
           }
 
           let tasks = val.get("tasks");
+          let urg = [];
+          let mdm = [];
+          let noturg = [];
           //for (let i = tasks.length - 1; i >= 0; i--) {
           for (let i = 0; i < tasks.length; i++) {
             console.log(tasks[i]);
@@ -211,16 +214,24 @@ const Game = () => {
             let color = "red";
             if (orr[1] == "Urgent") {
               color = "red";
+              urg.push(
+                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
+              );
             } else if (orr[1] == "Medium") {
               color = "yellow";
+              mdm.push(
+                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
+              );
             } else {
               color = "green";
+              noturg.push(
+                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
+              );
             }
-            setRowsTask((prevTasks) => [
-              ...prevTasks,
-              ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id),
-            ]);
           }
+          let arr = urg.concat(mdm, noturg);
+          setRowsTask(arr);
+
           let achs = val.get("completed");
           for (let o = achs.length - 1; o >= achs.length - 4; o--) {
             if (typeof achs[o] === "undefined") {
@@ -233,6 +244,9 @@ const Game = () => {
             ]);
           }
           let brainstorm = val.get("brainstorm");
+          let high = [];
+          let medm = [];
+          let low = [];
           //for (let i = brainstorm.length - 1; i >= 0; i--) {
           for (let i = 0; i < brainstorm.length; i++) {
             console.log(brainstorm[i]);
@@ -240,15 +254,22 @@ const Game = () => {
             let color = "red";
             if (err[1] == "High") {
               color = "green";
+              high.push(
+                BrainstormComponent(err[0], err[1], color, i, router.query.id)
+              );
             } else if (err[1] == "Medium") {
               color = "yellow";
+              medm.push(
+                BrainstormComponent(err[0], err[1], color, i, router.query.id)
+              );
             } else {
               color = "red";
+              low.push(
+                BrainstormComponent(err[0], err[1], color, i, router.query.id)
+              );
             }
-            setRowsBrainstorm((prevBrainstorm) => [
-              ...prevBrainstorm,
-              BrainstormComponent(err[0], err[1], color, i, router.query.id),
-            ]);
+            let arror = high.concat(medm, low);
+            setRowsBrainstorm(arror);
           }
           setLoading(false);
         });

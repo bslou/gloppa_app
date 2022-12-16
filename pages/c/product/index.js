@@ -237,11 +237,18 @@ const Product = () => {
           </Flex>
         </Flex>
       </Flex>
-      <Flex marginTop={"90"} direction={"column"} alignItems={"center"}>
+      <Flex
+        marginTop={"90"}
+        direction={"column"}
+        border={"2px solid black"}
+        borderRadius={10}
+        alignItems={"center"}
+      >
         <Image
           src={"/assets/pic.png"}
           alt={"Gloppa sample"}
-          width={950}
+          layout={"responsive"}
+          width={750}
           height={750}
         />
       </Flex>

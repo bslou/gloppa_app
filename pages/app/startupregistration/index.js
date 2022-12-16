@@ -156,8 +156,8 @@ const StartupList = () => {
           gap={4}
           backgroundColor={"#1C1C1C"}
           width={"60vw"}
-          maxHeight={"91.6vh"}
-          minHeight={"91.6vh"}
+          maxHeight={"90vh"}
+          minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
           paddingTop={14}
@@ -263,7 +263,7 @@ const StartupList = () => {
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={"25pt"}
+            fontSize={{ base: "11pt", md: "17pt", lg: "25pt" }}
             type={"submit"}
             width={"22vw"}
             height={"8vh"}
