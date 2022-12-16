@@ -214,7 +214,7 @@ const Game = () => {
             } else if (orr[1] == "Medium") {
               color = "yellow";
             } else {
-              color = "lightgreen";
+              color = "green";
             }
             setRowsTask((prevTasks) => [
               ...prevTasks,
@@ -239,7 +239,7 @@ const Game = () => {
             let err = JSON.parse(brainstorm[i]);
             let color = "red";
             if (err[1] == "High") {
-              color = "lightgreen";
+              color = "green";
             } else if (err[1] == "Medium") {
               color = "yellow";
             } else {
@@ -351,6 +351,8 @@ const Game = () => {
     }, 500);
   };
 
+  let audio = new Audio("/assets/alarm.mp3");
+
   const startTimer = () => {
     setIsRunning(true);
     let ot = time;
@@ -368,6 +370,15 @@ const Game = () => {
         db.collection("startups")
           .doc(router.query.id)
           .update({ level: increment(5) });
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({
+            completed: arrayUnion(
+              JSON.stringify([
+                "Completed " + time / 60 + " minutes of intense work time",
+              ])
+            ),
+          });
         toast({
           title: "Work time finished!",
           description:
@@ -377,6 +388,7 @@ const Game = () => {
           isClosable: true,
         });
         onClose5();
+        audio.play();
       }
     }, 1000);
     setIntervalId(intId);
@@ -512,6 +524,8 @@ const Game = () => {
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
                     onChange={(e) => setStartupText(e.target.value)}
+                    minLength={3}
+                    maxLength={45}
                     required
                   />
                 </Flex>
@@ -567,6 +581,8 @@ const Game = () => {
                     value={startupText2}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
+                    minLength={3}
+                    maxLength={45}
                     onChange={(e) => setStartupText2(e.target.value)}
                     required
                   />
@@ -593,9 +609,9 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen3} onClose={onClose3}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Leaderboards</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Leaderboards</ModalHeader>
+          <ModalCloseButton color={"white"} />
           <ModalBody>
             <Flex direction={"column"} alignItems={"center"} gap={"3vh"}>
               {rowsLeaderboards}
@@ -731,9 +747,9 @@ const Game = () => {
       </Modal>
       <Modal size={"xl"} isOpen={isOpen6} onClose={onClose6}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#dfdfdf"}>
-          <ModalCloseButton />
-          <ModalHeader>Shop</ModalHeader>
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalCloseButton color={"white"} />
+          <ModalHeader color={"white"}>Shop</ModalHeader>
           <ModalBody maxH={"60vh"} overflowY="scroll">
             <Flex direction={"column"} alignItems={"center"} gap={5}>
               <Flex
@@ -944,7 +960,7 @@ const Game = () => {
               >
                 <Text
                   fontWeight={900}
-                  fontSize={{ base: "14pt", md: "17pt", lg: "20pt" }}
+                  fontSize={{ base: "11pt", md: "13pt", lg: "15pt" }}
                 >
                   <Tooltip
                     label={"You are currently level " + lvl + "!"}

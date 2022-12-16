@@ -8,13 +8,15 @@ const Leaderboards = (img, lvl, startupName, index, eq) => {
       alignItems={"center"}
       justifyContent={"space-between"}
       width={"90%"}
-      backgroundColor={eq ? "#98CCFF" : "#dfdfdf"}
+      backgroundColor={eq ? "#1F90FF" : "#dfdfdf"}
       paddingTop={3}
       paddingBottom={3}
       paddingLeft={5}
       paddingRight={5}
       borderRadius={2}
-      boxShadow={eq ? "0 0 5px 1px #004C97" : "0 0 5px 1px rgba(0, 0, 0, 0.9)"}
+      boxShadow={
+        eq ? "0 0 5px 1px #004C97" : "0 0 5px 1px rgba(255, 255, 255, 0.9)"
+      }
       _hover={{
         boxShadow: "0 0 5px 1px rgba(100, 100, 100, 0.9)",
       }}

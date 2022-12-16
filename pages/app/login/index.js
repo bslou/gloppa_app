@@ -85,7 +85,11 @@ const Login = () => {
                     });
                   router.push("/app/pricing");
                 }
+              } else {
+                router.push("/app/pricing");
               }
+            } else {
+              router.push("/app/pricing");
             }
           });
         // ...

@@ -33,7 +33,11 @@ const Direction = () => {
                 } else {
                   router.push("/app/pricing");
                 }
+              } else {
+                router.push("/c/main");
               }
+            } else {
+              router.push("/c/main");
             }
           });
       } else {

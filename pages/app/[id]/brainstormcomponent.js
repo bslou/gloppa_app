@@ -91,8 +91,8 @@ const BrainstormComponent = (task, probability, color, index, id) => {
             <Image
               src={"/assets/Braille.png"}
               alt={"options"}
-              width={35}
-              height={35}
+              width={28}
+              height={28}
             />
           </MenuButton>
           <MenuList>
@@ -100,30 +100,37 @@ const BrainstormComponent = (task, probability, color, index, id) => {
             <MenuItem onClick={deleteIt}>Remove</MenuItem>
           </MenuList>
         </Menu>
-        <Text color={"white"} fontWeight={500} fontSize={"18pt"}>
+        <Text
+          color={"white"}
+          fontWeight={500}
+          fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+        >
           {task}
         </Text>
       </Flex>
       <Flex gap={"1vw"} alignItems={"center"} justifyContent={"center"}>
         <Text
-          color={color}
+          color={color == "green" ? "lightgreen" : color}
           fontSize={{ base: "8pt", md: "11.5pt", lg: "15pt" }}
           fontWeight={700}
         >
           {probability}
         </Text>
-        <Button
-          marginRight={"1vw"}
-          onClick={finished}
-          colorScheme={"transparent"}
-        >
-          <Checkbox
-            size={{ base: "sm", md: "md", lg: "lg" }}
-            colorScheme={color}
-            defaultChecked={true}
-            isReadOnly={true}
-          />
-        </Button>
+        <Flex zIndex={10}>
+          <Button
+            marginRight={"1vw"}
+            onClick={finished}
+            colorScheme={"transparent"}
+          >
+            <Checkbox
+              size={{ base: "sm", md: "md", lg: "lg" }}
+              colorScheme={color}
+              defaultChecked={true}
+              isReadOnly={true}
+              zIndex={-1}
+            />
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );

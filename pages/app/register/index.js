@@ -49,7 +49,7 @@ const Register = () => {
     nummers
       .get()
       .then((querySnapshot) => {
-        if (!querySnapshot.empty && uname != oguname) {
+        if (!querySnapshot.empty) {
           toast({
             title: "Username exists.",
             description: "The username already exists in our database.",
@@ -93,6 +93,13 @@ const Register = () => {
       })
       .catch((err) => {
         console.log("Error " + err);
+        toast({
+          title: "Error occured!",
+          description: err.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       });
   };
 

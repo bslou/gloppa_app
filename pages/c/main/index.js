@@ -4,6 +4,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { db } from "../../api/firebaseconfig";
 
 //hydration error is caused by the nextlink!!!
 

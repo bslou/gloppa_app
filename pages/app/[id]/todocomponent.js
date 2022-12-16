@@ -93,8 +93,8 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
             <Image
               src={"/assets/Braille.png"}
               alt={"options"}
-              width={35}
-              height={35}
+              width={28}
+              height={28}
             />
           </MenuButton>
           <MenuList>
@@ -117,28 +117,34 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
           justifyContent={"center"}
         >
           <Text
-            color={color}
+            color={color == "green" ? "lightgreen" : color}
             fontSize={{ base: "12pt", md: "16pt", lg: "20pt" }}
             fontWeight={700}
           >
             {urgency}
           </Text>
-          <Text color={color} fontSize={{ base: "5pt", md: "8pt", lg: "11pt" }}>
+          <Text
+            color={color == "green" ? "lightgreen" : color}
+            fontSize={{ base: "5pt", md: "8pt", lg: "11pt" }}
+          >
             {date}
           </Text>
         </Flex>
-        <Button
-          marginRight={"1vw"}
-          onClick={finished}
-          colorScheme={"transparent"}
-        >
-          <Checkbox
-            size={{ base: "sm", md: "md", lg: "lg" }}
-            colorScheme={color}
-            defaultChecked
-            isReadOnly
-          />
-        </Button>
+        <Flex zIndex={10}>
+          <Button
+            marginRight={"1vw"}
+            onClick={finished}
+            colorScheme={"transparent"}
+          >
+            <Checkbox
+              size={{ base: "sm", md: "md", lg: "lg" }}
+              colorScheme={color}
+              defaultChecked
+              isReadOnly
+              zIndex={-1}
+            />
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );
