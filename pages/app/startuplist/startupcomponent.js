@@ -14,10 +14,6 @@ const StartupComponent = (img, level, name, id) => {
     db.collection("users")
       .doc(idd)
       .update({ startups: arrayRemove(id) });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
   };
 
   return (

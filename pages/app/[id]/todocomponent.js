@@ -24,10 +24,6 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
     db.collection("startups")
       .doc(id)
       .update({ tasks: arrayRemove(JSON.stringify([task, urgency, date])) });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
   };
 
   const finished = () => {
@@ -54,10 +50,6 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
       db.collection("startups")
         .doc(id)
         .update({ tasks: arrayRemove(JSON.stringify([task, urgency, date])) });
-      setTimeout(() => {
-        console.log("timer completed");
-        window.location.reload();
-      }, 500);
     }
   };
 

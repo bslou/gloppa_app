@@ -24,10 +24,6 @@ const BrainstormComponent = (task, probability, color, index, id) => {
     db.collection("startups")
       .doc(id)
       .update({ brainstorm: arrayRemove(JSON.stringify([task, probability])) });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
   };
 
   const finished = () => {
@@ -56,10 +52,6 @@ const BrainstormComponent = (task, probability, color, index, id) => {
         .update({
           brainstorm: arrayRemove(JSON.stringify([task, probability])),
         });
-      setTimeout(() => {
-        console.log("timer completed");
-        window.location.reload();
-      }, 500);
     }
   };
 

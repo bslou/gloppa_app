@@ -35,7 +35,6 @@ const StartupList = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [rows, setRows] = useState([]);
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const dataFetchedRef = useRef(false);
 
@@ -89,6 +88,11 @@ const StartupList = () => {
         if (!val.exists) return;
         if (rows.length > 0) return;
         let n = val.get("startups");
+        //console.log(Object.keys(n).length);
+        if (Object.keys(n).length == 0) {
+          setLoading(false);
+          return;
+        }
         n.reverse();
         setUname(val.get("username"));
         setOgUname(val.get("username"));
@@ -102,9 +106,9 @@ const StartupList = () => {
               let startupName = String(res.get("startupName"));
               let lvl = String(Math.floor(res.get("level") / 100) + 1);
               let img = "/assets/spacer1.png";
-              console.log(
+              /*console.log(
                 "Name " + startupName + " Level " + lvl + " Image " + img
-              );
+              );*/
               setRows((prevRows) => [
                 ...prevRows,
                 StartupComponent(
@@ -121,9 +125,128 @@ const StartupList = () => {
   };
 
   useEffect(() => {
-    if (dataFetchedRef.current) return;
-    dataFetchedRef.current = true;
-    fetchData();
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            if (typeof val.get("premium")[0] !== "undefined") {
+              // does not exist
+              if (val.get("premium")[0] == "fulltime") {
+                // router.push("/app/startuplist");
+                if (dataFetchedRef.current) return;
+                dataFetchedRef.current = true;
+                db.collection("users")
+                  .doc(localStorage.getItem("id"))
+                  .onSnapshot((snapshot) => {
+                    setRows([]);
+                    const data = snapshot.data();
+                    let n = data.startups;
+                    //console.log(Object.keys(n).length);
+                    if (Object.keys(n).length == 0) {
+                      setLoading(false);
+                      return;
+                    }
+                    n.reverse();
+                    setUname(data.username);
+                    setOgUname(data.username);
+                    setEmail(data.email);
+                    if (n.length < 1) setLoading(false);
+                    n.forEach((document) => {
+                      db.collection("startups")
+                        .doc(document)
+                        .get()
+                        .then((res) => {
+                          let startupName = String(res.get("startupName"));
+                          let lvl = String(
+                            Math.floor(res.get("level") / 100) + 1
+                          );
+                          let img = "/assets/spacer1.png";
+                          /*console.log(
+                  "Name " + startupName + " Level " + lvl + " Image " + img
+                );*/
+                          setRows((prevRows) => [
+                            ...prevRows,
+                            StartupComponent(
+                              accessories[res.get("selectedAccessory")][1],
+                              lvl,
+                              startupName,
+                              String(document)
+                            ),
+                          ]);
+                          setLoading(false);
+                        });
+                    });
+                  });
+              } else if (val.get("premium")[0] == "parttime") {
+                const date1 = new Date(String(val.get("premium")[1]));
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 31) {
+                  // router.push("/app/startuplist");
+                  if (dataFetchedRef.current) return;
+                  dataFetchedRef.current = true;
+                  db.collection("users")
+                    .doc(localStorage.getItem("id"))
+                    .onSnapshot((snapshot) => {
+                      setRows([]);
+                      const data = snapshot.data();
+                      let n = data.startups;
+                      //console.log(Object.keys(n).length);
+                      if (Object.keys(n).length == 0) {
+                        setLoading(false);
+                        return;
+                      }
+                      n.reverse();
+                      setUname(data.username);
+                      setOgUname(data.username);
+                      setEmail(data.email);
+                      if (n.length < 1) setLoading(false);
+                      n.forEach((document) => {
+                        db.collection("startups")
+                          .doc(document)
+                          .get()
+                          .then((res) => {
+                            let startupName = String(res.get("startupName"));
+                            let lvl = String(
+                              Math.floor(res.get("level") / 100) + 1
+                            );
+                            let img = "/assets/spacer1.png";
+                            /*console.log(
+                  "Name " + startupName + " Level " + lvl + " Image " + img
+                );*/
+                            setRows((prevRows) => [
+                              ...prevRows,
+                              StartupComponent(
+                                accessories[res.get("selectedAccessory")][1],
+                                lvl,
+                                startupName,
+                                String(document)
+                              ),
+                            ]);
+                            setLoading(false);
+                          });
+                      });
+                    });
+                } else {
+                  router.push("/app/pricing");
+                }
+              }
+            }
+          });
+      } else {
+        router.push("/c/main");
+      }
+    }
   }, []);
 
   if (loading) {

@@ -156,151 +156,213 @@ const Game = () => {
   ];
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            if (typeof val.get("premium")[0] !== "undefined") {
+              // does not exist
+              if (val.get("premium")[0] == "fulltime") {
+                // router.push("/app/startuplist");
+              } else if (val.get("premium")[0] == "parttime") {
+                const date1 = new Date(String(val.get("premium")[1]));
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = mm + "/" + dd + "/" + yyyy;
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 31) {
+                  // router.push("/app/startuplist");
+                } else {
+                  router.push("/app/pricing");
+                }
+              }
+            }
+          });
+      } else {
+        router.push("/c/main");
+      }
+    }
     if (router.isReady) {
       db.collection("startups")
         .doc(router.query.id)
-        .get()
-        .then((val) => {
-          setLvl(String(Math.floor(val.get("level") / 100) + 1));
-          setStartupName(String(val.get("startupName")));
-          setStartupName2(String(val.get("startupName")));
-          setStartupDes(String(val.get("description")));
-          setStartupLocation(String(val.get("startupLocation")));
-          setAcc(val.get("accessories"));
-          setSelectedAcc(val.get("selectedAccessory"));
-          setCoins(String(val.get("coins")));
-          var today = new Date();
-          var dd = String(today.getDate()).padStart(2, "0");
-          var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-          var yyyy = today.getFullYear();
+        .onSnapshot((snapshot) => {
+          if (typeof snapshot.data() !== "undefined") {
+            const data = snapshot.data();
+            setRowsTask([]);
+            setRowsBrainstorm([]);
+            setRowsAchievements([]);
+            setRowsLeaderboards([]);
 
-          today = mm + "/" + dd + "/" + yyyy;
+            setLvl(String(Math.floor(data.level / 100) + 1));
+            setStartupName(String(data.startupName));
+            setStartupName2(String(data.startupName));
+            setStartupDes(String(data.description));
+            setStartupLocation(String(data.startupLocation));
+            setAcc(data.accessories);
+            setSelectedAcc(data.selectedAccessory);
+            setCoins(String(data.coins));
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, "0");
+            var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+            var yyyy = today.getFullYear();
 
-          if (val.get("factoryCoinsDate") == "") {
-            console.log("Coins " + accessories[selectedAcc][4]);
-            db.collection("startups")
-              .doc(router.query.id)
-              .update({ coins: increment(accessories[selectedAcc][4]) });
-            setCoins(coins + accessories[selectedAcc][4]);
-            db.collection("startups")
-              .doc(router.query.id)
-              .update({ factoryCoinsDate: today });
-          } else {
-            if (val.get("factoryCoinsDate") != today) {
-              const date1 = new Date(String(val.get("factoryCoinsDate")));
-              const date2 = new Date(String(today));
-              const diffTime = Math.abs(date2 - date1);
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            today = mm + "/" + dd + "/" + yyyy;
+
+            if (data.factoryCoinsDate == "") {
+              console.log("Coins " + accessories[selectedAcc][4]);
               db.collection("startups")
                 .doc(router.query.id)
-                .update({
-                  coins: increment(accessories[selectedAcc][4] * diffDays),
-                });
+                .update({ coins: increment(accessories[selectedAcc][4]) });
+              setCoins(coins + accessories[selectedAcc][4]);
               db.collection("startups")
                 .doc(router.query.id)
                 .update({ factoryCoinsDate: today });
-              setCoins(coins + accessories[selectedAcc][4] * diffDays);
-            }
-          }
-
-          let tasks = val.get("tasks");
-          let urg = [];
-          let mdm = [];
-          let noturg = [];
-          //for (let i = tasks.length - 1; i >= 0; i--) {
-          for (let i = 0; i < tasks.length; i++) {
-            console.log(tasks[i]);
-            let orr = JSON.parse(tasks[i]);
-            let color = "red";
-            if (orr[1] == "Urgent") {
-              color = "red";
-              urg.push(
-                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
-              );
-            } else if (orr[1] == "Medium") {
-              color = "yellow";
-              mdm.push(
-                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
-              );
             } else {
-              color = "green";
-              noturg.push(
-                ToDoComponent(orr[0], orr[1], orr[2], color, i, router.query.id)
-              );
+              if (data.factoryCoinsDate != today) {
+                const date1 = new Date(String(val.get("factoryCoinsDate")));
+                const date2 = new Date(String(today));
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                db.collection("startups")
+                  .doc(router.query.id)
+                  .update({
+                    coins: increment(accessories[selectedAcc][4] * diffDays),
+                  });
+                db.collection("startups")
+                  .doc(router.query.id)
+                  .update({ factoryCoinsDate: today });
+                setCoins(coins + accessories[selectedAcc][4] * diffDays);
+              }
             }
-          }
-          let arr = urg.concat(mdm, noturg);
-          setRowsTask(arr);
 
-          let achs = val.get("completed");
-          for (let o = achs.length - 1; o >= achs.length - 4; o--) {
-            if (typeof achs[o] === "undefined") {
-              break;
+            let tasks = data.tasks;
+            let urg = [];
+            let mdm = [];
+            let noturg = [];
+            //for (let i = tasks.length - 1; i >= 0; i--) {
+            for (let i = 0; i < tasks.length; i++) {
+              console.log(tasks[i]);
+              let orr = JSON.parse(tasks[i]);
+              let color = "red";
+              if (orr[1] == "Urgent") {
+                color = "red";
+                urg.push(
+                  ToDoComponent(
+                    orr[0],
+                    orr[1],
+                    orr[2],
+                    color,
+                    i,
+                    router.query.id
+                  )
+                );
+              } else if (orr[1] == "Medium") {
+                color = "yellow";
+                mdm.push(
+                  ToDoComponent(
+                    orr[0],
+                    orr[1],
+                    orr[2],
+                    color,
+                    i,
+                    router.query.id
+                  )
+                );
+              } else {
+                color = "green";
+                noturg.push(
+                  ToDoComponent(
+                    orr[0],
+                    orr[1],
+                    orr[2],
+                    color,
+                    i,
+                    router.query.id
+                  )
+                );
+              }
             }
-            let urr = JSON.parse(achs[o]);
-            setRowsAchievements((prevAchs) => [
-              ...prevAchs,
-              Achievements(urr[0], 5),
-            ]);
-          }
-          let brainstorm = val.get("brainstorm");
-          let high = [];
-          let medm = [];
-          let low = [];
-          //for (let i = brainstorm.length - 1; i >= 0; i--) {
-          for (let i = 0; i < brainstorm.length; i++) {
-            console.log(brainstorm[i]);
-            let err = JSON.parse(brainstorm[i]);
-            let color = "red";
-            if (err[1] == "High") {
-              color = "green";
-              high.push(
-                BrainstormComponent(err[0], err[1], color, i, router.query.id)
-              );
-            } else if (err[1] == "Medium") {
-              color = "yellow";
-              medm.push(
-                BrainstormComponent(err[0], err[1], color, i, router.query.id)
-              );
-            } else {
-              color = "red";
-              low.push(
-                BrainstormComponent(err[0], err[1], color, i, router.query.id)
-              );
+            let arr = urg.concat(mdm, noturg);
+            setRowsTask(arr);
+
+            let achs = data.completed;
+            for (let o = achs.length - 1; o >= achs.length - 4; o--) {
+              if (typeof achs[o] === "undefined") {
+                break;
+              }
+              let urr = JSON.parse(achs[o]);
+              setRowsAchievements((prevAchs) => [
+                ...prevAchs,
+                Achievements(urr[0], 5),
+              ]);
             }
-            let arror = high.concat(medm, low);
-            setRowsBrainstorm(arror);
+            let brainstorm = data.brainstorm;
+            let high = [];
+            let medm = [];
+            let low = [];
+            //for (let i = brainstorm.length - 1; i >= 0; i--) {
+            for (let i = 0; i < brainstorm.length; i++) {
+              console.log(brainstorm[i]);
+              let err = JSON.parse(brainstorm[i]);
+              let color = "red";
+              if (err[1] == "High") {
+                color = "green";
+                high.push(
+                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
+                );
+              } else if (err[1] == "Medium") {
+                color = "yellow";
+                medm.push(
+                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
+                );
+              } else {
+                color = "red";
+                low.push(
+                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
+                );
+              }
+              let arror = high.concat(medm, low);
+              setRowsBrainstorm(arror);
+            }
           }
+          let query = db.collection("startups").orderBy("level", "desc");
+          query
+            .get()
+            .then(function (querySnapshot) {
+              // Loop through the query results
+              querySnapshot.forEach(function (doc) {
+                // Get the value of the "name" field for each document
+                let ido = doc.id;
+                var stName = doc.data().startupName;
+                var stLvl = String(Math.floor(doc.data().level / 100) + 1);
+                let img = accessories[doc.data().selectedAccessory][1];
+                console.log(startupName);
+                console.log(stLvl);
+                setRowsLeaderboards((prevLeaderboards) => [
+                  ...prevLeaderboards,
+                  Leaderboards(
+                    img,
+                    stLvl,
+                    stName,
+                    String(prevLeaderboards.length + 1),
+                    router.query.id == ido
+                  ),
+                ]);
+              });
+            })
+            .catch(function (error) {
+              // Handle any errors that occurred during the query
+              console.error(error);
+            });
           setLoading(false);
-        });
-      let query = db.collection("startups").orderBy("level", "desc");
-      query
-        .get()
-        .then(function (querySnapshot) {
-          // Loop through the query results
-          querySnapshot.forEach(function (doc) {
-            // Get the value of the "name" field for each document
-            let ido = doc.id;
-            var stName = doc.data().startupName;
-            var stLvl = String(Math.floor(doc.data().level / 100) + 1);
-            let img = accessories[doc.data().selectedAccessory][1];
-            console.log(startupName);
-            console.log(stLvl);
-            setRowsLeaderboards((prevLeaderboards) => [
-              ...prevLeaderboards,
-              Leaderboards(
-                img,
-                stLvl,
-                stName,
-                String(prevLeaderboards.length + 1),
-                router.query.id == ido
-              ),
-            ]);
-          });
-        })
-        .catch(function (error) {
-          // Handle any errors that occurred during the query
-          console.error(error);
         });
     }
   }, [router]);
@@ -329,10 +391,7 @@ const Game = () => {
       duration: 4000,
       isClosable: true,
     });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
+    onClose();
   };
 
   const submitIdea2 = (e) => {
@@ -353,10 +412,7 @@ const Game = () => {
       duration: 4000,
       isClosable: true,
     });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
+    onClose2();
   };
 
   const changeVal = (e) => {
@@ -366,10 +422,9 @@ const Game = () => {
       startupLocation: startupLocation,
       description: startupDes,
     });
-    setTimeout(() => {
-      console.log("timer completed");
-      window.location.reload();
-    }, 500);
+    const o = startupName2;
+    setStartupName(o);
+    onClose4();
   };
 
   let audio = new Audio("/assets/alarm.mp3");
@@ -426,10 +481,6 @@ const Game = () => {
         db.collection("startups")
           .doc(router.query.id)
           .update({ selectedAccessory: ind });
-        setTimeout(() => {
-          console.log("timer completed");
-          window.location.reload();
-        }, 500);
       } else {
         toast3({
           title: "Factory already selected",
@@ -453,10 +504,6 @@ const Game = () => {
         db.collection("startups")
           .doc(router.query.id)
           .update({ accessories: arrayUnion(ind) });
-        setTimeout(() => {
-          console.log("timer completed");
-          window.location.reload();
-        }, 500);
       } else {
         toast3({
           title: "Not enough coins",
@@ -694,6 +741,7 @@ const Game = () => {
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
                   <Text color={"white"}>Startup Description</Text>
                   <Textarea
+                    autoComplete="on"
                     minLength={3}
                     value={startupDes}
                     color={"white"}
@@ -986,7 +1034,7 @@ const Game = () => {
               <Box
                 position="absolute"
                 top="45%"
-                right={"37%"}
+                right={"39%"}
                 transform="translateY(-50%)"
                 textAlign="center"
               >

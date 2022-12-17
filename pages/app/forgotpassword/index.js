@@ -1,5 +1,8 @@
 import { Button, Flex, Input, Link, Text, useToast } from "@chakra-ui/react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { arrayRemove } from "firebase/firestore";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -9,7 +12,6 @@ import { auth, db } from "../../api/firebaseconfig";
 const Login = () => {
   const router = useRouter();
   const [eml, setEml] = useState("");
-  const [pwd, setPwd] = useState("");
   const toast = useToast();
   useEffect(() => {
     if (localStorage.getItem("id") !== null) {
@@ -43,71 +45,40 @@ const Login = () => {
         });
     }
   });
-  const LoginSubmission = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, eml, pwd)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        //uncomment below thingy later
-        //localStorage.setItem("id", user.uid)
-        localStorage.setItem("id", user.uid);
-        db.collection("users")
-          .doc(user.uid)
-          .get()
-          .then((val) => {
-            if (!val.exists) return;
-            if (typeof val.get("premium")[0] !== "undefined") {
-              // does not exist
-              if (val.get("premium")[0] == "fulltime") {
-                router.push("/app/startuplist");
-              } else if (val.get("premium")[0] == "parttime") {
-                const date1 = new Date(String(val.get("premium")[1]));
-                var today = new Date();
-                var dd = String(today.getDate()).padStart(2, "0");
-                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                var yyyy = today.getFullYear();
-
-                today = mm + "/" + dd + "/" + yyyy;
-                const date2 = new Date(String(today));
-                const diffTime = Math.abs(date2 - date1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays <= 31) {
-                  router.push("/app/startuplist");
-                } else {
-                  db.collection("users")
-                    .doc(user.uid)
-                    .update({
-                      premium: arrayRemove([
-                        String(val.get("premium")[0]),
-                        String(val.get("premium")[1]),
-                      ]),
-                    });
-                  router.push("/app/pricing");
-                }
-              } else {
-                router.push("/app/pricing");
-              }
-            } else {
-              router.push("/app/pricing");
-            }
+    try {
+      auth
+        .sendPasswordResetEmail(eml)
+        .then(function (a) {
+          router.push("/app/login");
+          toast({
+            title: "Email sent.",
+            description: "The email was sent successfully to you.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
           });
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error " + errorMessage);
-        toast({
-          title: "Login Error!",
-          description: "The login credentials are wrong...",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
+        })
+        .catch(function (e) {
+          toast({
+            title: "Error here.",
+            description: "The error is:  " + error.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
         });
-
-        // ..
+    } catch (error) {
+      setError(error.message);
+      toast({
+        title: "Error here.",
+        description: "The error is:  " + error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
       });
+    }
   };
   return (
     <Flex
@@ -118,7 +89,7 @@ const Login = () => {
       alignItems={"center"}
       justifyContent={"center"}
     >
-      <form onSubmit={(e) => LoginSubmission(e)}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <Flex
           direction={"column"}
           width={{ base: "70vw", md: "50vw", lg: "50vw" }}
@@ -144,7 +115,16 @@ const Login = () => {
             fontSize={{ base: "35pt", md: "45pt", lg: "55pt" }}
             textAlign={"center"}
           >
-            Welcome Back
+            Reset Password
+          </Text>
+          <Text
+            color={"white"}
+            marginTop={2}
+            marginBottom={2}
+            textAlign={"center"}
+          >
+            To reset your password, we will <br />
+            send you an email, and for this we need your email.
           </Text>
           <Flex
             direction={"column"}
@@ -176,30 +156,6 @@ const Login = () => {
                 }}
               />
             </Flex>
-            <Flex
-              direction={"column"}
-              alignItems={"left"}
-              justifyContent={"center"}
-              width={"80%"}
-            >
-              <Text
-                color={"white"}
-                fontSize={{ base: "10pt", md: "15pt", lg: "20pt" }}
-              >
-                Password
-              </Text>
-              <Input
-                borderRadius={7}
-                type={"password"}
-                background={"white"}
-                fontSize={"17pt"}
-                height={50}
-                required
-                onChange={(e) => {
-                  setPwd(e.target.value);
-                }}
-              />
-            </Flex>
           </Flex>
 
           <Button
@@ -215,7 +171,7 @@ const Login = () => {
             paddingTop={7}
             marginTop={4}
           >
-            Login
+            Reset Password
           </Button>
           <Flex
             direction={"row"}
@@ -230,9 +186,18 @@ const Login = () => {
             </NextLink>
             <Text color={"white"}>.</Text>
           </Flex>
-          <NextLink href={"/app/forgotpassword"}>
-            <Link color={"#5686E1"}>Forgot your password?</Link>
-          </NextLink>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={1}
+          >
+            <Text color={"white"}>Have an account? </Text>
+            <NextLink href={"/app/login"}>
+              <Link color={"#5686E1"}>Log-in</Link>
+            </NextLink>
+            <Text color={"white"}>.</Text>
+          </Flex>
         </Flex>
       </form>
     </Flex>
