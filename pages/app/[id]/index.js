@@ -39,12 +39,11 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { db } from "../../api/firebaseconfig";
-import BrainstormComponent from "./brainstormcomponent";
-import ToDoComponent from "./todocomponent";
 import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 import Achievements from "./achievements";
 import Leaderboards from "./leaderboards";
+import { Draggable } from "react-beautiful-dnd";
 
 const Game = () => {
   const [lvl, setLvl] = useState("0");
@@ -60,12 +59,14 @@ const Game = () => {
   ];
   const router = useRouter();
   console.log("ID " + router.query.id);
-  const [rowsTask, setRowsTask] = useState([]);
-  const [rowsBrainstorm, setRowsBrainstorm] = useState([]);
   const [rowsAchievements, setRowsAchievements] = useState([]);
   const [rowsLeaderboards, setRowsLeaderboards] = useState([]);
+  const [todos, setTodos] = useState([]);
+  const [todos2, setTodos2] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quota, setQuota] = useState(quotes[getRandomInt(quotes.length)]);
+  const [editData, setEditData] = useState([]);
+  const [editData2, setEditData2] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpen2,
@@ -97,6 +98,40 @@ const Game = () => {
     onOpen: onOpen7,
     onClose: onClose7,
   } = useDisclosure();
+  const {
+    isOpen: isOpen8,
+    onOpen: onOpen8,
+    onClose: onClose8,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen9,
+    onOpen: onOpen9,
+    onClose: onClose9,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen10,
+    onOpen: onOpen10,
+    onClose: onClose10,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen11,
+    onOpen: onOpen11,
+    onClose: onClose11,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen12,
+    onOpen: onOpen12,
+    onClose: onClose12,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen13,
+    onOpen: onOpen13,
+    onClose: onClose13,
+  } = useDisclosure();
+  const cancelRef5 = useRef();
+  const cancelRef4 = useRef();
+  const cancelRef3 = useRef();
+  const cancelRef2 = useRef();
   const cancelRef = useRef();
   const toast = useToast();
   const toast2 = useToast();
@@ -114,6 +149,7 @@ const Game = () => {
 
   const [selectedAcc, setSelectedAcc] = useState(0);
   const [acc, setAcc] = useState([]);
+  const [td, setTd] = useState({});
 
   const [intervalId, setIntervalId] = useState();
 
@@ -196,10 +232,12 @@ const Game = () => {
         .onSnapshot((snapshot) => {
           if (typeof snapshot.data() !== "undefined") {
             const data = snapshot.data();
-            setRowsTask([]);
-            setRowsBrainstorm([]);
             setRowsAchievements([]);
             setRowsLeaderboards([]);
+            setTodos([]);
+            setTodos2([]);
+
+            console.log(data.tasks);
 
             setLvl(String(Math.floor(data.level / 100) + 1));
             setStartupName(String(data.startupName));
@@ -243,55 +281,40 @@ const Game = () => {
               }
             }
 
-            let tasks = data.tasks;
-            let urg = [];
-            let mdm = [];
-            let noturg = [];
-            //for (let i = tasks.length - 1; i >= 0; i--) {
-            for (let i = 0; i < tasks.length; i++) {
-              console.log(tasks[i]);
-              let orr = JSON.parse(tasks[i]);
-              let color = "red";
-              if (orr[1] == "Urgent") {
-                color = "red";
-                urg.push(
-                  ToDoComponent(
-                    orr[0],
-                    orr[1],
-                    orr[2],
-                    color,
-                    i,
-                    router.query.id
-                  )
-                );
-              } else if (orr[1] == "Medium") {
-                color = "yellow";
-                mdm.push(
-                  ToDoComponent(
-                    orr[0],
-                    orr[1],
-                    orr[2],
-                    color,
-                    i,
-                    router.query.id
-                  )
-                );
-              } else {
-                color = "green";
-                noturg.push(
-                  ToDoComponent(
-                    orr[0],
-                    orr[1],
-                    orr[2],
-                    color,
-                    i,
-                    router.query.id
-                  )
-                );
-              }
-            }
-            let arr = urg.concat(mdm, noturg);
-            setRowsTask(arr);
+            let newItems = [];
+            data.tasks.forEach(function (item, index) {
+              newItems.push({
+                id: router.query.id,
+                index: index,
+                msg: JSON.parse(item)[0],
+                urgency: JSON.parse(item)[1],
+                color:
+                  JSON.parse(item)[1] == "Urgent"
+                    ? "red"
+                    : JSON.parse(item)[1] == "Medium"
+                    ? "yellow"
+                    : "green",
+                date: JSON.parse(item)[2],
+              });
+            });
+            setTodos((prevItems) => prevItems.concat(newItems));
+
+            let newItems2 = [];
+            data.brainstorm.forEach(function (item, index) {
+              newItems2.push({
+                id: router.query.id,
+                index: index,
+                msg: JSON.parse(item)[0],
+                probability: JSON.parse(item)[1],
+                color:
+                  JSON.parse(item)[1] == "High"
+                    ? "green"
+                    : JSON.parse(item)[1] == "Medium"
+                    ? "yellow"
+                    : "red",
+              });
+            });
+            setTodos2((prevItems) => prevItems.concat(newItems2));
 
             let achs = data.completed;
             for (let o = achs.length - 1; o >= achs.length - 4; o--) {
@@ -303,34 +326,6 @@ const Game = () => {
                 ...prevAchs,
                 Achievements(urr[0], 5),
               ]);
-            }
-            let brainstorm = data.brainstorm;
-            let high = [];
-            let medm = [];
-            let low = [];
-            //for (let i = brainstorm.length - 1; i >= 0; i--) {
-            for (let i = 0; i < brainstorm.length; i++) {
-              console.log(brainstorm[i]);
-              let err = JSON.parse(brainstorm[i]);
-              let color = "red";
-              if (err[1] == "High") {
-                color = "green";
-                high.push(
-                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
-                );
-              } else if (err[1] == "Medium") {
-                color = "yellow";
-                medm.push(
-                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
-                );
-              } else {
-                color = "red";
-                low.push(
-                  BrainstormComponent(err[0], err[1], color, i, router.query.id)
-                );
-              }
-              let arror = high.concat(medm, low);
-              setRowsBrainstorm(arror);
             }
           } else {
             router.push("/app/startuplist");
@@ -525,6 +520,106 @@ const Game = () => {
     }
   };
 
+  const deleteIt = (todo) => {
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        tasks: arrayRemove(JSON.stringify([todo.msg, todo.urgency, todo.date])),
+      });
+  };
+
+  console.log(urgency);
+
+  const finished = (todo) => {
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        completed: arrayUnion(
+          JSON.stringify([todo.msg, todo.urgency, todo.date])
+        ),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        level: increment(5),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        coins: increment(5),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        tasks: arrayRemove(JSON.stringify([todo.msg, todo.urgency, todo.date])),
+      });
+  };
+
+  const deleteIt2 = (todo) => {
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        brainstorm: arrayRemove(JSON.stringify([todo.msg, todo.probability])),
+      });
+  };
+
+  const finished2 = (todo) => {
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        completed: arrayUnion(JSON.stringify([todo.msg, todo.probability])),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        level: increment(5),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        coins: increment(5),
+      });
+    db.collection("startups")
+      .doc(todo.id)
+      .update({
+        brainstorm: arrayRemove(JSON.stringify([todo.msg, todo.probability])),
+      });
+  };
+
+  const editTasks = (e) => {
+    e.preventDefault();
+    const arrora = [editData[0], editData[1], editData[2]];
+    console.log("Index " + editData[3]);
+    db.collection("startups")
+      .doc(router.query.id)
+      .get()
+      .then((val) => {
+        if (!val.exists) return;
+        let opa = val.get("tasks");
+        opa[editData[3]] = JSON.stringify(arrora);
+        db.collection("startups").doc(router.query.id).update({ tasks: opa });
+      });
+    onClose12();
+  };
+
+  const editBrainstorms = (e) => {
+    e.preventDefault();
+    const arrora = [editData2[0], editData2[1]];
+    console.log("Index " + editData2[2]);
+    db.collection("startups")
+      .doc(router.query.id)
+      .get()
+      .then((val) => {
+        if (!val.exists) return;
+        let opa = val.get("brainstorm");
+        opa[editData2[2]] = JSON.stringify(arrora);
+        db.collection("startups")
+          .doc(router.query.id)
+          .update({ brainstorm: opa });
+      });
+    onClose13();
+  };
+
   var dtToday = new Date();
 
   var month = dtToday.getMonth() + 1;
@@ -544,6 +639,305 @@ const Game = () => {
       height={"100vh"}
       backgroundColor={"#323232"}
     >
+      <Modal isOpen={isOpen13} onClose={onClose13}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Edit Brainstorm Task</ModalHeader>
+          <ModalCloseButton color={"white"} />
+          <ModalBody>
+            <form onSubmit={(e) => editBrainstorms(e)}>
+              <Flex
+                direction={"column"}
+                gap={"3vh"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                paddingBottom={"1vh"}
+              >
+                <Flex gap={"0.5vh"} direction={"column"}>
+                  <Text color={"white"}>Message</Text>
+                  <Input
+                    color={"white"}
+                    value={editData2[0]}
+                    placeHolder={"This should be simple..."}
+                    width={"20vw"}
+                    onChange={(e) => {
+                      let tosks = [...editData2];
+                      tosks[0] = e.target.value;
+                      setEditData2(tosks);
+                    }}
+                    minLength={3}
+                    maxLength={45}
+                    required
+                  />
+                </Flex>
+                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                  <Text color={"white"}>Probability</Text>
+                  <Select
+                    required
+                    onChange={(e) => {
+                      let tosks = [...editData2];
+                      tosks[1] = e.target.value;
+                      setEditData2(tosks);
+                    }}
+                    value={editData2[1]}
+                    color={"white"}
+                    backgroundColor={"#323232"}
+                  >
+                    <option value={"High"} name={"High"}>
+                      High
+                    </option>
+                    <option value={"Medium"} name={"Medium"}>
+                      Medium
+                    </option>
+                    <option value={"Low"} name={"Low"}>
+                      Low
+                    </option>
+                  </Select>
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"1vw"}
+                >
+                  <Button onClick={onClose13} colorScheme="transparent" mr={3}>
+                    Close
+                  </Button>
+                  <Button type={"submit"} colorScheme="blue" mr={3}>
+                    Change Edits
+                  </Button>
+                </Flex>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen12} onClose={onClose12}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Edit To Do List Task</ModalHeader>
+          <ModalCloseButton color={"white"} />
+          <ModalBody>
+            <form onSubmit={(e) => editTasks(e)}>
+              <Flex
+                direction={"column"}
+                gap={"3vh"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                paddingBottom={"1vh"}
+              >
+                <Flex gap={"0.5vh"} direction={"column"}>
+                  <Text color={"white"}>Message</Text>
+                  <Input
+                    color={"white"}
+                    value={editData[0]}
+                    placeHolder={"This should be simple..."}
+                    width={"20vw"}
+                    onChange={(e) => {
+                      let tosks = [...editData];
+                      tosks[0] = e.target.value;
+                      setEditData(tosks);
+                    }}
+                    minLength={3}
+                    maxLength={45}
+                    required
+                  />
+                </Flex>
+                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                  <Text color={"white"}>Urgency</Text>
+                  <Select
+                    required
+                    onChange={(e) => {
+                      let tosks = [...editData];
+                      tosks[1] = e.target.value;
+                      setEditData(tosks);
+                    }}
+                    value={editData[1]}
+                    color={"white"}
+                    backgroundColor={"#323232"}
+                  >
+                    <option value={"Urgent"} name={"Urgent"}>
+                      Urgent
+                    </option>
+                    <option value={"Medium"} name={"Medium"}>
+                      Medium
+                    </option>
+                    <option value={"No Urgency"} name={"No Urgency"}>
+                      No Urgency
+                    </option>
+                  </Select>
+                </Flex>
+                <Flex gap={"0.5vh"} direction={"column"}>
+                  <Text color={"white"}>Due Date</Text>
+                  <Input
+                    value={editData[2]}
+                    type="date"
+                    min={maxDate}
+                    required
+                    onChange={(e) => {
+                      let tosks = [...editData];
+                      tosks[2] = e.target.value;
+                      setEditData(tosks);
+                    }}
+                    width={"20vw"}
+                    color={"white"}
+                  />
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"1vw"}
+                >
+                  <Button onClick={onClose12} colorScheme="transparent" mr={3}>
+                    Close
+                  </Button>
+                  <Button type={"submit"} colorScheme="blue" mr={3}>
+                    Change Edits
+                  </Button>
+                </Flex>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <AlertDialog
+        isOpen={isOpen11}
+        leastDestructiveRef={cancelRef5}
+        onClose={onClose11}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Done with Brainstorm
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you are done with this brainstorm "{td.msg}?"
+              <br /> You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef5} onClick={onClose11}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="green"
+                onClick={() => {
+                  finished2(td);
+                  onClose11();
+                }}
+                ml={3}
+              >
+                Done
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={isOpen10}
+        leastDestructiveRef={cancelRef4}
+        onClose={onClose10}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Done with Task
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you are done with this task "{td.msg}?"
+              <br /> You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef4} onClick={onClose10}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="green"
+                onClick={() => {
+                  finished(td);
+                  onClose10();
+                }}
+                ml={3}
+              >
+                Done
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={isOpen9}
+        leastDestructiveRef={cancelRef3}
+        onClose={onClose9}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Brainstorm
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete "{td.msg}?"
+              <br /> You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef3} onClick={onClose9}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  deleteIt2(td);
+                  onClose9();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={isOpen8}
+        leastDestructiveRef={cancelRef2}
+        onClose={onClose8}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Task
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete "{td.msg}?"
+              <br /> You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef2} onClick={onClose8}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  deleteIt(td);
+                  onClose8();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
       <AlertDialog
         isOpen={isOpen7}
         leastDestructiveRef={cancelRef}
@@ -1227,7 +1621,156 @@ const Game = () => {
             gap={"1vh"}
             style={{ overflowY: "scroll" }}
           >
-            {rowsTask.length < 1 ? (
+            {Object.keys(todos).length > 0 ? (
+              <UnorderedList
+                width={"100%"}
+                gap={"1vh"}
+                display={"flex"}
+                alignItems={"center"}
+                flexDirection={"column"}
+                marginLeft={"10%"}
+              >
+                {todos.map((todo) => (
+                  <ListItem width={"100%"}>
+                    <Flex
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      backgroundColor={"#303030"}
+                      width={"90%"}
+                      paddingTop={0.5}
+                      paddingBottom={0.5}
+                      paddingLeft={2}
+                      borderRadius={2}
+                      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                      _hover={{
+                        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+                      }}
+                      key={todo.id}
+                    >
+                      <Flex
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        marginRight={2}
+                      >
+                        <Menu>
+                          <MenuButton
+                            paddingLeft={5}
+                            paddingRight={5}
+                            variant={"ghost"}
+                            colorScheme={"transparent"}
+                          >
+                            <Image
+                              src={"/assets/Braille.png"}
+                              alt={"options"}
+                              width={28}
+                              height={28}
+                            />
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem
+                              onClick={() => {
+                                setEditData([
+                                  todo.msg,
+                                  todo.urgency,
+                                  todo.date,
+                                  todo.index,
+                                ]);
+                                onOpen12();
+                              }}
+                            >
+                              Edit
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                setTd(todo);
+                                onOpen8();
+                              }}
+                            >
+                              Remove
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        <Text
+                          color={"white"}
+                          fontWeight={500}
+                          fontSize={{
+                            base: "10pt",
+                            md: "14pt",
+                            lg: "18pt",
+                          }}
+                          maxWidth={"22vw"}
+                        >
+                          {todo.msg}
+                        </Text>
+                      </Flex>
+                      <Flex alignItems={"center"} justifyContent={"center"}>
+                        <Flex
+                          direction={"column"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                        >
+                          <Text
+                            color={
+                              todo.urgency == ""
+                                ? "red"
+                                : todo.color == "green"
+                                ? "lightgreen"
+                                : todo.color
+                            }
+                            fontSize={{
+                              base: "12pt",
+                              md: "16pt",
+                              lg: "20pt",
+                            }}
+                            fontWeight={700}
+                          >
+                            {todo.urg == "" ? "Urgent" : todo.urgency}
+                          </Text>
+                          <Text
+                            color={
+                              todo.urgency == ""
+                                ? "red"
+                                : todo.color == "green"
+                                ? "lightgreen"
+                                : todo.color
+                            }
+                            fontSize={{
+                              base: "5pt",
+                              md: "8pt",
+                              lg: "11pt",
+                            }}
+                          >
+                            {todo.date}
+                          </Text>
+                        </Flex>
+                        <Flex zIndex={10}>
+                          <Button
+                            marginRight={"1vw"}
+                            colorScheme={"transparent"}
+                            onClick={() => {
+                              setTd(todo);
+                              onOpen10();
+                            }}
+                          >
+                            <Checkbox
+                              size={{ base: "sm", md: "md", lg: "lg" }}
+                              colorScheme={
+                                todo.urgency == "" ? "red" : todo.color
+                              }
+                              defaultChecked
+                              isReadOnly
+                              zIndex={-1}
+                            />
+                          </Button>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </ListItem>
+                ))}
+              </UnorderedList>
+            ) : (
               <Flex
                 direction={"column"}
                 alignItems={"center"}
@@ -1242,12 +1785,10 @@ const Game = () => {
                   height={170}
                 />
                 <Text color={"white"} textAlign={"center"} fontSize={"12pt"}>
-                  No tasks <br />
+                  No brainstorms <br />
                   found here... 😔
                 </Text>
               </Flex>
-            ) : (
-              rowsTask
             )}
           </Flex>
         </Flex>
@@ -1292,7 +1833,118 @@ const Game = () => {
             gap={"1vh"}
             style={{ overflowY: "scroll" }}
           >
-            {rowsBrainstorm.length < 1 ? (
+            {Object.keys(todos2).length > 0 ? (
+              <UnorderedList
+                width={"100%"}
+                gap={"1vh"}
+                display={"flex"}
+                alignItems={"center"}
+                flexDirection={"column"}
+                marginLeft={"10%"}
+              >
+                {todos2.map((todo) => (
+                  <ListItem width={"100%"}>
+                    <Flex
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      backgroundColor={"#303030"}
+                      width={"90%"}
+                      paddingTop={2}
+                      paddingBottom={2}
+                      paddingLeft={2}
+                      borderRadius={2}
+                      gap={5}
+                      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                      _hover={{
+                        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+                      }}
+                    >
+                      <Flex>
+                        <Menu>
+                          <MenuButton
+                            paddingLeft={5}
+                            paddingRight={5}
+                            variant={"ghost"}
+                            colorScheme={"transparent"}
+                          >
+                            <Image
+                              src={"/assets/Braille.png"}
+                              alt={"options"}
+                              width={28}
+                              height={28}
+                            />
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem
+                              onClick={() => {
+                                setEditData2([
+                                  todo.msg,
+                                  todo.probability,
+                                  todo.index,
+                                ]);
+                                onOpen13();
+                              }}
+                            >
+                              Edit
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                setTd(todo);
+                                onOpen9();
+                              }}
+                            >
+                              Remove
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        <Text
+                          color={"white"}
+                          fontWeight={500}
+                          fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+                          maxWidth={"22vw"}
+                        >
+                          {todo.msg}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        gap={"1vw"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                      >
+                        <Text
+                          color={
+                            todo.color == "green" ? "lightgreen" : todo.color
+                          }
+                          fontSize={{ base: "8pt", md: "11.5pt", lg: "15pt" }}
+                          fontWeight={700}
+                        >
+                          {todo.probability}
+                        </Text>
+                        <Flex zIndex={10}>
+                          <Button
+                            onClick={() => {
+                              setTd(todo);
+                              onOpen11();
+                            }}
+                            marginRight={"1vw"}
+                            colorScheme={"transparent"}
+                          >
+                            <Checkbox
+                              size={{ base: "sm", md: "md", lg: "lg" }}
+                              colorScheme={todo.color}
+                              defaultChecked={true}
+                              isReadOnly={true}
+                              zIndex={-1}
+                            />
+                          </Button>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </ListItem>
+                ))}
+              </UnorderedList>
+            ) : (
               <Flex
                 direction={"column"}
                 alignItems={"center"}
@@ -1311,8 +1963,6 @@ const Game = () => {
                   found here... 😔
                 </Text>
               </Flex>
-            ) : (
-              rowsBrainstorm
             )}
           </Flex>
         </Flex>

@@ -377,7 +377,7 @@ const StartupList = () => {
                 and web application for all operating systems in the future. We
                 also want to add more features than just the video game, such as
                 services to help boost startups. If you have any recommendations
-                or feedback, feel free to email us at gloppaofficial@gmail.com.
+                or feedback, feel free to email us at gloppaglow@gmail.com.
               </Text>
             </ModalBody>
 
