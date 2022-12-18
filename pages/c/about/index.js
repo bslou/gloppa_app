@@ -286,7 +286,10 @@ const About = () => {
           >
             We unite fun and creating startups
           </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
+          <Text
+            fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}
+            textAlign={"center"}
+          >
             We understand that working on startups may be a grueling and
             difficult process, as there may be easy and hard days. Gloppa allows
             you to enjoy the process even in the hardest of times!
@@ -312,7 +315,10 @@ const About = () => {
           >
             We are startup enthusiasts and creators hoping to make it fun
           </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
+          <Text
+            fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}
+            textAlign={"center"}
+          >
             Initially the startup process may be fun, but as you progress, it
             gets more tedious and consequently more discouraging. With Gloppa,
             we hope to make the process as fun as a video game!
@@ -332,7 +338,10 @@ const About = () => {
           >
             We are always looking for feedback!
           </Text>
-          <Text fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}>
+          <Text
+            fontSize={{ base: "13pt", md: "18pt", lg: "22pt" }}
+            textAlign={"center"}
+          >
             We desperately want feedback, so if you have any words of
             recommendation or advice, please use the global.co/contact page to
             reach out to us!

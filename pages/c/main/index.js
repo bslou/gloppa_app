@@ -352,6 +352,7 @@ const Home = () => {
             borderRadius={"50%"}
             color={"white"}
             fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+            onClick={() => router.push("/app/register")}
           >
             Get
             <br />

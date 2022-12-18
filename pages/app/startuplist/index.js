@@ -79,50 +79,50 @@ const StartupList = () => {
     ],
   ];
 
-  const fetchData = () => {
-    let id = localStorage.getItem("id");
-    db.collection("users")
-      .doc(id)
-      .get()
-      .then((val) => {
-        if (!val.exists) return;
-        if (rows.length > 0) return;
-        let n = val.get("startups");
-        //console.log(Object.keys(n).length);
-        if (Object.keys(n).length == 0) {
-          setLoading(false);
-          return;
-        }
-        n.reverse();
-        setUname(val.get("username"));
-        setOgUname(val.get("username"));
-        setEmail(val.get("email"));
-        if (n.length < 1) setLoading(false);
-        n.forEach((document) => {
-          db.collection("startups")
-            .doc(document)
-            .get()
-            .then((res) => {
-              let startupName = String(res.get("startupName"));
-              let lvl = String(Math.floor(res.get("level") / 100) + 1);
-              let img = "/assets/spacer1.png";
-              /*console.log(
-                "Name " + startupName + " Level " + lvl + " Image " + img
-              );*/
-              setRows((prevRows) => [
-                ...prevRows,
-                StartupComponent(
-                  accessories[res.get("selectedAccessory")][1],
-                  lvl,
-                  startupName,
-                  String(document)
-                ),
-              ]);
-              setLoading(false);
-            });
-        });
-      });
-  };
+  // const fetchData = () => {
+  //   let id = localStorage.getItem("id");
+  //   db.collection("users")
+  //     .doc(id)
+  //     .get()
+  //     .then((val) => {
+  //       if (!val.exists) return;
+  //       if (rows.length > 0) return;
+  //       let n = val.get("startups");
+  //       //console.log(Object.keys(n).length);
+  //       if (Object.keys(n).length == 0) {
+  //         setLoading(false);
+  //         return;
+  //       }
+  //       n.reverse();
+  //       setUname(val.get("username"));
+  //       setOgUname(val.get("username"));
+  //       setEmail(val.get("email"));
+  //       if (n.length < 1) setLoading(false);
+  //       n.forEach((document) => {
+  //         db.collection("startups")
+  //           .doc(document)
+  //           .get()
+  //           .then((res) => {
+  //             let startupName = String(res.get("startupName"));
+  //             let lvl = String(Math.floor(res.get("level") / 100) + 1);
+  //             let img = "/assets/spacer1.png";
+  //             /*console.log(
+  //               "Name " + startupName + " Level " + lvl + " Image " + img
+  //             );*/
+  //             setRows((prevRows) => [
+  //               ...prevRows,
+  //               StartupComponent(
+  //                 accessories[res.get("selectedAccessory")][1],
+  //                 lvl,
+  //                 startupName,
+  //                 String(document)
+  //               ),
+  //             ]);
+  //             setLoading(false);
+  //           });
+  //       });
+  //     });
+  // };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -142,6 +142,9 @@ const StartupList = () => {
                   .doc(localStorage.getItem("id"))
                   .onSnapshot((snapshot) => {
                     setRows([]);
+                    setUname(data.username);
+                    setOgUname(data.username);
+                    setEmail(data.email);
                     const data = snapshot.data();
                     let n = data.startups;
                     //console.log(Object.keys(n).length);
@@ -150,9 +153,6 @@ const StartupList = () => {
                       return;
                     }
                     n.reverse();
-                    setUname(data.username);
-                    setOgUname(data.username);
-                    setEmail(data.email);
                     if (n.length < 1) setLoading(false);
                     n.forEach((document) => {
                       db.collection("startups")
@@ -202,14 +202,14 @@ const StartupList = () => {
                       const data = snapshot.data();
                       let n = data.startups;
                       //console.log(Object.keys(n).length);
+                      setUname(data.username);
+                      setOgUname(data.username);
+                      setEmail(data.email);
                       if (Object.keys(n).length == 0) {
                         setLoading(false);
                         return;
                       }
                       n.reverse();
-                      setUname(data.username);
-                      setOgUname(data.username);
-                      setEmail(data.email);
                       if (n.length < 1) setLoading(false);
                       n.forEach((document) => {
                         db.collection("startups")
@@ -317,7 +317,7 @@ const StartupList = () => {
                     <Input
                       color={"white"}
                       value={uname}
-                      onChange={(e) => setUname(e.target.value)}
+                      onChange={(e) => setUname(e.target.value.toLowerCase())}
                       minLength={4}
                       maxLength={12}
                     />
@@ -374,7 +374,10 @@ const StartupList = () => {
                 with them to collaborate on projects. We also want to implement
                 custom backgrounds and greater responsiveness. We also have a
                 plan of creating mobile applications for both iOS and Android,
-                and web application for all operating systems in the future.
+                and web application for all operating systems in the future. We
+                also want to add more features than just the video game, such as
+                services to help boost startups. If you have any recommendations
+                or feedback, feel free to email us at gloppaofficial@gmail.com.
               </Text>
             </ModalBody>
 

@@ -165,8 +165,9 @@ const Register = () => {
                 fontSize={"17pt"}
                 height={50}
                 required
+                value={uname}
                 onChange={(e) => {
-                  setUname(e.target.value);
+                  setUname(e.target.value.toLowerCase());
                 }}
                 minLength={4}
                 maxLength={12}

@@ -332,6 +332,15 @@ const Game = () => {
               let arror = high.concat(medm, low);
               setRowsBrainstorm(arror);
             }
+          } else {
+            router.push("/app/startuplist");
+            toast({
+              title: "ID does not exist",
+              description: "The id either got removed or it does not exist.",
+              status: "error",
+              duration: 4000,
+              isClosable: true,
+            });
           }
           let query = db.collection("startups").orderBy("level", "desc");
           query
@@ -607,9 +616,15 @@ const Game = () => {
                     color={"white"}
                     backgroundColor={"#323232"}
                   >
-                    <option value={"Urgent"}>Urgent</option>
-                    <option value={"Medium"}>Medium</option>
-                    <option value={"No Urgency"}>No Urgency</option>
+                    <option value={"Urgent"} name={"Urgent"}>
+                      Urgent
+                    </option>
+                    <option value={"Medium"} name={"Medium"}>
+                      Medium
+                    </option>
+                    <option value={"No Urgency"} name={"No Urgency"}>
+                      No Urgency
+                    </option>
                   </Select>
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
@@ -687,7 +702,7 @@ const Game = () => {
         <ModalContent backgroundColor={"#323232"}>
           <ModalHeader color={"white"}>Leaderboards</ModalHeader>
           <ModalCloseButton color={"white"} />
-          <ModalBody>
+          <ModalBody maxHeight={"70vh"} overflowY={"scroll"}>
             <Flex direction={"column"} alignItems={"center"} gap={"3vh"}>
               {rowsLeaderboards}
             </Flex>

@@ -334,6 +334,7 @@ const Partners = () => {
         <Text
           fontSize={{ base: "14pt", md: "22pt", lg: "30pt" }}
           fontWeight={200}
+          textAlign={"center"}
         >
           We are making startups funner and easier for others to work and
           create. If you are a startup also looking to help other startups, we

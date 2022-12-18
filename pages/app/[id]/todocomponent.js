@@ -26,6 +26,8 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
       .update({ tasks: arrayRemove(JSON.stringify([task, urgency, date])) });
   };
 
+  console.log(urgency);
+
   const finished = () => {
     if (
       window.confirm(
@@ -110,14 +112,18 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
           justifyContent={"center"}
         >
           <Text
-            color={color == "green" ? "lightgreen" : color}
+            color={
+              urgency == "" ? "red" : color == "green" ? "lightgreen" : color
+            }
             fontSize={{ base: "12pt", md: "16pt", lg: "20pt" }}
             fontWeight={700}
           >
-            {urgency}
+            {urgency == "" ? "Urgent" : urgency}
           </Text>
           <Text
-            color={color == "green" ? "lightgreen" : color}
+            color={
+              urgency == "" ? "red" : color == "green" ? "lightgreen" : color
+            }
             fontSize={{ base: "5pt", md: "8pt", lg: "11pt" }}
           >
             {date}
@@ -131,7 +137,7 @@ const ToDoComponent = (task, urgency, date, color, index, id) => {
           >
             <Checkbox
               size={{ base: "sm", md: "md", lg: "lg" }}
-              colorScheme={color}
+              colorScheme={urgency == "" ? "red" : color}
               defaultChecked
               isReadOnly
               zIndex={-1}
