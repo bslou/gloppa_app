@@ -1,7 +1,7 @@
 import { Button, Collapse, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const FundingComponent = (
   img,

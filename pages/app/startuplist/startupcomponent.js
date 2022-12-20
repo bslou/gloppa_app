@@ -10,10 +10,24 @@ const StartupComponent = (img, level, name, id) => {
   let idd = localStorage.getItem("id");
 
   const deleteIt = () => {
-    db.collection("startups").doc(id).delete();
-    db.collection("users")
-      .doc(idd)
-      .update({ startups: arrayRemove(id) });
+    db.collection("startups")
+      .doc(id)
+      .get()
+      .then((val) => {
+        let fundid = val.get("fundingId");
+        if (fundid != "") {
+          db.collection("funding").doc(fundid).delete();
+          db.collection("startups").doc(id).delete();
+          db.collection("users")
+            .doc(idd)
+            .update({ startups: arrayRemove(id) });
+        } else {
+          db.collection("startups").doc(id).delete();
+          db.collection("users")
+            .doc(idd)
+            .update({ startups: arrayRemove(id) });
+        }
+      });
   };
 
   return (

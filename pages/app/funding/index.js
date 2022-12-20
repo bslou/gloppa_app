@@ -107,35 +107,45 @@ const Funding = () => {
                     db.collection("funding")
                       .get()
                       .then((val) => {
+                        // if (!val.exists) {
+                        //   setLoading(false);
+                        //   return;
+                        // }
                         val.forEach(function (doc) {
                           let des = doc.data().description;
                           let email = doc.data().email;
                           let foundedDate = doc.data().foundedDate;
-                          let img = doc.data().img;
+                          let stid = doc.data().startupId;
                           let equity = doc.data().investment[0];
                           let price = doc.data().investment[1];
                           let name = doc.data().startupName;
                           let website = doc.data().website;
-                          storage
-                            .ref(img)
-                            .getDownloadURL()
-                            .then((url) => {
-                              setFunds((prevFunds) => [
-                                ...prevFunds,
-                                FundingComponent(
-                                  url,
-                                  name,
-                                  [equity, price],
-                                  des,
-                                  email,
-                                  foundedDate,
-                                  website,
-                                  doc.id,
-                                  show,
-                                  setShow
-                                ),
-                              ]);
-                              setLoading(false);
+                          db.collection("startups")
+                            .doc(stid)
+                            .get()
+                            .then((val) => {
+                              let img = val.get("img");
+                              storage
+                                .ref(img)
+                                .getDownloadURL()
+                                .then((url) => {
+                                  setFunds((prevFunds) => [
+                                    ...prevFunds,
+                                    FundingComponent(
+                                      url,
+                                      name,
+                                      [equity, price],
+                                      des,
+                                      email,
+                                      foundedDate,
+                                      website,
+                                      doc.id,
+                                      show,
+                                      setShow
+                                    ),
+                                  ]);
+                                  setLoading(false);
+                                });
                             });
                         });
                       });
@@ -171,36 +181,45 @@ const Funding = () => {
                       db.collection("funding")
                         .get()
                         .then((val) => {
+                          //   if (!val.exists) {
+                          //     setLoading(false);
+                          //     return;
+                          //   }
                           val.forEach(function (doc) {
                             let des = doc.data().description;
                             let email = doc.data().email;
                             let foundedDate = doc.data().foundedDate;
-                            let img = doc.data().img;
+                            let stid = doc.data().startupId;
                             let equity = doc.data().investment[0];
                             let price = doc.data().investment[1];
                             let name = doc.data().startupName;
                             let website = doc.data().website;
-                            storage
-                              .ref(img)
-                              .getDownloadURL()
-                              .then((url) => {
-                                console.log("Url " + url);
-                                setFunds((prevFunds) => [
-                                  ...prevFunds,
-                                  FundingComponent(
-                                    url,
-                                    name,
-                                    [price, equity],
-                                    des,
-                                    email,
-                                    foundedDate,
-                                    website,
-                                    doc.id,
-                                    show,
-                                    setShow
-                                  ),
-                                ]);
-                                setLoading(false);
+                            db.collection("startups")
+                              .doc(stid)
+                              .get()
+                              .then((val) => {
+                                let img = val.get("img");
+                                storage
+                                  .ref(img)
+                                  .getDownloadURL()
+                                  .then((url) => {
+                                    setFunds((prevFunds) => [
+                                      ...prevFunds,
+                                      FundingComponent(
+                                        url,
+                                        name,
+                                        [equity, price],
+                                        des,
+                                        email,
+                                        foundedDate,
+                                        website,
+                                        doc.id,
+                                        show,
+                                        setShow
+                                      ),
+                                    ]);
+                                    setLoading(false);
+                                  });
                               });
                           });
                         });
@@ -379,7 +398,7 @@ const Funding = () => {
             </NextLink>
             <NextLink href={"/app/funding"}>
               <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-                funding
+                Funding
               </Link>
             </NextLink>
           </Flex>
@@ -458,7 +477,28 @@ const Funding = () => {
               ⚠️ Note: You need to have at least a level 3 startup to be able to
               apply for funding.
             </Text>
-            {funds}
+            {funds.length > 0 ? (
+              funds
+            ) : (
+              <Flex
+                direction={"column"}
+                alignItems={"center"}
+                justifyContent={"center"}
+                width={"90%"}
+                height={"90%"}
+              >
+                <Image
+                  src={"/assets/nodata.png"}
+                  alt={"No data"}
+                  width={400}
+                  height={400}
+                />
+                <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
+                  No funding <br />
+                  found here yet... 😔
+                </Text>
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Flex>

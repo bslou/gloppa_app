@@ -83,6 +83,7 @@ const StartupRegistration = () => {
         brainstorm: [],
         completed: {},
         fundingId: "",
+        img: "",
         //completedTasks: {},
         //completedBrainstorm: {},
       })
@@ -144,7 +145,7 @@ const StartupRegistration = () => {
           </NextLink>
           <NextLink href={"/app/funding"}>
             <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              funding
+              Funding
             </Link>
           </NextLink>
         </Flex>

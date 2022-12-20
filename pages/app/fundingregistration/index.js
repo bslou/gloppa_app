@@ -24,6 +24,8 @@ const FundingRegistration = () => {
 
   const toast = useToast();
 
+  const [loading, setLoading] = useState(true);
+
   const [idd, setIdd] = useState("");
   const [startups, setStartups] = useState([]);
   const [startupName, setStartupName] = useState(null);
@@ -83,7 +85,7 @@ const FundingRegistration = () => {
                           let startupName = String(res.get("startupName"));
                           let lvl = Math.floor(res.get("level") / 100) + 1;
                           if (lvl >= 3) {
-                            if (res.get("fundingId") != "") {
+                            if (res.get("fundingId") == "") {
                               console.log(String(document));
                               setStartups((prevStartups) => [
                                 ...prevStartups,
@@ -228,6 +230,10 @@ const FundingRegistration = () => {
               console.log("Error " + err);
             });
 
+          db.collection("startups")
+            .doc(idd)
+            .update({ img: `/images/${imgname}` });
+
           db.collection("funding")
             .add({
               startupName: startupName,
@@ -235,7 +241,6 @@ const FundingRegistration = () => {
               owner: id,
               foundedDate: foundedDate,
               description: description,
-              img: `/images/${imgname}`,
               investment: [parseInt(equity), parseInt(price)],
               website: website,
               email: eml,
@@ -312,7 +317,7 @@ const FundingRegistration = () => {
           </NextLink>
           <NextLink href={"/app/funding"}>
             <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              funding
+              Funding
             </Link>
           </NextLink>
         </Flex>
