@@ -24,10 +24,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import FundingComponent from "./fundingcomponent";
 import Router, { useRouter } from "next/router";
+import MyLoadingScreen from "./myloadingscreen";
 
 const Funding = () => {
   const [uname, setUname] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [oguname, setOgUname] = useState("");
   const [email, setEmail] = useState("");
   const [funds, setFunds] = useState([]);
@@ -91,11 +92,11 @@ const Funding = () => {
                 db.collection("users")
                   .doc(localStorage.getItem("id"))
                   .onSnapshot((snapshot) => {
+                    const data = snapshot.data();
+                    let n = data.startups;
                     setUname(data.username);
                     setOgUname(data.username);
                     setEmail(data.email);
-                    const data = snapshot.data();
-                    let n = data.startups;
                     //console.log(Object.keys(n).length);
                     if (Object.keys(n).length == 0) {
                       setLoading(false);
@@ -129,10 +130,12 @@ const Funding = () => {
                                   email,
                                   foundedDate,
                                   website,
+                                  doc.id,
                                   show,
                                   setShow
                                 ),
                               ]);
+                              setLoading(false);
                             });
                         });
                       });
@@ -192,10 +195,12 @@ const Funding = () => {
                                     email,
                                     foundedDate,
                                     website,
+                                    doc.id,
                                     show,
                                     setShow
                                   ),
                                 ]);
+                                setLoading(false);
                               });
                           });
                         });
@@ -248,6 +253,10 @@ const Funding = () => {
         console.log("Error " + err);
       });
   };
+
+  if (loading) {
+    return <MyLoadingScreen />;
+  }
 
   if (!loading) {
     return (
@@ -405,12 +414,12 @@ const Funding = () => {
             alignItems={"center"}
             justifyContent={"center"}
             position={"absolute"}
-            top={"4vh"}
+            top={{ base: "5vh", md: "4.5vh", lg: "4vh" }}
           >
             <Text
               color={"white"}
               fontWeight={700}
-              fontSize={"40pt"}
+              fontSize={{ base: "30pt", md: "35pt", lg: "40pt" }}
               textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
             >
               Funding
@@ -439,7 +448,13 @@ const Funding = () => {
             width={"100%"}
             overflowY={"scroll"}
           >
-            <Text color={"white"} textAlign={"center"}>
+            <Text
+              color={"white"}
+              textAlign={"center"}
+              fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
+              marginLeft={"5vw"}
+              marginRight={"5vw"}
+            >
               ⚠️ Note: You need to have at least a level 3 startup to be able to
               apply for funding.
             </Text>

@@ -83,16 +83,18 @@ const FundingRegistration = () => {
                           let startupName = String(res.get("startupName"));
                           let lvl = Math.floor(res.get("level") / 100) + 1;
                           if (lvl >= 3) {
-                            console.log(String(document));
-                            setStartups((prevStartups) => [
-                              ...prevStartups,
-                              <option
-                                value={res.get("startupName")}
-                                id={String(document)}
-                              >
-                                {res.get("startupName")}
-                              </option>,
-                            ]);
+                            if (res.get("fundingId") != "") {
+                              console.log(String(document));
+                              setStartups((prevStartups) => [
+                                ...prevStartups,
+                                <option
+                                  value={res.get("startupName")}
+                                  id={String(document)}
+                                >
+                                  {res.get("startupName")}
+                                </option>,
+                              ]);
+                            }
                           }
                         });
                     });
@@ -242,9 +244,11 @@ const FundingRegistration = () => {
               console.log("Document written with ID: ", docRef.id);
               db.collection("users")
                 .doc(id)
-                .update({ fundingId: arrayUnion(idd) });
-              db.collection("startups").doc(idd).update({ funding: docRef.id });
-              //router.push("/app/funding");
+                .update({ fundingStartupId: arrayUnion(idd) });
+              db.collection("startups")
+                .doc(idd)
+                .update({ fundingId: docRef.id });
+              router.push("/app/funding");
             })
             .catch(function (error) {
               console.error("Error adding document: ", error);
@@ -339,7 +343,13 @@ const FundingRegistration = () => {
           borderTopRightRadius={20}
           paddingTop={6}
         >
-          <Text color={"white"} textAlign={"center"}>
+          <Text
+            color={"white"}
+            textAlign={"center"}
+            fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
+            marginLeft={"2vw"}
+            marginRight={"2vw"}
+          >
             ⚠️ Note: You need to have at least a level 3 startup to be able to
             apply for funding.
           </Text>
@@ -507,6 +517,7 @@ const FundingRegistration = () => {
                 borderRadius={5}
                 required
                 min={100}
+                max={1000000000000}
                 value={price}
                 onChange={(e) => {
                   setPrice(e.target.value);
@@ -562,7 +573,7 @@ const FundingRegistration = () => {
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={{ base: "11pt", md: "17pt", lg: "25pt" }}
+            fontSize={{ base: "11pt", md: "16pt", lg: "21pt" }}
             type={"submit"}
             width={"22vw"}
             height={"8vh"}

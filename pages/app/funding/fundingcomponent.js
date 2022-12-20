@@ -11,6 +11,7 @@ const FundingComponent = (
   eml,
   foundedYear,
   website,
+  id,
   show,
   setShow
 ) => {
@@ -46,7 +47,11 @@ const FundingComponent = (
           width={"100%"}
         >
           <Flex direction={"row"} alignItems={"center"}>
-            <Text color={"white"} fontWeight={800} fontSize={"25pt"}>
+            <Text
+              color={"white"}
+              fontWeight={800}
+              fontSize={{ base: "21pt", md: "23pt", lg: "25pt" }}
+            >
               {startupName}
             </Text>
             <Tooltip
@@ -104,7 +109,7 @@ const FundingComponent = (
       >
         <Text
           color={"white"}
-          fontSize={"13pt"}
+          fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
           fontWeight={900}
           textAlign={"center"}
         >
@@ -121,7 +126,12 @@ const FundingComponent = (
           </Link>
         </NextLink>
         <NextLink href={website} passHref target={"_blank"}>
-          <Link color={"white"}>Website</Link>
+          <Link
+            color={"white"}
+            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+          >
+            Website
+          </Link>
         </NextLink>
       </Flex>
     </Flex>
