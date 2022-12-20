@@ -43,7 +43,7 @@ import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 import Achievements from "./achievements";
 import Leaderboards from "./leaderboards";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const Game = () => {
   const [lvl, setLvl] = useState("0");
@@ -58,7 +58,6 @@ const Game = () => {
     "The people who don't quit are the ones that succeed!",
   ];
   const router = useRouter();
-  console.log("ID " + router.query.id);
   const [rowsAchievements, setRowsAchievements] = useState([]);
   const [rowsLeaderboards, setRowsLeaderboards] = useState([]);
   const [todos, setTodos] = useState([]);
@@ -231,13 +230,12 @@ const Game = () => {
         .doc(router.query.id)
         .onSnapshot((snapshot) => {
           if (typeof snapshot.data() !== "undefined") {
+            console.log("Test often Test totototot");
             const data = snapshot.data();
             setRowsAchievements([]);
             setRowsLeaderboards([]);
             setTodos([]);
             setTodos2([]);
-
-            console.log(data.tasks);
 
             setLvl(String(Math.floor(data.level / 100) + 1));
             setStartupName(String(data.startupName));
@@ -255,7 +253,6 @@ const Game = () => {
             today = mm + "/" + dd + "/" + yyyy;
 
             if (data.factoryCoinsDate == "") {
-              console.log("Coins " + accessories[selectedAcc][4]);
               db.collection("startups")
                 .doc(router.query.id)
                 .update({ coins: increment(accessories[selectedAcc][4]) });
@@ -348,8 +345,8 @@ const Game = () => {
                 var stName = doc.data().startupName;
                 var stLvl = String(Math.floor(doc.data().level / 100) + 1);
                 let img = accessories[doc.data().selectedAccessory][1];
-                console.log(startupName);
-                console.log(stLvl);
+                //console.log(startupName);
+                //console.log(stLvl);
                 setRowsLeaderboards((prevLeaderboards) => [
                   ...prevLeaderboards,
                   Leaderboards(
@@ -528,8 +525,6 @@ const Game = () => {
       });
   };
 
-  console.log(urgency);
-
   const finished = (todo) => {
     db.collection("startups")
       .doc(todo.id)
@@ -589,7 +584,7 @@ const Game = () => {
   const editTasks = (e) => {
     e.preventDefault();
     const arrora = [editData[0], editData[1], editData[2]];
-    console.log("Index " + editData[3]);
+    //console.log("Index " + editData[3]);
     db.collection("startups")
       .doc(router.query.id)
       .get()
@@ -605,7 +600,7 @@ const Game = () => {
   const editBrainstorms = (e) => {
     e.preventDefault();
     const arrora = [editData2[0], editData2[1]];
-    console.log("Index " + editData2[2]);
+    //console.log("Index " + editData2[2]);
     db.collection("startups")
       .doc(router.query.id)
       .get()
@@ -619,6 +614,35 @@ const Game = () => {
       });
     onClose13();
   };
+
+  // const onDragEnd = (result) => {
+  //   // dropped outside the list
+  //   if (!result.destination) {
+  //     return;
+  //   }
+
+  //   //console.log("result data " + JSON.stringify(result));
+
+  //   const reorderedList = reorder(
+  //     todos,
+  //     result.source.index,
+  //     result.destination.index
+  //   );
+
+  //   //console.log("Reordered list " + JSON.stringify(reorderedList));
+
+  //   let it = [];
+  //   for (let i = 0; i < reorderedList.length; i++) {
+  //     let mos = reorderedList[i].msg;
+  //     let dot = reorderedList[i].urgency;
+  //     let det = reorderedList[i].date;
+  //     it.push(JSON.stringify([mos, dot, det]));
+  //   }
+  //console.log(it);
+  //   db.collection("startups").doc(router.query.id).update({ tasks: it });
+
+  //   setTodos(reorderedList);
+  // };
 
   var dtToday = new Date();
 
@@ -1622,155 +1646,177 @@ const Game = () => {
             style={{ overflowY: "scroll" }}
           >
             {Object.keys(todos).length > 0 ? (
+              // <DragDropContext onDragEnd={onDragEnd}>
+              //   <Droppable droppableId="droppable">
+              //     {(provided) => (
               <UnorderedList
+                display={"flex"}
                 width={"100%"}
                 gap={"1vh"}
-                display={"flex"}
                 alignItems={"center"}
                 flexDirection={"column"}
-                marginLeft={"10%"}
+                // {...provided.droppableProps}
+                // ref={provided.innerRef}
               >
-                {todos.map((todo) => (
-                  <ListItem width={"100%"}>
+                {todos.map((todo, index) => (
+                  // <Draggable
+                  //   key={todo.id}
+                  //   draggableId={todo.id}
+                  //   index={index}
+                  // >
+                  //   {(provided) => (
+                  <ListItem
+                    display={"flex"}
+                    flexDirection={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    backgroundColor={"#303030"}
+                    width={"90%"}
+                    marginRight={"2.5%"}
+                    paddingTop={0.5}
+                    paddingBottom={0.5}
+                    paddingLeft={2}
+                    borderRadius={2}
+                    // ref={provided.innerRef}
+                    // {...provided.draggableProps}
+                    // {...provided.dragHandleProps}
+                    boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                    _hover={{
+                      boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+                    }}
+                  >
                     <Flex
                       direction={"row"}
                       alignItems={"center"}
-                      justifyContent={"space-between"}
-                      backgroundColor={"#303030"}
-                      width={"90%"}
-                      paddingTop={0.5}
-                      paddingBottom={0.5}
-                      paddingLeft={2}
-                      borderRadius={2}
-                      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
-                      _hover={{
-                        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
-                      }}
-                      key={todo.id}
+                      justifyContent={"center"}
+                      marginRight={2}
                     >
-                      <Flex
-                        direction={"row"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        marginRight={2}
-                      >
-                        <Menu>
-                          <MenuButton
-                            paddingLeft={5}
-                            paddingRight={5}
-                            variant={"ghost"}
-                            colorScheme={"transparent"}
-                          >
-                            <Image
-                              src={"/assets/Braille.png"}
-                              alt={"options"}
-                              width={28}
-                              height={28}
-                            />
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem
-                              onClick={() => {
-                                setEditData([
-                                  todo.msg,
-                                  todo.urgency,
-                                  todo.date,
-                                  todo.index,
-                                ]);
-                                onOpen12();
-                              }}
-                            >
-                              Edit
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                setTd(todo);
-                                onOpen8();
-                              }}
-                            >
-                              Remove
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
-                        <Text
-                          color={"white"}
-                          fontWeight={500}
-                          fontSize={{
-                            base: "10pt",
-                            md: "14pt",
-                            lg: "18pt",
-                          }}
-                          maxWidth={"22vw"}
+                      <Menu>
+                        <MenuButton
+                          paddingLeft={5}
+                          paddingRight={5}
+                          variant={"ghost"}
+                          colorScheme={"transparent"}
                         >
-                          {todo.msg}
-                        </Text>
-                      </Flex>
-                      <Flex alignItems={"center"} justifyContent={"center"}>
-                        <Flex
-                          direction={"column"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                        >
-                          <Text
-                            color={
-                              todo.urgency == ""
-                                ? "red"
-                                : todo.color == "green"
-                                ? "lightgreen"
-                                : todo.color
-                            }
-                            fontSize={{
-                              base: "12pt",
-                              md: "16pt",
-                              lg: "20pt",
-                            }}
-                            fontWeight={700}
-                          >
-                            {todo.urg == "" ? "Urgent" : todo.urgency}
-                          </Text>
-                          <Text
-                            color={
-                              todo.urgency == ""
-                                ? "red"
-                                : todo.color == "green"
-                                ? "lightgreen"
-                                : todo.color
-                            }
-                            fontSize={{
-                              base: "5pt",
-                              md: "8pt",
-                              lg: "11pt",
+                          <Image
+                            src={"/assets/Braille.png"}
+                            alt={"options"}
+                            width={28}
+                            height={28}
+                          />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem
+                            onClick={() => {
+                              setEditData([
+                                todo.msg,
+                                todo.urgency,
+                                todo.date,
+                                todo.index,
+                              ]);
+                              onOpen12();
                             }}
                           >
-                            {todo.date}
-                          </Text>
-                        </Flex>
-                        <Flex zIndex={10}>
-                          <Button
-                            marginRight={"1vw"}
-                            colorScheme={"transparent"}
+                            Edit
+                          </MenuItem>
+                          <MenuItem
                             onClick={() => {
                               setTd(todo);
-                              onOpen10();
+                              onOpen8();
                             }}
                           >
-                            <Checkbox
-                              size={{ base: "sm", md: "md", lg: "lg" }}
-                              colorScheme={
-                                todo.urgency == "" ? "red" : todo.color
-                              }
-                              defaultChecked
-                              isReadOnly
-                              zIndex={-1}
-                            />
-                          </Button>
-                        </Flex>
+                            Remove
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                      <Text
+                        color={"white"}
+                        fontWeight={500}
+                        fontSize={{
+                          base: "10pt",
+                          md: "14pt",
+                          lg: "18pt",
+                        }}
+                        maxWidth={"22vw"}
+                      >
+                        {todo.msg}
+                      </Text>
+                    </Flex>
+                    <Flex alignItems={"center"} justifyContent={"center"}>
+                      <Flex
+                        direction={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                      >
+                        <Text
+                          color={
+                            todo.urgency == ""
+                              ? "red"
+                              : todo.color == "green"
+                              ? "lightgreen"
+                              : todo.color
+                          }
+                          fontSize={{
+                            base: "12pt",
+                            md: "16pt",
+                            lg: "20pt",
+                          }}
+                          fontWeight={700}
+                        >
+                          {todo.urgency == "" ? "Urgent" : todo.urgency}
+                        </Text>
+                        <Text
+                          color={
+                            todo.urgency == ""
+                              ? "red"
+                              : todo.color == "green"
+                              ? "lightgreen"
+                              : todo.color
+                          }
+                          fontSize={{
+                            base: "5pt",
+                            md: "8pt",
+                            lg: "11pt",
+                          }}
+                        >
+                          {todo.date}
+                        </Text>
+                      </Flex>
+                      <Flex zIndex={10}>
+                        <Button
+                          marginRight={"1vw"}
+                          colorScheme={"transparent"}
+                          onClick={() => {
+                            setTd(todo);
+                            onOpen10();
+                          }}
+                        >
+                          <Checkbox
+                            size={{
+                              base: "sm",
+                              md: "md",
+                              lg: "lg",
+                            }}
+                            colorScheme={
+                              todo.urgency == "" ? "red" : todo.color
+                            }
+                            defaultChecked
+                            isReadOnly
+                            zIndex={-1}
+                          />
+                        </Button>
                       </Flex>
                     </Flex>
                   </ListItem>
+                  //   )}
+                  // </Draggable>
                 ))}
+                {/* {provided.placeholder} */}
               </UnorderedList>
             ) : (
+              // )}
+              //   </Droppable>
+              // </DragDropContext>
               <Flex
                 direction={"column"}
                 alignItems={"center"}
@@ -1970,5 +2016,13 @@ const Game = () => {
     </Flex>
   );
 };
+
+// const reorder = (list, startIndex, endIndex) => {
+//   const result = Array.from(list);
+//   const [removed] = result.splice(startIndex, 1);
+//   result.splice(endIndex, 0, removed);
+
+//   return result;
+// };
 
 export default Game;

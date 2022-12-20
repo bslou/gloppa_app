@@ -68,6 +68,7 @@ const Register = () => {
                 username: uname,
                 premium: {},
                 startups: {},
+                funding: [],
               });
               localStorage.setItem("id", user.uid);
               //uncomment line below later

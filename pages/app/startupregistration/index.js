@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
-const StartupList = () => {
+const StartupRegistration = () => {
   const router = useRouter();
 
   const [startupName, setStartupName] = useState();
@@ -82,6 +82,7 @@ const StartupList = () => {
         tasks: [],
         brainstorm: [],
         completed: {},
+        fundingId: "",
         //completedTasks: {},
         //completedBrainstorm: {},
       })
@@ -130,11 +131,23 @@ const StartupList = () => {
         paddingTop={5}
         width={"100vw"}
       >
-        <NextLink href={"/app/startuplist"}>
-          <Link color={"white"} fontWeight={600} fontSize={"20pt"}>
-            Gloppa
-          </Link>
-        </NextLink>
+        <Flex
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={"1vw"}
+        >
+          <NextLink href={"/app/startuplist"}>
+            <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
+              Gloppa
+            </Link>
+          </NextLink>
+          <NextLink href={"/app/funding"}>
+            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+              funding
+            </Link>
+          </NextLink>
+        </Flex>
         <Menu>
           <MenuButton colorScheme={"transparent"}>
             <Image
@@ -276,4 +289,4 @@ const StartupList = () => {
   );
 };
 
-export default StartupList;
+export default StartupRegistration;

@@ -1,12 +1,13 @@
 import {
-  Button,
   Flex,
-  Input,
   Link,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
+  Tooltip,
+  useDisclosure,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,37 +15,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
-  Text,
-  Tooltip,
-  useDisclosure,
-  useToast,
+  Input,
+  Button,
 } from "@chakra-ui/react";
-import Image from "next/image";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { auth, db } from "../../api/firebaseconfig";
-import StartupComponent from "./startupcomponent";
-import MyLoadingScreen from "./myloadingscreen";
+import Image from "next/image";
+import React, { useState, useEffect, useRef } from "react";
+import { db, storage } from "../../api/firebaseconfig";
+import FundingComponent from "./fundingcomponent";
+import Router, { useRouter } from "next/router";
 
-const StartupList = () => {
-  const router = useRouter();
-
-  const [oguname, setOgUname] = useState("");
+const Funding = () => {
   const [uname, setUname] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [oguname, setOgUname] = useState("");
   const [email, setEmail] = useState("");
-  const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [funds, setFunds] = useState([]);
   const dataFetchedRef = useRef(false);
-
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [show, setShow] = useState(false);
   const {
     isOpen: isOpen2,
     onOpen: onOpen2,
     onClose: onClose2,
   } = useDisclosure();
-  const toast = useToast();
 
   const accessories = [
     [
@@ -79,51 +74,6 @@ const StartupList = () => {
     ],
   ];
 
-  // const fetchData = () => {
-  //   let id = localStorage.getItem("id");
-  //   db.collection("users")
-  //     .doc(id)
-  //     .get()
-  //     .then((val) => {
-  //       if (!val.exists) return;
-  //       if (rows.length > 0) return;
-  //       let n = val.get("startups");
-  //       //console.log(Object.keys(n).length);
-  //       if (Object.keys(n).length == 0) {
-  //         setLoading(false);
-  //         return;
-  //       }
-  //       n.reverse();
-  //       setUname(val.get("username"));
-  //       setOgUname(val.get("username"));
-  //       setEmail(val.get("email"));
-  //       if (n.length < 1) setLoading(false);
-  //       n.forEach((document) => {
-  //         db.collection("startups")
-  //           .doc(document)
-  //           .get()
-  //           .then((res) => {
-  //             let startupName = String(res.get("startupName"));
-  //             let lvl = String(Math.floor(res.get("level") / 100) + 1);
-  //             let img = "/assets/spacer1.png";
-  //             /*console.log(
-  //               "Name " + startupName + " Level " + lvl + " Image " + img
-  //             );*/
-  //             setRows((prevRows) => [
-  //               ...prevRows,
-  //               StartupComponent(
-  //                 accessories[res.get("selectedAccessory")][1],
-  //                 lvl,
-  //                 startupName,
-  //                 String(document)
-  //               ),
-  //             ]);
-  //             setLoading(false);
-  //           });
-  //       });
-  //     });
-  // };
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
@@ -141,7 +91,6 @@ const StartupList = () => {
                 db.collection("users")
                   .doc(localStorage.getItem("id"))
                   .onSnapshot((snapshot) => {
-                    setRows([]);
                     setUname(data.username);
                     setOgUname(data.username);
                     setEmail(data.email);
@@ -154,31 +103,39 @@ const StartupList = () => {
                     }
                     n.reverse();
                     if (n.length < 1) setLoading(false);
-                    n.forEach((document) => {
-                      db.collection("startups")
-                        .doc(document)
-                        .get()
-                        .then((res) => {
-                          let startupName = String(res.get("startupName"));
-                          let lvl = String(
-                            Math.floor(res.get("level") / 100) + 1
-                          );
-                          let img = "/assets/spacer1.png";
-                          /*console.log(
-                  "Name " + startupName + " Level " + lvl + " Image " + img
-                );*/
-                          setRows((prevRows) => [
-                            ...prevRows,
-                            StartupComponent(
-                              accessories[res.get("selectedAccessory")][1],
-                              lvl,
-                              startupName,
-                              String(document)
-                            ),
-                          ]);
-                          setLoading(false);
+                    db.collection("funding")
+                      .get()
+                      .then((val) => {
+                        val.forEach(function (doc) {
+                          let des = doc.data().description;
+                          let email = doc.data().email;
+                          let foundedDate = doc.data().foundedDate;
+                          let img = doc.data().img;
+                          let equity = doc.data().investment[0];
+                          let price = doc.data().investment[1];
+                          let name = doc.data().startupName;
+                          let website = doc.data().website;
+                          storage
+                            .ref(img)
+                            .getDownloadURL()
+                            .then((url) => {
+                              setFunds((prevFunds) => [
+                                ...prevFunds,
+                                FundingComponent(
+                                  url,
+                                  name,
+                                  [equity, price],
+                                  des,
+                                  email,
+                                  foundedDate,
+                                  website,
+                                  show,
+                                  setShow
+                                ),
+                              ]);
+                            });
                         });
-                    });
+                      });
                   });
               } else if (val.get("premium")[0] == "parttime") {
                 const date1 = new Date(String(val.get("premium")[1]));
@@ -198,7 +155,6 @@ const StartupList = () => {
                   db.collection("users")
                     .doc(localStorage.getItem("id"))
                     .onSnapshot((snapshot) => {
-                      setRows([]);
                       const data = snapshot.data();
                       let n = data.startups;
                       //console.log(Object.keys(n).length);
@@ -209,33 +165,40 @@ const StartupList = () => {
                         setLoading(false);
                         return;
                       }
-                      n.reverse();
-                      if (n.length < 1) setLoading(false);
-                      n.forEach((document) => {
-                        db.collection("startups")
-                          .doc(document)
-                          .get()
-                          .then((res) => {
-                            let startupName = String(res.get("startupName"));
-                            let lvl = String(
-                              Math.floor(res.get("level") / 100) + 1
-                            );
-                            let img = "/assets/spacer1.png";
-                            /*console.log(
-                  "Name " + startupName + " Level " + lvl + " Image " + img
-                );*/
-                            setRows((prevRows) => [
-                              ...prevRows,
-                              StartupComponent(
-                                accessories[res.get("selectedAccessory")][1],
-                                lvl,
-                                startupName,
-                                String(document)
-                              ),
-                            ]);
-                            setLoading(false);
+                      db.collection("funding")
+                        .get()
+                        .then((val) => {
+                          val.forEach(function (doc) {
+                            let des = doc.data().description;
+                            let email = doc.data().email;
+                            let foundedDate = doc.data().foundedDate;
+                            let img = doc.data().img;
+                            let equity = doc.data().investment[0];
+                            let price = doc.data().investment[1];
+                            let name = doc.data().startupName;
+                            let website = doc.data().website;
+                            storage
+                              .ref(img)
+                              .getDownloadURL()
+                              .then((url) => {
+                                console.log("Url " + url);
+                                setFunds((prevFunds) => [
+                                  ...prevFunds,
+                                  FundingComponent(
+                                    url,
+                                    name,
+                                    [price, equity],
+                                    des,
+                                    email,
+                                    foundedDate,
+                                    website,
+                                    show,
+                                    setShow
+                                  ),
+                                ]);
+                              });
                           });
-                      });
+                        });
                     });
                 } else {
                   router.push("/app/pricing");
@@ -248,10 +211,6 @@ const StartupList = () => {
       }
     }
   }, []);
-
-  if (loading) {
-    return <MyLoadingScreen />;
-  }
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -415,35 +374,28 @@ const StartupList = () => {
               </Link>
             </NextLink>
           </Flex>
-          <Tooltip
-            label={"Personal Settings for " + uname + "!"}
-            aria-label="A tooltip"
-          >
-            <Menu>
-              <MenuButton colorScheme={"transparent"}>
-                <Image
-                  src={"/assets/profile.png"}
-                  alt={"Gloppa profile"}
-                  width={50}
-                  height={50}
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-                <MenuItem onClick={onOpen}>Update Info</MenuItem>
-                <MenuItem onClick={Logout}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          </Tooltip>
+          <Menu>
+            <MenuButton colorScheme={"transparent"}>
+              <Image
+                src={"/assets/profile.png"}
+                alt={"Gloppa profile"}
+                width={50}
+                height={50}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+              <MenuItem onClick={onOpen}>Update Info</MenuItem>
+              <MenuItem onClick={Logout}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          gap={0}
-          backgroundColor={"#1C1C1C"}
-          width={"55vw"}
-          maxHeight={"90vh"}
-          minHeight={"90vh"}
+          height={"90vh"}
+          width={"65vw"}
+          backgroundColor={"#1C1c1c"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
           paddingTop={10}
@@ -451,21 +403,25 @@ const StartupList = () => {
           <Flex
             direction={"row"}
             alignItems={"center"}
+            justifyContent={"center"}
             position={"absolute"}
-            top={{ base: 7, lg: 4 }}
+            top={"4vh"}
           >
             <Text
-              textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-              fontWeight={800}
               color={"white"}
-              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+              fontWeight={700}
+              fontSize={"40pt"}
+              textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
             >
-              Startups
+              Funding
             </Text>
-            <Tooltip label={"Add startup here!"} aria-label="A tooltip">
+            <Tooltip
+              label={"Add startup to public funding!"}
+              aria-label="A tooltip"
+            >
               <Button
                 colorScheme="transparent"
-                onClick={() => router.push("/app/startupregistration")}
+                onClick={() => router.push("/app/fundingregistration")}
               >
                 <Image
                   src={"/assets/plus.png"}
@@ -477,40 +433,17 @@ const StartupList = () => {
             </Tooltip>
           </Flex>
           <Flex
-            width={"100%"}
-            height={"100%"}
-            overflowY={"scroll"}
             direction={"column"}
             alignItems={"center"}
-            gap={"1vw"}
-            paddingTop={"1vw"}
+            gap={"2vh"}
+            width={"100%"}
+            overflowY={"scroll"}
           >
-            {rows.length > 0 ? (
-              rows
-            ) : (
-              <Flex
-                direction={"column"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                width={"90%"}
-                height={"90%"}
-              >
-                <Image
-                  src={"/assets/nodata.png"}
-                  alt={"No data"}
-                  width={400}
-                  height={400}
-                />
-                <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
-                  No startups <br />
-                  found here... 😔
-                </Text>
-              </Flex>
-            )}
-            {/* {StartupComponent("/assets/spacer.png", "13", "DreamMate")}
-          {StartupComponent("/assets/spacer.png", "13", "Krunker")}
-          {StartupComponent("/assets/spacer.png", "13", "Lol")}
-          {StartupComponent("/assets/spacer.png", "13", "Gloppa")} */}
+            <Text color={"white"} textAlign={"center"}>
+              ⚠️ Note: You need to have at least a level 3 startup to be able to
+              apply for funding.
+            </Text>
+            {funds}
           </Flex>
         </Flex>
       </Flex>
@@ -518,4 +451,4 @@ const StartupList = () => {
   }
 };
 
-export default StartupList;
+export default Funding;
