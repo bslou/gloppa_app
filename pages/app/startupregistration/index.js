@@ -180,7 +180,7 @@ const StartupRegistration = () => {
             direction={"row"}
             alignItems={"center"}
             position={"absolute"}
-            top={{ base: 7, lg: 4 }}
+            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
           >
             <Text
               textShadow={"0px 4px 1px rgba(0,0,0,1)"}

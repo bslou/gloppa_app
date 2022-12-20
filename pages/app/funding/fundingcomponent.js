@@ -39,7 +39,7 @@ const FundingComponent = (
         gap={"2vw"}
         maxWidth={"77%"}
       >
-        <img src={img} alt={"Gloppa Logo"} width={"13%"} height={"13%"} />
+        <img src={img} alt={"Startup Logo"} width={"13%"} height={"13%"} />
         <Flex
           direction={"column"}
           alignItems={"left"}
@@ -81,7 +81,7 @@ const FundingComponent = (
               fontWeight={900}
               fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
             >
-              {String(investment[1])}% equity for ${String(investment[0])}
+              {String(investment[0])}% equity for ${String(investment[1])}
             </Text>
             <Text
               color={"white"}

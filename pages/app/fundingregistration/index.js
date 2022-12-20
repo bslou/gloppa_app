@@ -215,48 +215,56 @@ const FundingRegistration = () => {
 
           db.collection("startups")
             .doc(idd)
-            .update({ foundedDate: foundedDate });
-          db.collection("startups")
-            .doc(idd)
-            .update({ description: description });
-
-          storage
-            .ref(`/images/${imgname}`)
-            .put(image)
-            .then(() => {
-              console.log("Process was successful");
-            })
-            .catch((err) => {
-              console.log("Error " + err);
-            });
-
-          db.collection("startups")
-            .doc(idd)
-            .update({ img: `/images/${imgname}` });
-
-          db.collection("funding")
-            .add({
-              startupName: startupName,
-              startupId: idd,
-              owner: id,
-              foundedDate: foundedDate,
-              description: description,
-              investment: [parseInt(equity), parseInt(price)],
-              website: website,
-              email: eml,
-            })
-            .then(function (docRef) {
-              console.log("Document written with ID: ", docRef.id);
-              db.collection("users")
-                .doc(id)
-                .update({ fundingStartupId: arrayUnion(idd) });
+            .get()
+            .then((val) => {
+              let img = val.get("img");
+              if (img != "") {
+                storage.refFromURL(img).delete();
+              }
               db.collection("startups")
                 .doc(idd)
-                .update({ fundingId: docRef.id });
-              router.push("/app/funding");
-            })
-            .catch(function (error) {
-              console.error("Error adding document: ", error);
+                .update({ foundedDate: foundedDate });
+              // db.collection("startups")
+              //   .doc(idd)
+              //   .update({ description: description });
+
+              storage
+                .ref(`/images/${imgname}`)
+                .put(image)
+                .then(() => {
+                  console.log("Process was successful");
+                })
+                .catch((err) => {
+                  console.log("Error " + err);
+                });
+
+              db.collection("startups")
+                .doc(idd)
+                .update({ img: `/images/${imgname}` });
+
+              db.collection("funding")
+                .add({
+                  startupName: startupName,
+                  startupId: idd,
+                  owner: id,
+                  description: description,
+                  investment: [parseInt(equity), parseInt(price)],
+                  website: website,
+                  email: eml,
+                })
+                .then(function (docRef) {
+                  console.log("Document written with ID: ", docRef.id);
+                  db.collection("users")
+                    .doc(id)
+                    .update({ fundingStartupId: arrayUnion(idd) });
+                  db.collection("startups")
+                    .doc(idd)
+                    .update({ fundingId: docRef.id });
+                  router.push("/app/funding");
+                })
+                .catch(function (error) {
+                  console.error("Error adding document: ", error);
+                });
             });
         } else {
           toast({
@@ -362,7 +370,7 @@ const FundingRegistration = () => {
             direction={"row"}
             alignItems={"center"}
             position={"absolute"}
-            top={{ base: 7, lg: 4 }}
+            top={{ base: "5vh", md: "4vh", lg: "3vh" }}
           >
             <Text
               textShadow={"0px 4px 1px rgba(0,0,0,1)"}

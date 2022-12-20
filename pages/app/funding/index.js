@@ -114,7 +114,6 @@ const Funding = () => {
                         val.forEach(function (doc) {
                           let des = doc.data().description;
                           let email = doc.data().email;
-                          let foundedDate = doc.data().foundedDate;
                           let stid = doc.data().startupId;
                           let equity = doc.data().investment[0];
                           let price = doc.data().investment[1];
@@ -124,6 +123,7 @@ const Funding = () => {
                             .doc(stid)
                             .get()
                             .then((val) => {
+                              let foundedDate = val.get("foundedDate");
                               let img = val.get("img");
                               storage
                                 .ref(img)
@@ -149,6 +149,7 @@ const Funding = () => {
                             });
                         });
                       });
+                    setLoading(false);
                   });
               } else if (val.get("premium")[0] == "parttime") {
                 const date1 = new Date(String(val.get("premium")[1]));
@@ -188,7 +189,6 @@ const Funding = () => {
                           val.forEach(function (doc) {
                             let des = doc.data().description;
                             let email = doc.data().email;
-                            let foundedDate = doc.data().foundedDate;
                             let stid = doc.data().startupId;
                             let equity = doc.data().investment[0];
                             let price = doc.data().investment[1];
@@ -198,6 +198,7 @@ const Funding = () => {
                               .doc(stid)
                               .get()
                               .then((val) => {
+                                let foundedDate = val.get("foundedDate");
                                 let img = val.get("img");
                                 storage
                                   .ref(img)
@@ -223,6 +224,7 @@ const Funding = () => {
                               });
                           });
                         });
+                      setLoading(false);
                     });
                 } else {
                   router.push("/app/pricing");
@@ -477,28 +479,30 @@ const Funding = () => {
               ⚠️ Note: You need to have at least a level 3 startup to be able to
               apply for funding.
             </Text>
-            {funds.length > 0 ? (
+            {
+              //funds.length > 0 ? (
               funds
-            ) : (
-              <Flex
-                direction={"column"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                width={"90%"}
-                height={"90%"}
-              >
-                <Image
-                  src={"/assets/nodata.png"}
-                  alt={"No data"}
-                  width={400}
-                  height={400}
-                />
-                <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
-                  No funding <br />
-                  found here yet... 😔
-                </Text>
-              </Flex>
-            )}
+              // ) : (
+              //   <Flex
+              //     direction={"column"}
+              //     alignItems={"center"}
+              //     justifyContent={"center"}
+              //     width={"90%"}
+              //     height={"90%"}
+              //   >
+              //     <Image
+              //       src={"/assets/nodata.png"}
+              //       alt={"No data"}
+              //       width={400}
+              //       height={400}
+              //     />
+              //     <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
+              //       No funding <br />
+              //       found here yet... 😔
+              //     </Text>
+              //   </Flex>
+              //)
+            }
           </Flex>
         </Flex>
       </Flex>

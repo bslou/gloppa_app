@@ -21,6 +21,9 @@ const StartupComponent = (img, level, name, id) => {
           db.collection("users")
             .doc(idd)
             .update({ startups: arrayRemove(id) });
+          db.collection("users")
+            .doc(idd)
+            .update({ startups: arrayRemove(fundid) });
         } else {
           db.collection("startups").doc(id).delete();
           db.collection("users")
