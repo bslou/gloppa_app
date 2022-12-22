@@ -42,41 +42,6 @@ const ProductReview = () => {
   } = useDisclosure();
   const toast = useToast();
 
-  const accessories = [
-    [
-      "/assets/spacer.png",
-      "/assets/spacer1.png",
-      "Beginner factory (producing 5 coins a day)",
-      0,
-    ],
-    [
-      "/assets/spacert.png",
-      "/assets/spacer2.png",
-      "Medium factory (producing 10 coins a day)",
-      100,
-    ],
-    [
-      "/assets/spacerth.png",
-      "/assets/spacer3.png",
-      "Comfort-Zone factory (producing 25 coins a day)",
-      1000,
-    ],
-    [
-      "/assets/spacerf.png",
-      "/assets/spacer4.png",
-      "Semi-advanced factory (producing 50 coins a day)",
-      10000,
-    ],
-    [
-      "/assets/spacerfi.png",
-      "/assets/spacer5.png",
-      "Advanced factory (producing 100 coins a day)",
-      100000,
-    ],
-  ];
-
-  //change to individual states like [id]
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
@@ -84,147 +49,66 @@ const ProductReview = () => {
           .doc(localStorage.getItem("id"))
           .onSnapshot((val) => {
             if (!val.exists) return;
-            if (typeof val.data().premium[0] !== "undefined") {
-              if (val.data().premium[0] == "fulltime") {
-                let n = val.data().startups;
-                setUname(val.data().username);
-                setOgUname(val.data().username);
-                setEmail(val.data().email);
-                n.reverse();
-                if (n.length < 1) setLoading(false);
-                db.collection("productReview").onSnapshot((yal) => {
-                  yal.forEach(function (doc) {
-                    let stid = doc.data().startupId;
-                    let cathp = doc.data().catchPhrase;
-                    let commentss = doc.data().comments;
-                    let likess = doc.data().likes;
-                    let title = doc.data().startupName;
-                    let hashtags = doc.data().hashtags;
-                    let liked = false;
-                    if (
-                      likess.length > 0 &&
-                      likess.includes(localStorage.getItem("id"))
-                    ) {
-                      liked = true;
+            let n = val.data().startups;
+            setUname(val.data().username);
+            setOgUname(val.data().username);
+            setEmail(val.data().email);
+            n.reverse();
+            if (n.length < 1) setLoading(false);
+            db.collection("productReview").onSnapshot((yal) => {
+              yal.forEach(function (doc) {
+                let stid = doc.data().startupId;
+                let cathp = doc.data().catchPhrase;
+                let commentss = doc.data().comments;
+                let likess = doc.data().likes;
+                let title = doc.data().startupName;
+                let hashtags = doc.data().hashtags;
+                let liked = false;
+                if (
+                  likess.length > 0 &&
+                  likess.includes(localStorage.getItem("id"))
+                ) {
+                  liked = true;
+                } else {
+                  liked = false;
+                }
+                db.collection("startups")
+                  .doc(stid)
+                  .onSnapshot((snapshot2) => {
+                    let website = snapshot2.data().website;
+                    let img = snapshot2.data().img;
+                    let to = false;
+                    if (n.includes(stid)) {
+                      to = true;
                     } else {
-                      liked = false;
+                      to = false;
                     }
-                    db.collection("startups")
-                      .doc(stid)
-                      .onSnapshot((snapshot2) => {
-                        let website = snapshot2.data().website;
-                        let img = snapshot2.data().img;
-                        let to = false;
-                        if (n.includes(stid)) {
-                          to = true;
-                        } else {
-                          to = false;
-                        }
-                        storage
-                          .ref(img)
-                          .getDownloadURL()
-                          .then((url) => {
-                            setProdRev((prevProdRev) => [
-                              ...prevProdRev,
-                              ProdRevComponent(
-                                doc.id,
-                                stid,
-                                website,
-                                url,
-                                title,
-                                cathp,
-                                hashtags,
-                                commentss,
-                                likess,
-                                liked,
-                                to
-                              ),
-                            ]);
-                            setLoading(false);
-                          });
+                    storage
+                      .ref(img)
+                      .getDownloadURL()
+                      .then((url) => {
+                        setProdRev((prevProdRev) => [
+                          ...prevProdRev,
+                          ProdRevComponent(
+                            doc.id,
+                            stid,
+                            website,
+                            url,
+                            title,
+                            cathp,
+                            hashtags,
+                            commentss,
+                            likess,
+                            liked,
+                            to
+                          ),
+                        ]);
+                        setLoading(false);
                       });
                   });
-                  setLoading(false);
-                });
-              } else if (val.data().premium[0] == "parttime") {
-                const date1 = new Date(String(val.data().premium[1]));
-                var today = new Date();
-                var dd = String(today.getDate()).padStart(2, "0");
-                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                var yyyy = today.getFullYear();
-
-                today = mm + "/" + dd + "/" + yyyy;
-                const date2 = new Date(String(today));
-                const diffTime = Math.abs(date2 - date1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays <= 31) {
-                  let n = val.data().startups;
-                  setUname(val.data().username);
-                  setOgUname(val.data().username);
-                  setEmail(val.data().email);
-                  n.reverse();
-                  if (n.length < 1) setLoading(false);
-                  db.collection("productReview").onSnapshot((yal) => {
-                    yal.forEach(function (doc) {
-                      let stid = doc.data().startupId;
-                      let cathp = doc.data().catchPhrase;
-                      let commentss = doc.data().comments;
-                      let likess = doc.data().likes;
-                      let title = doc.data().startupName;
-                      let hashtags = doc.data().hashtags;
-                      let liked = false;
-                      if (
-                        likess.length > 0 &&
-                        likess.includes(localStorage.getItem("id"))
-                      ) {
-                        liked = true;
-                      } else {
-                        liked = false;
-                      }
-                      db.collection("startups")
-                        .doc(stid)
-                        .onSnapshot((snapshot2) => {
-                          let website = snapshot2.data().website;
-                          let img = snapshot2.data().img;
-                          if (n != []) {
-                            let to = false;
-                            if (n.includes(stid)) {
-                              to = true;
-                            } else {
-                              to = false;
-                            }
-                            storage
-                              .ref(img)
-                              .getDownloadURL()
-                              .then((url) => {
-                                setProdRev((prevProdRev) => [
-                                  ...prevProdRev,
-                                  ProdRevComponent(
-                                    doc.id,
-                                    stid,
-                                    website,
-                                    url,
-                                    title,
-                                    cathp,
-                                    hashtags,
-                                    commentss,
-                                    likess,
-                                    liked,
-                                    to
-                                  ),
-                                ]);
-                                setLoading(false);
-                              });
-                          }
-                        });
-                    });
-                    setLoading(false);
-                  });
-                } else {
-                  router.push("/app/pricing");
-                }
-              }
-            }
+              });
+              setLoading(false);
+            });
           });
       } else {
         router.push("/c/main");

@@ -63,87 +63,36 @@ const ProductReviewReg = () => {
           .get()
           .then((val) => {
             if (!val.exists) return;
-            if (typeof val.get("premium")[0] !== "undefined") {
-              if (val.get("premium")[0] == "fulltime") {
-                let n = val.get("startups");
-                // if (Object.keys(n).length == 0) {
-                //   setLoading(false);
-                //   return;
-                // }
-                n.reverse();
-                if (n.length < 1) setLoading(false);
-                n.forEach((document) => {
-                  db.collection("startups")
-                    .doc(document)
-                    .get()
-                    .then((res) => {
-                      let startupName = String(res.get("startupName"));
-                      let lvl = Math.floor(res.get("level") / 100) + 1;
-                      if (lvl >= 2) {
-                        if (res.get("productReviewId") == "") {
-                          console.log(String(document));
-                          setStartups((prevStartups) => [
-                            ...prevStartups,
-                            <option
-                              value={res.get("startupName")}
-                              id={String(document)}
-                            >
-                              {res.get("startupName")}
-                            </option>,
-                          ]);
-                        }
-                      }
-                    });
+            let n = val.get("startups");
+            // if (Object.keys(n).length == 0) {
+            //   setLoading(false);
+            //   return;
+            // }
+            n.reverse();
+            if (n.length < 1) setLoading(false);
+            n.forEach((document) => {
+              db.collection("startups")
+                .doc(document)
+                .get()
+                .then((res) => {
+                  let startupName = String(res.get("startupName"));
+                  let lvl = Math.floor(res.get("level") / 100) + 1;
+                  if (lvl >= 2) {
+                    if (res.get("productReviewId") == "") {
+                      console.log(String(document));
+                      setStartups((prevStartups) => [
+                        ...prevStartups,
+                        <option
+                          value={res.get("startupName")}
+                          id={String(document)}
+                        >
+                          {res.get("startupName")}
+                        </option>,
+                      ]);
+                    }
+                  }
                 });
-              } else if (val.get("premium")[0] == "parttime") {
-                const date1 = new Date(String(val.get("premium")[1]));
-                var today = new Date();
-                var dd = String(today.getDate()).padStart(2, "0");
-                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                var yyyy = today.getFullYear();
-
-                today = mm + "/" + dd + "/" + yyyy;
-                const date2 = new Date(String(today));
-                const diffTime = Math.abs(date2 - date1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays <= 31) {
-                  db.collection("users")
-                    .doc(localStorage.getItem("id"))
-                    .onSnapshot((snapshot) => {
-                      const data = snapshot.data();
-                      let n = data.startups;
-                      //   if (Object.keys(n).length == 0) {
-                      //     setLoading(false);
-                      //     return;
-                      //   }
-                      if (n.length < 1) setLoading(false);
-                      n.forEach((document) => {
-                        db.collection("startups")
-                          .doc(document)
-                          .get()
-                          .then((res) => {
-                            let startupName = String(res.get("startupName"));
-                            let lvl = Math.floor(res.get("level") / 100) + 1;
-                            if (lvl >= 2) {
-                              console.log(String(document));
-                              setStartups((prevStartups) => [
-                                ...prevStartups,
-                                <option
-                                  value={res.get("startupName")}
-                                  id={String(document)}
-                                >
-                                  {res.get("startupName")}
-                                </option>,
-                              ]);
-                            }
-                          });
-                      });
-                    });
-                } else {
-                  router.push("/app/pricing");
-                }
-              }
-            }
+            });
           });
       } else {
         router.push("/c/main");
@@ -331,19 +280,14 @@ const ProductReviewReg = () => {
           justifyContent={"center"}
           gap={"2.5vw"}
         >
-          <NextLink href={"/app/startuplist"}>
-            <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
-              Gloppa
-            </Link>
-          </NextLink>
           <NextLink href={"/app/productreview"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Product Review
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/funding"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Funding
+            <Link color={"white"}>
+              <Image
+                src={"/assets/back.png"}
+                alt={"Back"}
+                width={60}
+                height={60}
+              />
             </Link>
           </NextLink>
         </Flex>
@@ -395,7 +339,7 @@ const ProductReviewReg = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Product Review
+              Product Review Post
             </Text>
           </Flex>
           <Flex>

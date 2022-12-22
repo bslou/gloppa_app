@@ -57,102 +57,40 @@ const FundingRegistration = () => {
       if (localStorage.getItem("id") !== null) {
         db.collection("users")
           .doc(localStorage.getItem("id"))
-          .get()
-          .then((val) => {
-            if (!val.exists) return;
-            if (typeof val.get("premium")[0] !== "undefined") {
-              // does not exist
-              if (val.get("premium")[0] == "fulltime") {
-                // router.push("/app/startuplist");
-                db.collection("users")
-                  .doc(localStorage.getItem("id"))
-                  .onSnapshot((snapshot) => {
-                    //setEml(data.email);
-                    const data = snapshot.data();
-                    let n = data.startups;
-                    //console.log(Object.keys(n).length);
-                    if (Object.keys(n).length == 0) {
-                      setLoading(false);
-                      return;
-                    }
-                    n.reverse();
-                    if (n.length < 1) setLoading(false);
-                    n.forEach((document) => {
-                      db.collection("startups")
-                        .doc(document)
-                        .get()
-                        .then((res) => {
-                          let startupName = String(res.get("startupName"));
-                          let lvl = Math.floor(res.get("level") / 100) + 1;
-                          if (lvl >= 3) {
-                            if (res.get("fundingId") == "") {
-                              console.log(String(document));
-                              setStartups((prevStartups) => [
-                                ...prevStartups,
-                                <option
-                                  value={res.get("startupName")}
-                                  id={String(document)}
-                                >
-                                  {res.get("startupName")}
-                                </option>,
-                              ]);
-                            }
-                          }
-                        });
-                    });
-                  });
-              } else if (val.get("premium")[0] == "parttime") {
-                const date1 = new Date(String(val.get("premium")[1]));
-                var today = new Date();
-                var dd = String(today.getDate()).padStart(2, "0");
-                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                var yyyy = today.getFullYear();
-
-                today = mm + "/" + dd + "/" + yyyy;
-                const date2 = new Date(String(today));
-                const diffTime = Math.abs(date2 - date1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays <= 31) {
-                  // router.push("/app/startuplist");
-                  db.collection("users")
-                    .doc(localStorage.getItem("id"))
-                    .onSnapshot((snapshot) => {
-                      const data = snapshot.data();
-                      let n = data.startups;
-                      //console.log(Object.keys(n).length);
-                      //setEml(data.email);
-                      if (Object.keys(n).length == 0) {
-                        setLoading(false);
-                        return;
-                      }
-                      if (n.length < 1) setLoading(false);
-                      n.forEach((document) => {
-                        db.collection("startups")
-                          .doc(document)
-                          .get()
-                          .then((res) => {
-                            let startupName = String(res.get("startupName"));
-                            let lvl = Math.floor(res.get("level") / 100) + 1;
-                            if (lvl >= 3) {
-                              console.log(String(document));
-                              setStartups((prevStartups) => [
-                                ...prevStartups,
-                                <option
-                                  value={res.get("startupName")}
-                                  id={String(document)}
-                                >
-                                  {res.get("startupName")}
-                                </option>,
-                              ]);
-                            }
-                          });
-                      });
-                    });
-                } else {
-                  router.push("/app/pricing");
-                }
-              }
+          .onSnapshot((snapshot) => {
+            //setEml(data.email);
+            const data = snapshot.data();
+            let n = data.startups;
+            //console.log(Object.keys(n).length);
+            if (Object.keys(n).length == 0) {
+              setLoading(false);
+              return;
             }
+            n.reverse();
+            if (n.length < 1) setLoading(false);
+            n.forEach((document) => {
+              db.collection("startups")
+                .doc(document)
+                .get()
+                .then((res) => {
+                  let startupName = String(res.get("startupName"));
+                  let lvl = Math.floor(res.get("level") / 100) + 1;
+                  if (lvl >= 3) {
+                    if (res.get("fundingId") == "") {
+                      console.log(String(document));
+                      setStartups((prevStartups) => [
+                        ...prevStartups,
+                        <option
+                          value={res.get("startupName")}
+                          id={String(document)}
+                        >
+                          {res.get("startupName")}
+                        </option>,
+                      ]);
+                    }
+                  }
+                });
+            });
           });
       } else {
         router.push("/c/main");
@@ -318,19 +256,14 @@ const FundingRegistration = () => {
           justifyContent={"center"}
           gap={"2.5vw"}
         >
-          <NextLink href={"/app/startuplist"}>
-            <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
-              Gloppa
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/productreview"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Product Review
-            </Link>
-          </NextLink>
           <NextLink href={"/app/funding"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Funding
+            <Link color={"white"}>
+              <Image
+                src={"/assets/back.png"}
+                alt={"Back"}
+                width={60}
+                height={60}
+              />
             </Link>
           </NextLink>
         </Flex>
@@ -383,7 +316,7 @@ const FundingRegistration = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Funding
+              Funding Post
             </Text>
           </Flex>
           <Flex>
