@@ -83,6 +83,8 @@ const StartupRegistration = () => {
         brainstorm: [],
         completed: {},
         fundingId: "",
+        productReviewId: "",
+        website: "",
         img: "",
         //completedTasks: {},
         //completedBrainstorm: {},
@@ -136,11 +138,16 @@ const StartupRegistration = () => {
           direction={"row"}
           alignItems={"center"}
           justifyContent={"center"}
-          gap={"1vw"}
+          gap={"2.5vw"}
         >
           <NextLink href={"/app/startuplist"}>
             <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
               Gloppa
+            </Link>
+          </NextLink>
+          <NextLink href={"/app/productreview"}>
+            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+              Product Review
             </Link>
           </NextLink>
           <NextLink href={"/app/funding"}>
@@ -268,6 +275,8 @@ const StartupRegistration = () => {
               borderRadius={5}
               maxHeight={"45vh"}
               minHeight={"35vh"}
+              minLength={3}
+              maxLength={150}
               required
               onChange={(e) => {
                 setDescription(e.target.value);

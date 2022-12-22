@@ -67,8 +67,9 @@ const Register = () => {
                 email: eml,
                 username: uname,
                 premium: {},
-                startups: {},
+                startups: [],
                 fundingStartupId: [],
+                productReviewStartupId: [],
               });
               localStorage.setItem("id", user.uid);
               //uncomment line below later

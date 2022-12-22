@@ -7,9 +7,12 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Select,
   Text,
   Textarea,
+  Select,
+  Tag,
+  TagLabel,
+  TagCloseButton,
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
@@ -19,38 +22,38 @@ import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
-const FundingRegistration = () => {
+const ProductReviewReg = () => {
+  const [idd, setIdd] = useState("");
   const router = useRouter();
-
+  const [startupName, setStartupName] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [catchPhrase, setCatchPhrase] = useState("");
+  const [website, setWebsite] = useState("");
+  const [image, setImage] = useState(null);
   const toast = useToast();
 
   const [loading, setLoading] = useState(true);
-
-  const [idd, setIdd] = useState("");
   const [startups, setStartups] = useState([]);
-  const [startupName, setStartupName] = useState(null);
-  const [foundedDate, setFoundedDate] = useState();
-  const [website, setWebsite] = useState();
-  const [eml, setEml] = useState();
-  const [price, setPrice] = useState();
-  const [equity, setEquity] = useState();
-  const [description, setDescription] = useState();
-  const [image, setImage] = useState(null);
 
-  const handleChange = (event) => {
+  const handleImageChange = (event) => {
     const file = event.target.files[0];
     setImage(file);
   };
 
-  function isValidHttpUrl(string) {
-    let url;
-    try {
-      url = new URL(string);
-    } catch (_) {
-      return false;
-    }
-    return url.protocol === "http:" || url.protocol === "https:";
-  }
+  const updateInfo = (e) => {
+    const index = e.target.selectedIndex;
+    const el = e.target.childNodes[index];
+    const option = el.getAttribute("id");
+    setIdd(option);
+    db.collection("startups")
+      .doc(option)
+      .get()
+      .then((val) => {
+        setWebsite(String(val.get("website")));
+        setStartupName(String(val.get("startupName")));
+        //add image later
+      });
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -61,46 +64,37 @@ const FundingRegistration = () => {
           .then((val) => {
             if (!val.exists) return;
             if (typeof val.get("premium")[0] !== "undefined") {
-              // does not exist
               if (val.get("premium")[0] == "fulltime") {
-                // router.push("/app/startuplist");
-                db.collection("users")
-                  .doc(localStorage.getItem("id"))
-                  .onSnapshot((snapshot) => {
-                    //setEml(data.email);
-                    const data = snapshot.data();
-                    let n = data.startups;
-                    //console.log(Object.keys(n).length);
-                    if (Object.keys(n).length == 0) {
-                      setLoading(false);
-                      return;
-                    }
-                    n.reverse();
-                    if (n.length < 1) setLoading(false);
-                    n.forEach((document) => {
-                      db.collection("startups")
-                        .doc(document)
-                        .get()
-                        .then((res) => {
-                          let startupName = String(res.get("startupName"));
-                          let lvl = Math.floor(res.get("level") / 100) + 1;
-                          if (lvl >= 3) {
-                            if (res.get("fundingId") == "") {
-                              console.log(String(document));
-                              setStartups((prevStartups) => [
-                                ...prevStartups,
-                                <option
-                                  value={res.get("startupName")}
-                                  id={String(document)}
-                                >
-                                  {res.get("startupName")}
-                                </option>,
-                              ]);
-                            }
-                          }
-                        });
+                let n = val.get("startups");
+                // if (Object.keys(n).length == 0) {
+                //   setLoading(false);
+                //   return;
+                // }
+                n.reverse();
+                if (n.length < 1) setLoading(false);
+                n.forEach((document) => {
+                  db.collection("startups")
+                    .doc(document)
+                    .get()
+                    .then((res) => {
+                      let startupName = String(res.get("startupName"));
+                      let lvl = Math.floor(res.get("level") / 100) + 1;
+                      if (lvl >= 2) {
+                        if (res.get("productReviewId") == "") {
+                          console.log(String(document));
+                          setStartups((prevStartups) => [
+                            ...prevStartups,
+                            <option
+                              value={res.get("startupName")}
+                              id={String(document)}
+                            >
+                              {res.get("startupName")}
+                            </option>,
+                          ]);
+                        }
+                      }
                     });
-                  });
+                });
               } else if (val.get("premium")[0] == "parttime") {
                 const date1 = new Date(String(val.get("premium")[1]));
                 var today = new Date();
@@ -113,18 +107,15 @@ const FundingRegistration = () => {
                 const diffTime = Math.abs(date2 - date1);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 if (diffDays <= 31) {
-                  // router.push("/app/startuplist");
                   db.collection("users")
                     .doc(localStorage.getItem("id"))
                     .onSnapshot((snapshot) => {
                       const data = snapshot.data();
                       let n = data.startups;
-                      //console.log(Object.keys(n).length);
-                      //setEml(data.email);
-                      if (Object.keys(n).length == 0) {
-                        setLoading(false);
-                        return;
-                      }
+                      //   if (Object.keys(n).length == 0) {
+                      //     setLoading(false);
+                      //     return;
+                      //   }
                       if (n.length < 1) setLoading(false);
                       n.forEach((document) => {
                         db.collection("startups")
@@ -133,7 +124,7 @@ const FundingRegistration = () => {
                           .then((res) => {
                             let startupName = String(res.get("startupName"));
                             let lvl = Math.floor(res.get("level") / 100) + 1;
-                            if (lvl >= 3) {
+                            if (lvl >= 2) {
                               console.log(String(document));
                               setStartups((prevStartups) => [
                                 ...prevStartups,
@@ -160,22 +151,42 @@ const FundingRegistration = () => {
     }
   }, []);
 
-  const updateInfo = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    setIdd(option);
-    db.collection("startups")
-      .doc(option)
-      .get()
-      .then((val) => {
-        setDescription(String(val.get("description")));
-        setStartupName(String(val.get("startupName")));
-        setFoundedDate(String(val.get("foundedDate")));
-      });
+  function isValidHttpUrl(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
+
+  function onKeyDown(keyEvent) {
+    if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+      keyEvent.preventDefault();
+    }
+  }
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    if (event.key === "Enter" && tags.length < 3) {
+      setTags([...tags, value]);
+      event.target.value = "";
+    }
   };
 
-  const submitFund = (e) => {
+  const handleClose = (index) => {
+    const newTags = [...tags];
+    newTags.splice(index, 1);
+    setTags(newTags);
+  };
+
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
+  };
+
+  const submitProdReview = (e) => {
     e.preventDefault();
     if (startupName == null) {
       toast({
@@ -187,12 +198,22 @@ const FundingRegistration = () => {
       });
       return;
     }
+    if (tags.length < 1) {
+      toast({
+        title: "No hashtags",
+        description: "You have to select hashtags.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
     let id = localStorage.getItem("id");
     db.collection("startups")
       .doc(idd)
       .get()
       .then((val) => {
-        if (val.get("fundingId") == "") {
+        if (val.get("productReviewId") == "") {
           if (image == null) {
             return;
           }
@@ -221,9 +242,6 @@ const FundingRegistration = () => {
               if (img != "") {
                 storage.ref(img).delete();
               }
-              db.collection("startups")
-                .doc(idd)
-                .update({ foundedDate: foundedDate });
               // db.collection("startups")
               //   .doc(idd)
               //   .update({ description: description });
@@ -243,24 +261,25 @@ const FundingRegistration = () => {
                 .update({ img: `/images/${imgname}` });
               db.collection("startups").doc(idd).update({ website: website });
 
-              db.collection("funding")
+              db.collection("productReview")
                 .add({
                   startupName: startupName,
                   startupId: idd,
                   owner: id,
-                  description: description,
-                  investment: [parseInt(equity), parseInt(price)],
-                  email: eml,
+                  catchPhrase: catchPhrase,
+                  hashtags: [...tags],
+                  likes: [],
+                  comments: [],
                 })
                 .then(function (docRef) {
                   console.log("Document written with ID: ", docRef.id);
                   db.collection("users")
                     .doc(id)
-                    .update({ fundingStartupId: arrayUnion(idd) });
+                    .update({ productReviewStartupId: arrayUnion(idd) });
                   db.collection("startups")
                     .doc(idd)
-                    .update({ fundingId: docRef.id });
-                  router.push("/app/funding");
+                    .update({ productReviewId: docRef.id });
+                  router.push("/app/productreview");
                 })
                 .catch(function (error) {
                   console.error("Error adding document: ", error);
@@ -279,11 +298,6 @@ const FundingRegistration = () => {
       });
   };
 
-  const Logout = () => {
-    localStorage.removeItem("id");
-    router.push("/");
-  };
-
   var dtToday = new Date();
 
   var month = dtToday.getMonth() + 1;
@@ -294,7 +308,6 @@ const FundingRegistration = () => {
   if (day < 10) day = "0" + day.toString();
 
   var maxDate = year + "-" + month + "-" + day;
-
   return (
     <Flex
       width={"100vw"}
@@ -348,7 +361,7 @@ const FundingRegistration = () => {
           </MenuList>
         </Menu>
       </Flex>
-      <form onSubmit={(e) => submitFund(e)}>
+      <form onKeyDown={onKeyDown} onSubmit={(e) => submitProdReview(e)}>
         <Flex
           direction={"column"}
           alignItems={"center"}
@@ -359,23 +372,22 @@ const FundingRegistration = () => {
           minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
-          paddingTop={6}
+          paddingTop={8}
         >
           <Text
             color={"white"}
             textAlign={"center"}
-            fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
             marginLeft={"2vw"}
             marginRight={"2vw"}
           >
-            ⚠️ Note: You need to have at least a level 3 startup to be able to
+            ⚠️ Note: You need to have at least a level 2 startup to be able to
             apply for funding.
           </Text>
           <Flex
             direction={"row"}
             alignItems={"center"}
             position={"absolute"}
-            top={{ base: "5vh", md: "4vh", lg: "3vh" }}
+            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
           >
             <Text
               textShadow={"0px 4px 1px rgba(0,0,0,1)"}
@@ -383,7 +395,7 @@ const FundingRegistration = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Funding
+              Product Review
             </Text>
           </Flex>
           <Flex>
@@ -400,7 +412,7 @@ const FundingRegistration = () => {
                 height={"100%"}
                 position={"absolute"}
                 opacity={0}
-                onChange={handleChange}
+                onChange={handleImageChange}
                 accept="image/png, image/gif, image/jpeg"
                 required
               />
@@ -419,54 +431,45 @@ const FundingRegistration = () => {
             direction={"row"}
             alignItems={"center"}
             justifyContent={"center"}
-            gap={"8vw"}
+            gap={6}
+            width={"50vw"}
           >
-            <Flex
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              width={"22vw"}
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Startup Name:
+            </Text>
+            <Select
+              backgroundColor={"white"}
+              value={startupName}
+              onChange={(e) => updateInfo(e)}
+              borderRadius={5}
+              required
             >
-              <Text color={"white"} fontWeight={300} width={"17vw"}>
-                Startup Name:
-              </Text>
-              <Select
-                backgroundColor={"white"}
-                borderRadius={5}
-                required
-                minLength={2}
-                maxLength={18}
-                value={startupName}
-                onChange={(e) => updateInfo(e)}
-              >
-                <option disabled selected value>
-                  {" "}
-                  - select option -{" "}
-                </option>
-                {startups}
-              </Select>
-            </Flex>
-            <Flex
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              width={"20vw"}
-            >
-              <Text color={"white"} fontWeight={300} width={"17vw"}>
-                Founded Date:
-              </Text>
-              <Input
-                backgroundColor={"white"}
-                borderRadius={5}
-                required
-                type={"date"}
-                max={maxDate}
-                value={foundedDate}
-                onChange={(e) => {
-                  setFoundedDate(e.target.value);
-                }}
-              />
-            </Flex>
+              <option disabled selected value>
+                {" "}
+                - select option -{" "}
+              </option>
+              {startups}
+            </Select>
+          </Flex>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={6}
+            width={"50vw"}
+          >
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Catch phrase:
+            </Text>
+            <Input
+              backgroundColor={"white"}
+              borderRadius={5}
+              required
+              minLength={3}
+              maxLength={75}
+              value={catchPhrase}
+              onChange={(e) => setCatchPhrase(e.target.value)}
+            />
           </Flex>
           <Flex
             direction={"row"}
@@ -481,13 +484,9 @@ const FundingRegistration = () => {
             <Input
               backgroundColor={"white"}
               borderRadius={5}
-              required
-              minLength={3}
-              placeholder={"https://"}
+              minLength={5}
               value={website}
-              onChange={(e) => {
-                setWebsite(e.target.value);
-              }}
+              onChange={(e) => setWebsite(e.target.value)}
             />
           </Flex>
           <Flex
@@ -498,106 +497,50 @@ const FundingRegistration = () => {
             width={"50vw"}
           >
             <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Email:
+              Hashtags:
             </Text>
+
             <Input
-              type={"email"}
               backgroundColor={"white"}
-              borderRadius={5}
-              required
-              minLength={3}
-              value={eml}
-              onChange={(e) => {
-                setEml(e.target.value);
-              }}
+              placeholder="hashtag"
+              onKeyDown={handleChange}
+              maxLength={30}
+              minLength={2}
             />
           </Flex>
           <Flex
             direction={"row"}
             alignItems={"center"}
             justifyContent={"center"}
-            gap={"9vw"}
+            gap={3}
           >
-            <Flex
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              width={"17vw"}
-              gap={5}
-            >
-              <Text color={"white"} fontWeight={300}>
-                Price:
-              </Text>
-              <Input
-                type={"number"}
-                backgroundColor={"white"}
-                borderRadius={5}
-                required
-                min={100}
-                max={1000000000000}
-                value={price}
-                onChange={(e) => {
-                  setPrice(e.target.value);
-                }}
-              />
-            </Flex>
-            <Flex
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              width={"24vw"}
-              gap={2}
-            >
-              <Text color={"white"} fontWeight={300} width={"20vw"}>
-                Equity percentage:
-              </Text>
-              <Input
-                type={"number"}
-                backgroundColor={"white"}
-                borderRadius={5}
-                required
-                min={0}
-                max={100}
-                value={equity}
-                onChange={(e) => {
-                  setEquity(e.target.value);
-                }}
-              />
-            </Flex>
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={6}
-            width={"50vw"}
-          >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Description:
-            </Text>
-            <Textarea
-              backgroundColor={"white"}
-              borderRadius={5}
-              height={"20vh"}
-              resize={"none"}
-              required
-              value={description}
-              minLength={3}
-              maxLength={150}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
+            {tags.map((tag, index) => (
+              <Tag
+                alignItems={"center"}
+                justifyContent={"center"}
+                size={"lg"}
+                borderRadius="full"
+                variant="solid"
+                colorScheme={"green"}
+              >
+                <TagLabel>{tag}</TagLabel>
+                <TagCloseButton
+                  onClick={(e) => {
+                    handleClose(index);
+                  }}
+                />
+              </Tag>
+            ))}
           </Flex>
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={{ base: "11pt", md: "16pt", lg: "21pt" }}
+            fontSize={{ base: "8pt", md: "15pt", lg: "20pt" }}
             type={"submit"}
             width={"22vw"}
             height={"8vh"}
           >
-            Register for Funds
+            Post Product Review
           </Button>
         </Flex>
       </form>
@@ -605,4 +548,4 @@ const FundingRegistration = () => {
   );
 };
 
-export default FundingRegistration;
+export default ProductReviewReg;

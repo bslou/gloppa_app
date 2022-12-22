@@ -10,27 +10,52 @@ const StartupComponent = (img, level, name, id) => {
   let idd = localStorage.getItem("id");
 
   const deleteIt = () => {
-    db.collection("startups")
-      .doc(id)
-      .get()
-      .then((val) => {
-        let fundid = val.get("fundingId");
-        if (fundid != "") {
-          db.collection("funding").doc(fundid).delete();
-          db.collection("startups").doc(id).delete();
-          db.collection("users")
-            .doc(idd)
-            .update({ startups: arrayRemove(id) });
-          db.collection("users")
-            .doc(idd)
-            .update({ startups: arrayRemove(fundid) });
-        } else {
-          db.collection("startups").doc(id).delete();
-          db.collection("users")
-            .doc(idd)
-            .update({ startups: arrayRemove(id) });
-        }
-      });
+    if (window.confirm("Do you really want to delete " + name + "?")) {
+      db.collection("startups")
+        .doc(id)
+        .get()
+        .then((val) => {
+          let fundid = val.get("fundingId");
+          let prodid = val.get("productReviewId");
+          if (prodid != "" && fundid != "") {
+            db.collection("productReview").doc(prodid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ productReviewStartupId: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ fundingStartupId: arrayRemove(idd) });
+            db.collection("funding").doc(fundid).delete();
+          } else if (prodid != "") {
+            db.collection("productReview").doc(prodid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ productReviewStartupId: arrayRemove(id) });
+          } else if (fundid != "") {
+            db.collection("funding").doc(fundid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ fundingStartupId: arrayRemove(idd) });
+          } else {
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+          }
+        });
+    }
   };
 
   return (

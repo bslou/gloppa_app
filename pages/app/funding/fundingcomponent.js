@@ -2,6 +2,8 @@ import { Button, Collapse, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { db } from "../../api/firebaseconfig";
+import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 const FundingComponent = (
   img,
@@ -11,10 +13,28 @@ const FundingComponent = (
   eml,
   foundedYear,
   website,
+  mine,
   id,
-  show,
-  setShow
+  idts
+  // show,
+  // setShow
 ) => {
+  const deleteIt = () => {
+    if (
+      window.confirm(
+        "Do you really want to delete " + startupName + " fund post?"
+      )
+    ) {
+      db.collection("users")
+        .doc(localStorage.getItem("id"))
+        .update({ arrayRemove: id });
+      db.collection("startups").doc(idts).update({ fundingId: "" });
+      db.collection("funding").doc(id).delete();
+      //change out of bottom code in the future!
+      //window.location.reload();
+    }
+  };
+
   return (
     <Flex
       direction={"row"}
@@ -23,7 +43,7 @@ const FundingComponent = (
       _hover={{
         boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
       }}
-      backgroundColor={"#323232"}
+      backgroundColor={mine ? "#1F90FF" : "#323232"}
       width={"90%"}
       paddingLeft={5}
       paddingRight={5}
@@ -54,7 +74,7 @@ const FundingComponent = (
             >
               {startupName}
             </Text>
-            <Tooltip
+            {/* <Tooltip
               label={"Show " + (show ? "less!" : "more!")}
               aria-label="A tooltip"
             >
@@ -68,7 +88,7 @@ const FundingComponent = (
               >
                 {show ? "-" : "+"}
               </Button>
-            </Tooltip>
+            </Tooltip> */}
           </Flex>
           <Flex
             direction={"row"}
@@ -91,14 +111,14 @@ const FundingComponent = (
               Founded: {String(foundedYear)}
             </Text>
           </Flex>
-          <Collapse startingHeight={22} in={show}>
-            <Text
-              color={"white"}
-              fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
-            >
-              {des}
-            </Text>
-          </Collapse>
+          {/* <Collapse startingHeight={22} in={show}> */}
+          <Text
+            color={"white"}
+            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+          >
+            {des}
+          </Text>
+          {/* </Collapse> */}
         </Flex>
       </Flex>
       <Flex
@@ -107,24 +127,50 @@ const FundingComponent = (
         justifyContent={"center"}
         gap={"1vh"}
       >
-        <Text
-          color={"white"}
-          fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
-          fontWeight={900}
-          textAlign={"center"}
-        >
-          Contact them!&nbsp;
-        </Text>
-        <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
-          <Link>
-            <Image
-              src={"/assets/Envelope.png"}
-              alt={"Envelope"}
-              width={30}
-              height={30}
-            />
-          </Link>
-        </NextLink>
+        {!mine ? (
+          <Text
+            color={"white"}
+            fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
+            fontWeight={900}
+            textAlign={"center"}
+          >
+            Contact them!&nbsp;
+          </Text>
+        ) : (
+          <Text
+            color={"red"}
+            fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
+            fontWeight={900}
+            textAlign={"center"}
+          >
+            Delete fund!&nbsp;
+          </Text>
+        )}
+        {!mine ? (
+          <Tooltip label={"Send email!"} aria-label="A tooltip">
+            <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
+              <Link>
+                <Image
+                  src={"/assets/Envelope.png"}
+                  alt={"Envelope"}
+                  width={30}
+                  height={30}
+                />
+              </Link>
+            </NextLink>
+          </Tooltip>
+        ) : (
+          <Tooltip label={"Delete startup fund!"} aria-label="A tooltip">
+            <Button colorScheme={"transparent"} onClick={deleteIt}>
+              <Image
+                src={"/assets/trash.png"}
+                alt={"Trash"}
+                width={30}
+                height={30}
+              />
+            </Button>
+          </Tooltip>
+        )}
         <NextLink href={website} passHref target={"_blank"}>
           <Link
             color={"white"}

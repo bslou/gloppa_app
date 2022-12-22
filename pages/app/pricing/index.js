@@ -47,12 +47,7 @@ const Payment = () => {
         top={10}
         left={5}
       >
-        <Image
-          src={"/assets/back.png"}
-          alt={"Gloppa back"}
-          width={60}
-          height={60}
-        />
+        <Image src={"/assets/back.png"} alt={"Back"} width={60} height={60} />
       </Button>
       <form action="/api/checkout_sessions" method="POST">
         <Flex
@@ -83,18 +78,18 @@ const Payment = () => {
             Gloppa’s current and future features including the beta version!
           </Text>
           <Text
-            fontSize={{ base: "14pt", md: "18pt", lg: "22pt" }}
-            as="s"
+            fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+            //as="s"
             color={"gray"}
           >
-            $15
+            Limited offer
           </Text>
           <Text
             fontSize={{ base: "14pt", md: "18pt", lg: "22pt" }}
             color={"white"}
             fontWeight={650}
           >
-            $10 / month
+            $2.50 / month
           </Text>
           <Button
             width={"90%"}
@@ -141,18 +136,18 @@ const Payment = () => {
             version!
           </Text>
           <Text
-            fontSize={{ base: "14pt", md: "18pt", lg: "22pt" }}
-            as="s"
+            fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
+            //as="s"
             color={"gray"}
           >
-            $200
+            Limited offer
           </Text>
           <Text
             fontSize={{ base: "14pt", md: "18pt", lg: "22pt" }}
             color={"white"}
             fontWeight={650}
           >
-            $150 / Full Time
+            $30 / Full Time
           </Text>
           <Button
             width={"90%"}

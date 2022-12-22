@@ -32,7 +32,6 @@ const Funding = () => {
   const [oguname, setOgUname] = useState("");
   const [email, setEmail] = useState("");
   const [funds, setFunds] = useState([]);
-  const dataFetchedRef = useRef(false);
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [show, setShow] = useState(false);
@@ -41,39 +40,6 @@ const Funding = () => {
     onOpen: onOpen2,
     onClose: onClose2,
   } = useDisclosure();
-
-  const accessories = [
-    [
-      "/assets/spacer.png",
-      "/assets/spacer1.png",
-      "Beginner factory (producing 5 coins a day)",
-      0,
-    ],
-    [
-      "/assets/spacert.png",
-      "/assets/spacer2.png",
-      "Medium factory (producing 10 coins a day)",
-      100,
-    ],
-    [
-      "/assets/spacerth.png",
-      "/assets/spacer3.png",
-      "Comfort-Zone factory (producing 25 coins a day)",
-      1000,
-    ],
-    [
-      "/assets/spacerf.png",
-      "/assets/spacer4.png",
-      "Semi-advanced factory (producing 50 coins a day)",
-      10000,
-    ],
-    [
-      "/assets/spacerfi.png",
-      "/assets/spacer5.png",
-      "Advanced factory (producing 100 coins a day)",
-      100000,
-    ],
-  ];
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -86,45 +52,39 @@ const Funding = () => {
             if (typeof val.get("premium")[0] !== "undefined") {
               // does not exist
               if (val.get("premium")[0] == "fulltime") {
-                // router.push("/app/startuplist");
-                if (dataFetchedRef.current) return;
-                dataFetchedRef.current = true;
-                db.collection("users")
-                  .doc(localStorage.getItem("id"))
-                  .onSnapshot((snapshot) => {
-                    const data = snapshot.data();
-                    let n = data.startups;
-                    setUname(data.username);
-                    setOgUname(data.username);
-                    setEmail(data.email);
-                    //console.log(Object.keys(n).length);
-                    if (Object.keys(n).length == 0) {
-                      setLoading(false);
-                      return;
-                    }
-                    n.reverse();
-                    if (n.length < 1) setLoading(false);
-                    db.collection("funding")
-                      .get()
-                      .then((val) => {
-                        // if (!val.exists) {
-                        //   setLoading(false);
-                        //   return;
-                        // }
-                        val.forEach(function (doc) {
-                          let des = doc.data().description;
-                          let email = doc.data().email;
-                          let stid = doc.data().startupId;
-                          let equity = doc.data().investment[0];
-                          let price = doc.data().investment[1];
-                          let name = doc.data().startupName;
-                          let website = doc.data().website;
-                          db.collection("startups")
-                            .doc(stid)
-                            .get()
-                            .then((val) => {
-                              let foundedDate = val.get("foundedDate");
-                              let img = val.get("img");
+                let n = val.get("startups");
+                setUname(val.get("username"));
+                setOgUname(val.get("username"));
+                setEmail(val.get("email"));
+                //console.log(Object.keys(n).length);
+                // if (Object.keys(n).length == 0) {
+                //   setLoading(false);
+                //   return;
+                // }
+                n.reverse();
+                if (n.length < 1) setLoading(false);
+                db.collection("funding")
+                  .get()
+                  .then((val) => {
+                    // if (!val.exists) {
+                    //   setLoading(false);
+                    //   return;
+                    // }
+                    val.forEach(function (doc) {
+                      let des = doc.data().description;
+                      let email = doc.data().email;
+                      let stid = doc.data().startupId;
+                      let equity = doc.data().investment[0];
+                      let price = doc.data().investment[1];
+                      let name = doc.data().startupName;
+                      db.collection("startups")
+                        .doc(stid)
+                        .onSnapshot((snapshot2) => {
+                          let foundedDate = snapshot2.data().foundedDate;
+                          let website = snapshot2.data().website;
+                          let img = snapshot2.data().img;
+                          if (n != []) {
+                            if (n.includes(stid)) {
                               storage
                                 .ref(img)
                                 .getDownloadURL()
@@ -139,16 +99,44 @@ const Funding = () => {
                                       email,
                                       foundedDate,
                                       website,
+                                      true,
                                       doc.id,
+                                      stid,
                                       show,
                                       setShow
                                     ),
                                   ]);
                                   setLoading(false);
                                 });
-                            });
+                            } else {
+                              console.log("prep");
+                              storage
+                                .ref(img)
+                                .getDownloadURL()
+                                .then((url) => {
+                                  setFunds((prevFunds) => [
+                                    ...prevFunds,
+                                    FundingComponent(
+                                      url,
+                                      name,
+                                      [equity, price],
+                                      des,
+                                      email,
+                                      foundedDate,
+                                      website,
+                                      false,
+                                      doc.id,
+                                      stid,
+                                      show,
+                                      setShow
+                                    ),
+                                  ]);
+                                  setLoading(false);
+                                });
+                            }
+                          }
                         });
-                      });
+                    });
                     setLoading(false);
                   });
               } else if (val.get("premium")[0] == "parttime") {
@@ -163,22 +151,20 @@ const Funding = () => {
                 const diffTime = Math.abs(date2 - date1);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 if (diffDays <= 31) {
-                  // router.push("/app/startuplist");
-                  if (dataFetchedRef.current) return;
-                  dataFetchedRef.current = true;
+                  console.log("zero");
                   db.collection("users")
                     .doc(localStorage.getItem("id"))
                     .onSnapshot((snapshot) => {
                       const data = snapshot.data();
                       let n = data.startups;
-                      //console.log(Object.keys(n).length);
+                      console.log("Startups: " + n);
                       setUname(data.username);
                       setOgUname(data.username);
                       setEmail(data.email);
-                      if (Object.keys(n).length == 0) {
-                        setLoading(false);
-                        return;
-                      }
+                      // if (Object.keys(n).length == 0) {
+                      //   setLoading(false);
+                      //   return;
+                      // }
                       db.collection("funding")
                         .get()
                         .then((val) => {
@@ -186,41 +172,76 @@ const Funding = () => {
                           //     setLoading(false);
                           //     return;
                           //   }
+                          console.log("one");
                           val.forEach(function (doc) {
+                            console.log("two");
                             let des = doc.data().description;
                             let email = doc.data().email;
                             let stid = doc.data().startupId;
                             let equity = doc.data().investment[0];
                             let price = doc.data().investment[1];
                             let name = doc.data().startupName;
-                            let website = doc.data().website;
                             db.collection("startups")
                               .doc(stid)
-                              .get()
-                              .then((val) => {
-                                let foundedDate = val.get("foundedDate");
-                                let img = val.get("img");
-                                storage
-                                  .ref(img)
-                                  .getDownloadURL()
-                                  .then((url) => {
-                                    setFunds((prevFunds) => [
-                                      ...prevFunds,
-                                      FundingComponent(
-                                        url,
-                                        name,
-                                        [equity, price],
-                                        des,
-                                        email,
-                                        foundedDate,
-                                        website,
-                                        doc.id,
-                                        show,
-                                        setShow
-                                      ),
-                                    ]);
-                                    setLoading(false);
-                                  });
+                              .onSnapshot((snapshot2) => {
+                                console.log("three");
+                                let website = snapshot2.data().website;
+                                let foundedDate = snapshot2.data().foundedDate;
+                                let img = snapshot2.data().img;
+                                if (n != []) {
+                                  console.log("four");
+                                  if (n.includes(stid)) {
+                                    console.log("five");
+                                    storage
+                                      .ref(img)
+                                      .getDownloadURL()
+                                      .then((url) => {
+                                        setFunds((prevFunds) => [
+                                          ...prevFunds,
+                                          FundingComponent(
+                                            url,
+                                            name,
+                                            [equity, price],
+                                            des,
+                                            email,
+                                            foundedDate,
+                                            website,
+                                            true,
+                                            doc.id,
+                                            stid,
+                                            show,
+                                            setShow
+                                          ),
+                                        ]);
+                                        setLoading(false);
+                                      });
+                                  } else {
+                                    console.log("six");
+                                    storage
+                                      .ref(img)
+                                      .getDownloadURL()
+                                      .then((url) => {
+                                        setFunds((prevFunds) => [
+                                          ...prevFunds,
+                                          FundingComponent(
+                                            url,
+                                            name,
+                                            [equity, price],
+                                            des,
+                                            email,
+                                            foundedDate,
+                                            website,
+                                            false,
+                                            doc.id,
+                                            stid,
+                                            show,
+                                            setShow
+                                          ),
+                                        ]);
+                                        setLoading(false);
+                                      });
+                                  }
+                                }
                               });
                           });
                         });
@@ -391,11 +412,16 @@ const Funding = () => {
             direction={"row"}
             alignItems={"center"}
             justifyContent={"center"}
-            gap={"1vw"}
+            gap={"2.5vw"}
           >
             <NextLink href={"/app/startuplist"}>
               <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
                 Gloppa
+              </Link>
+            </NextLink>
+            <NextLink href={"/app/productreview"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Product Review
               </Link>
             </NextLink>
             <NextLink href={"/app/funding"}>
