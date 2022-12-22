@@ -72,7 +72,7 @@ const ProdRevComponent = (
           gap={0.75}
         >
           <Flex alignItems={"center"} direction={"row"}>
-            <Link color={"white"} fontWeight={700} fontSize={"15pt"}>
+            <Link color={"white"} fontWeight={700} fontSize={"18pt"}>
               <NextLink href={website} passHref target={"_blank"}>
                 {title}
               </NextLink>

@@ -7,9 +7,12 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Select,
   Text,
   Textarea,
+  Select,
+  Tag,
+  TagLabel,
+  TagCloseButton,
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
@@ -19,28 +22,78 @@ import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
-const FundingRegistration = () => {
+const ProductReviewReg = () => {
+  const [idd, setIdd] = useState("");
   const router = useRouter();
-
+  const [startupName, setStartupName] = useState(null);
+  const [tagline, setTagline] = useState("");
+  const [jobtitle, setJobtitle] = useState("");
+  const [categories, setCategories] = useState("Engineering");
+  const [location, setLocation] = useState("");
+  const [linkjob, setLinkjob] = useState("");
+  const [contactemail, setContactemail] = useState("");
   const toast = useToast();
 
   const [loading, setLoading] = useState(true);
-
-  const [idd, setIdd] = useState("");
   const [startups, setStartups] = useState([]);
-  const [startupName, setStartupName] = useState(null);
-  const [foundedDate, setFoundedDate] = useState();
-  const [website, setWebsite] = useState();
-  const [eml, setEml] = useState();
-  const [price, setPrice] = useState();
-  const [equity, setEquity] = useState();
-  const [description, setDescription] = useState();
-  const [image, setImage] = useState(null);
 
-  const handleChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
+  const updateInfo = (e) => {
+    const index = e.target.selectedIndex;
+    const el = e.target.childNodes[index];
+    const option = el.getAttribute("id");
+    setIdd(option);
+    db.collection("startups")
+      .doc(option)
+      .get()
+      .then((val) => {
+        setStartupName(String(val.get("startupName")));
+        //add image later
+      });
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) return;
+            let n = val.get("startups");
+            // if (Object.keys(n).length == 0) {
+            //   setLoading(false);
+            //   return;
+            // }
+            n.reverse();
+            if (n.length < 1) setLoading(false);
+            n.forEach((document) => {
+              db.collection("startups")
+                .doc(document)
+                .get()
+                .then((res) => {
+                  let startupName = String(res.get("startupName"));
+                  let lvl = Math.floor(res.get("level") / 100) + 1;
+                  let jobs = res.get("jobs");
+                  if (lvl >= 4 && jobs.length < 2) {
+                    console.log(String(document));
+                    setStartups((prevStartups) => [
+                      ...prevStartups,
+                      <option
+                        value={res.get("startupName")}
+                        id={String(document)}
+                      >
+                        {res.get("startupName")}
+                      </option>,
+                    ]);
+                  }
+                });
+            });
+          });
+      } else {
+        router.push("/c/main");
+      }
+    }
+  }, []);
 
   function isValidHttpUrl(string) {
     let url;
@@ -52,68 +105,12 @@ const FundingRegistration = () => {
     return url.protocol === "http:" || url.protocol === "https:";
   }
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") !== null) {
-        db.collection("users")
-          .doc(localStorage.getItem("id"))
-          .onSnapshot((snapshot) => {
-            //setEml(data.email);
-            const data = snapshot.data();
-            let n = data.startups;
-            //console.log(Object.keys(n).length);
-            if (Object.keys(n).length == 0) {
-              setLoading(false);
-              return;
-            }
-            n.reverse();
-            if (n.length < 1) setLoading(false);
-            n.forEach((document) => {
-              db.collection("startups")
-                .doc(document)
-                .get()
-                .then((res) => {
-                  let startupName = String(res.get("startupName"));
-                  let lvl = Math.floor(res.get("level") / 100) + 1;
-                  if (lvl >= 3) {
-                    if (res.get("fundingId") == "") {
-                      console.log(String(document));
-                      setStartups((prevStartups) => [
-                        ...prevStartups,
-                        <option
-                          value={res.get("startupName")}
-                          id={String(document)}
-                        >
-                          {res.get("startupName")}
-                        </option>,
-                      ]);
-                    }
-                  }
-                });
-            });
-          });
-      } else {
-        router.push("/c/main");
-      }
-    }
-  }, []);
-
-  const updateInfo = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    setIdd(option);
-    db.collection("startups")
-      .doc(option)
-      .get()
-      .then((val) => {
-        setDescription(String(val.get("description")));
-        setStartupName(String(val.get("startupName")));
-        setFoundedDate(String(val.get("foundedDate")));
-      });
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
   };
 
-  const submitFund = (e) => {
+  const RegJob = (e) => {
     e.preventDefault();
     if (startupName == null) {
       toast({
@@ -130,12 +127,8 @@ const FundingRegistration = () => {
       .doc(idd)
       .get()
       .then((val) => {
-        if (val.get("fundingId") == "") {
-          // if (image == null) {
-          //   return;
-          // }
-
-          if (!isValidHttpUrl(website)) {
+        if (val.get("jobs").length < 2) {
+          if (!isValidHttpUrl(linkjob)) {
             toast({
               title: "Invalid website",
               description: "Make sure the url http/https and an extension",
@@ -145,69 +138,32 @@ const FundingRegistration = () => {
             });
             return;
           }
-
-          // const url = URL.createObjectURL(image);
-          // const imgname = image.name;
-
-          // console.log(image);
-
-          // db.collection("startups")
-          //   .doc(idd)
-          //   .get()
-          //   .then((val) => {
-          // let img = val.get("img");
-          // if (img != "") {
-          //   storage.ref(img).delete();
-          // }
-          db.collection("startups")
-            .doc(idd)
-            .update({ foundedDate: foundedDate });
-          // db.collection("startups")
-          //   .doc(idd)
-          //   .update({ description: description });
-
-          // storage
-          //   .ref(`/images/${imgname}`)
-          //   .put(image)
-          //   .then(() => {
-          //     console.log("Process was successful");
-          //   })
-          //   .catch((err) => {
-          //     console.log("Error " + err);
-          //   });
-
-          // db.collection("startups")
-          //   .doc(idd)
-          //   .update({ img: `/images/${imgname}` });
-          db.collection("startups").doc(idd).update({ website: website });
-
-          db.collection("funding")
+          db.collection("jobs")
             .add({
               startupName: startupName,
+              tagline: tagline,
+              jobtitle: jobtitle,
+              category: categories,
+              location: location,
+              linkjob: linkjob,
+              contactemail: contactemail,
               startupId: idd,
-              owner: id,
-              description: description,
-              investment: [parseInt(equity), parseInt(price)],
-              email: eml,
             })
             .then(function (docRef) {
               console.log("Document written with ID: ", docRef.id);
               db.collection("users")
                 .doc(id)
-                .update({ fundingStartupId: arrayUnion(idd) });
-              db.collection("startups")
-                .doc(idd)
-                .update({ fundingId: docRef.id });
-              router.push("/app/funding");
+                .update({ jobs: arrayUnion(idd) });
+              db.collection("startups").doc(idd).update({ jobs: docRef.id });
+              router.push("/app/jobs");
             })
             .catch(function (error) {
               console.error("Error adding document: ", error);
             });
-          // });
         } else {
           toast({
-            title: "Startup already exists",
-            description: "Startup already exists for funding.",
+            title: "Over job limit",
+            description: "Posted too many job positions.",
             status: "error",
             duration: 9000,
             isClosable: true,
@@ -215,11 +171,6 @@ const FundingRegistration = () => {
           return;
         }
       });
-  };
-
-  const Logout = () => {
-    localStorage.removeItem("id");
-    router.push("/");
   };
 
   var dtToday = new Date();
@@ -232,7 +183,6 @@ const FundingRegistration = () => {
   if (day < 10) day = "0" + day.toString();
 
   var maxDate = year + "-" + month + "-" + day;
-
   return (
     <Flex
       width={"100vw"}
@@ -281,7 +231,7 @@ const FundingRegistration = () => {
           </MenuList>
         </Menu>
       </Flex>
-      <form onSubmit={(e) => submitFund(e)}>
+      <form onSubmit={(e) => RegJob(e)}>
         <Flex
           direction={"column"}
           alignItems={"center"}
@@ -292,23 +242,22 @@ const FundingRegistration = () => {
           minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
-          paddingTop={6}
+          paddingTop={8}
         >
           <Text
             color={"white"}
             textAlign={"center"}
-            fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
             marginLeft={"2vw"}
             marginRight={"2vw"}
           >
-            ⚠️ Note: You need to have at least a level 3 startup to be able to
-            apply for funding.
+            ⚠️ Note: You need to have at least a level 4 startup to be able to
+            apply for funding. 2 job posts max!
           </Text>
           <Flex
             direction={"row"}
             alignItems={"center"}
             position={"absolute"}
-            top={{ base: "6vh", md: "5vh", lg: "4vh" }}
+            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
           >
             <Text
               textShadow={"0px 4px 1px rgba(0,0,0,1)"}
@@ -316,56 +265,25 @@ const FundingRegistration = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Funding Post
+              Product Review Post
             </Text>
           </Flex>
-          {/* <Flex>
-            <Button
-              borderRadius="50%"
-              backgroundColor="#ccc"
-              width={100}
-              height={100}
-              fontSize="11pt"
-            >
-              <Input
-                type={"file"}
-                width={"100%"}
-                height={"100%"}
-                position={"absolute"}
-                opacity={0}
-                onChange={handleChange}
-                accept="image/png, image/gif, image/jpeg"
-                required
-              />
-              Select Logo
-            </Button>
-            {image && (
-              <Image
-                src={URL.createObjectURL(image)}
-                alt="Selected"
-                width={100}
-                height={100}
-              />
-            )}
-          </Flex> */}
           <Flex
             direction={"row"}
             alignItems={"center"}
             justifyContent={"center"}
-            width={"50vw"}
             gap={6}
+            width={"50vw"}
           >
             <Text color={"white"} fontWeight={300} width={"15vw"}>
               Startup Name:
             </Text>
             <Select
               backgroundColor={"white"}
-              borderRadius={5}
-              required
-              minLength={2}
-              maxLength={18}
               value={startupName}
               onChange={(e) => updateInfo(e)}
+              borderRadius={5}
+              required
             >
               <option disabled selected value>
                 {" "}
@@ -378,44 +296,20 @@ const FundingRegistration = () => {
             direction={"row"}
             alignItems={"center"}
             justifyContent={"center"}
-            width={"50vw"}
-            gap={6}
-          >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Founded Date:
-            </Text>
-            <Input
-              backgroundColor={"white"}
-              borderRadius={5}
-              required
-              type={"date"}
-              max={maxDate}
-              value={foundedDate}
-              onChange={(e) => {
-                setFoundedDate(e.target.value);
-              }}
-            />
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
             gap={6}
             width={"50vw"}
           >
             <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Website:
+              Startup Tagline:
             </Text>
             <Input
               backgroundColor={"white"}
               borderRadius={5}
               required
               minLength={3}
-              placeholder={"https://"}
-              value={website}
-              onChange={(e) => {
-                setWebsite(e.target.value);
-              }}
+              maxLength={75}
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
             />
           </Flex>
           <Flex
@@ -426,99 +320,116 @@ const FundingRegistration = () => {
             width={"50vw"}
           >
             <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Email:
+              Job Title:
+            </Text>
+            <Input
+              backgroundColor={"white"}
+              borderRadius={5}
+              minLength={5}
+              value={jobtitle}
+              onChange={(e) => setJobtitle(e.target.value)}
+            />
+          </Flex>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={6}
+            width={"50vw"}
+          >
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Categories:
+            </Text>
+
+            <Select
+              required
+              backgroundColor={"white"}
+              onChange={(e) => {
+                setCategories(e.target.value);
+              }}
+            >
+              <option value={"Engineering"}>Engineering</option>
+              <option value={"Design"}>Design</option>
+              <option value={"Marketing"}>Marketing</option>
+              <option value={"Sales"}>Sales</option>
+              <option value={"Customer Support"}>Customer Support</option>
+              <option value={"Product"}>Product</option>
+              <option value={"Other"}>Other</option>
+            </Select>
+          </Flex>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={6}
+            width={"50vw"}
+          >
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Location:
+            </Text>
+            <Input
+              required
+              backgroundColor={"white"}
+              borderRadius={5}
+              minLength={2}
+              value={location}
+              onChange={(e) => {
+                setLocation(e.target.value);
+              }}
+              placeholder={
+                "Separate multiple locations with commas | Say remote if remote"
+              }
+            />
+          </Flex>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={6}
+            width={"50vw"}
+          >
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Link to the job description:
+            </Text>
+            <Input
+              required
+              backgroundColor={"white"}
+              borderRadius={5}
+              minLength={5}
+              placeholder={"https://"}
+              value={linkjob}
+              onChange={(e) => setLinkjob(e.target.value)}
+            />
+          </Flex>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={6}
+            width={"50vw"}
+          >
+            <Text color={"white"} fontWeight={300} width={"15vw"}>
+              Contact email:
             </Text>
             <Input
               type={"email"}
+              required
               backgroundColor={"white"}
               borderRadius={5}
-              required
-              minLength={3}
-              value={eml}
-              onChange={(e) => {
-                setEml(e.target.value);
-              }}
-            />
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            width={"50vw"}
-            gap={6}
-          >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Price:
-            </Text>
-            <Input
-              type={"number"}
-              backgroundColor={"white"}
-              borderRadius={5}
-              required
-              min={100}
-              max={1000000000000}
-              value={price}
-              onChange={(e) => {
-                setPrice(e.target.value);
-              }}
-            />
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            width={"50vw"}
-            gap={6}
-          >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Equity percentage:
-            </Text>
-            <Input
-              type={"number"}
-              backgroundColor={"white"}
-              borderRadius={5}
-              required
-              min={0}
-              max={100}
-              value={equity}
-              onChange={(e) => {
-                setEquity(e.target.value);
-              }}
-            />
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={6}
-            width={"50vw"}
-          >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
-              Description:
-            </Text>
-            <Textarea
-              backgroundColor={"white"}
-              borderRadius={5}
-              height={"18vh"}
-              resize={"none"}
-              required
-              value={description}
-              minLength={3}
-              maxLength={150}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
+              minLength={5}
+              value={contactemail}
+              onChange={(e) => setContactemail(e.target.value)}
             />
           </Flex>
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={{ base: "11pt", md: "16pt", lg: "21pt" }}
+            fontSize={{ base: "8pt", md: "15pt", lg: "20pt" }}
             type={"submit"}
             width={"22vw"}
             height={"8vh"}
           >
-            Register for Funds
+            Post Job Position
           </Button>
         </Flex>
       </form>
@@ -526,4 +437,4 @@ const FundingRegistration = () => {
   );
 };
 
-export default FundingRegistration;
+export default ProductReviewReg;

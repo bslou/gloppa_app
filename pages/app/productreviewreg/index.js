@@ -163,9 +163,9 @@ const ProductReviewReg = () => {
       .get()
       .then((val) => {
         if (val.get("productReviewId") == "") {
-          if (image == null) {
-            return;
-          }
+          // if (image == null) {
+          //   return;
+          // }
 
           if (!isValidHttpUrl(website)) {
             toast({
@@ -178,36 +178,36 @@ const ProductReviewReg = () => {
             return;
           }
 
-          const url = URL.createObjectURL(image);
-          const imgname = image.name;
+          // const url = URL.createObjectURL(image);
+          // const imgname = image.name;
 
-          console.log(image);
+          // console.log(image);
 
           db.collection("startups")
             .doc(idd)
             .get()
             .then((val) => {
-              let img = val.get("img");
-              if (img != "") {
-                storage.ref(img).delete();
-              }
+              // let img = val.get("img");
+              // if (img != "") {
+              //   storage.ref(img).delete();
+              // }
               // db.collection("startups")
               //   .doc(idd)
               //   .update({ description: description });
 
-              storage
-                .ref(`/images/${imgname}`)
-                .put(image)
-                .then(() => {
-                  console.log("Process was successful");
-                })
-                .catch((err) => {
-                  console.log("Error " + err);
-                });
+              // storage
+              //   .ref(`/images/${imgname}`)
+              //   .put(image)
+              //   .then(() => {
+              //     console.log("Process was successful");
+              //   })
+              //   .catch((err) => {
+              //     console.log("Error " + err);
+              //   });
 
-              db.collection("startups")
-                .doc(idd)
-                .update({ img: `/images/${imgname}` });
+              // db.collection("startups")
+              //   .doc(idd)
+              //   .update({ img: `/images/${imgname}` });
               db.collection("startups").doc(idd).update({ website: website });
 
               db.collection("productReview")
@@ -269,7 +269,7 @@ const ProductReviewReg = () => {
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        paddingLeft={7}
+        paddingLeft={3}
         paddingRight={4}
         paddingTop={5}
         width={"100vw"}
@@ -280,7 +280,7 @@ const ProductReviewReg = () => {
           justifyContent={"center"}
           gap={"2.5vw"}
         >
-          <NextLink href={"/app/productreview"}>
+          <Button colorScheme={"transparent"} onClick={() => router.back()}>
             <Link color={"white"}>
               <Image
                 src={"/assets/back.png"}
@@ -289,7 +289,7 @@ const ProductReviewReg = () => {
                 height={60}
               />
             </Link>
-          </NextLink>
+          </Button>
         </Flex>
         <Menu>
           <MenuButton colorScheme={"transparent"}>
@@ -342,7 +342,7 @@ const ProductReviewReg = () => {
               Product Review Post
             </Text>
           </Flex>
-          <Flex>
+          {/* <Flex>
             <Button
               borderRadius="50%"
               backgroundColor="#ccc"
@@ -370,7 +370,7 @@ const ProductReviewReg = () => {
                 height={100}
               />
             )}
-          </Flex>
+          </Flex> */}
           <Flex
             direction={"row"}
             alignItems={"center"}

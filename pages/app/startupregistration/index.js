@@ -14,7 +14,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { auth, db } from "../../api/firebaseconfig";
+import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 const StartupRegistration = () => {
@@ -24,10 +24,11 @@ const StartupRegistration = () => {
   const [foundedDate, setFoundedDate] = useState();
   const [startupLocation, setStartupLocation] = useState();
   const [description, setDescription] = useState();
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") !== null) {
+      if (localStorage.getItem("id") === null) {
         // db.collection("users")
         //   .doc(localStorage.getItem("id"))
         //   .get()
@@ -45,26 +46,47 @@ const StartupRegistration = () => {
         //         var yyyy = today.getFullYear();
 
         //         today = mm + "/" + dd + "/" + yyyy;
-        const date2 = new Date(String(today));
-        const diffTime = Math.abs(date2 - date1);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays <= 31) {
-          // router.push("/app/startuplist");
-        } else {
-          router.push("/app/pricing");
-        }
+        // const date2 = new Date(String(today));
+        // const diffTime = Math.abs(date2 - date1);
+        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        // if (diffDays <= 31) {
+        //router.push("/app/startuplist");
+        // } else {
+        //   router.push("/app/pricing");
+        // }
         //         }
         //       }
         //     });
         // } else {
-        //   router.push("/c/main");
+        router.push("/");
       }
     }
   });
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
+  };
+
   const submitStartup = (e) => {
     e.preventDefault();
+
+    if (image == null) {
+      return;
+    }
     let id = localStorage.getItem("id");
+    const url = URL.createObjectURL(image);
+    const imgname = image.name;
+
+    storage
+      .ref(`/images/${imgname}`)
+      .put(image)
+      .then(() => {
+        console.log("Process was successful");
+      })
+      .catch((err) => {
+        console.log("Error " + err);
+      });
 
     db.collection("startups")
       .add({
@@ -85,7 +107,9 @@ const StartupRegistration = () => {
         fundingId: "",
         productReviewId: "",
         website: "",
-        img: "",
+        boost: [],
+        jobs: [],
+        img: `/images/${imgname}`,
         //completedTasks: {},
         //completedBrainstorm: {},
       })
@@ -129,7 +153,7 @@ const StartupRegistration = () => {
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        paddingLeft={7}
+        paddingLeft={3}
         paddingRight={4}
         paddingTop={5}
         width={"100vw"}
@@ -140,7 +164,7 @@ const StartupRegistration = () => {
           justifyContent={"center"}
           gap={"2.5vw"}
         >
-          <NextLink href={"/app/startuplist"}>
+          <Button colorScheme={"transparent"} onClick={() => router.back()}>
             <Link color={"white"}>
               <Image
                 src={"/assets/back.png"}
@@ -149,7 +173,7 @@ const StartupRegistration = () => {
                 height={60}
               />
             </Link>
-          </NextLink>
+          </Button>
         </Flex>
         <Menu>
           <MenuButton colorScheme={"transparent"}>
@@ -176,7 +200,7 @@ const StartupRegistration = () => {
           minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
-          paddingTop={14}
+          paddingTop={7}
         >
           <Flex
             direction={"row"}
@@ -190,8 +214,37 @@ const StartupRegistration = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Startups
+              Startup
             </Text>
+          </Flex>
+          <Flex>
+            <Button
+              borderRadius="50%"
+              backgroundColor="#ccc"
+              width={75}
+              height={75}
+              fontSize="8pt"
+            >
+              <Input
+                type={"file"}
+                width={"100%"}
+                height={"100%"}
+                position={"absolute"}
+                opacity={0}
+                onChange={handleImageChange}
+                accept="image/png, image/gif, image/jpeg"
+                required
+              />
+              Select Logo
+            </Button>
+            {image && (
+              <Image
+                src={URL.createObjectURL(image)}
+                alt="Selected"
+                width={75}
+                height={75}
+              />
+            )}
           </Flex>
           <Flex
             direction={"row"}

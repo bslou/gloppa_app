@@ -28,6 +28,7 @@ import { db, storage } from "../../api/firebaseconfig";
 import ProdRevComponent2 from "./prodrevcomponent";
 import { arrayUnion } from "firebase/firestore";
 import Comments from "./comments";
+import MyLoadingScreen from "./myloadingscreen";
 
 const ProdRevComments = () => {
   const router = useRouter();
@@ -234,221 +235,227 @@ const ProdRevComments = () => {
     router.push("/");
   };
 
-  return (
-    <Flex
-      width={"100vw"}
-      height={"100vh"}
-      backgroundColor={"#323232"}
-      direction={"column"}
-      alignItems={"center"}
-    >
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>My info</ModalHeader>
-          <ModalCloseButton color={"white"} />
-          <ModalBody>
-            <form onSubmit={changeData}>
-              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"white"}>Username: </Text>
-                  <Input
-                    color={"white"}
-                    value={uname}
-                    onChange={(e) => setUname(e.target.value.toLowerCase())}
-                    minLength={4}
-                    maxLength={12}
-                  />
-                </Flex>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"white"}>Email: </Text>
-                  <Input
-                    color={"white"}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    readOnly
-                  />
-                </Flex>
-                <Flex
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"1vw"}
-                  marginTop={3}
-                  marginBottom={3}
-                >
-                  <Button type="submit" colorScheme={"blue"}>
-                    Change Information
-                  </Button>
-                  <Button
-                    variant={"ghost"}
-                    color={"white"}
-                    colorScheme={"transparent"}
-                    onClick={onClose}
-                  >
-                    Close
-                  </Button>
-                </Flex>
-              </Flex>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      <Modal isOpen={isOpen2} onClose={onClose2}>
-        <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Future Updates</ModalHeader>
-          <ModalCloseButton color={"white"} />
-          <ModalBody>
-            <Text color={"white"}>
-              In the future there is a lot of things we want to do to make this
-              be the best application for startups. First of all we would like
-              to create partnerships where you can invite people and call with
-              them to collaborate on projects. We also want to implement custom
-              backgrounds and greater responsiveness. We also have a plan of
-              creating mobile applications for both iOS and Android, and web
-              application for all operating systems in the future. We also want
-              to add more features than just the video game, such as services to
-              help boost startups. If you have any recommendations or feedback,
-              feel free to email us at gloppaglow@gmail.com.
-            </Text>
-          </ModalBody>
+  if (loading) {
+    <MyLoadingScreen />;
+  }
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose2}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+  if (!loading) {
+    return (
       <Flex
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        paddingLeft={4}
-        paddingRight={4}
-        paddingTop={2.5}
-        paddingBottom={2.5}
         width={"100vw"}
-      >
-        <NextLink href={"/app/productreview"}>
-          <Link color={"white"}>
-            <Image
-              src={"/assets/back.png"}
-              alt={"Back"}
-              width={60}
-              height={60}
-            />
-          </Link>
-        </NextLink>
-        <Menu>
-          <MenuButton colorScheme={"transparent"}>
-            <Image
-              src={"/assets/profile.png"}
-              alt={"Gloppa profile"}
-              width={50}
-              height={50}
-            />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-            <MenuItem onClick={onOpen}>Update Info</MenuItem>
-            <MenuItem onClick={Logout}>Logout</MenuItem>
-          </MenuList>
-        </Menu>
-      </Flex>
-      <Flex
+        height={"100vh"}
+        backgroundColor={"#323232"}
         direction={"column"}
         alignItems={"center"}
-        backgroundColor={"#1c1c1c"}
-        height={"89%"}
-        width={"65vw"}
-        borderTopLeftRadius={10}
-        borderTopRightRadius={10}
-        paddingTop={8}
       >
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>My info</ModalHeader>
+            <ModalCloseButton color={"white"} />
+            <ModalBody>
+              <form onSubmit={changeData}>
+                <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"white"}>Username: </Text>
+                    <Input
+                      color={"white"}
+                      value={uname}
+                      onChange={(e) => setUname(e.target.value.toLowerCase())}
+                      minLength={4}
+                      maxLength={12}
+                    />
+                  </Flex>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"white"}>Email: </Text>
+                    <Input
+                      color={"white"}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      readOnly
+                    />
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"1vw"}
+                    marginTop={3}
+                    marginBottom={3}
+                  >
+                    <Button type="submit" colorScheme={"blue"}>
+                      Change Information
+                    </Button>
+                    <Button
+                      variant={"ghost"}
+                      color={"white"}
+                      colorScheme={"transparent"}
+                      onClick={onClose}
+                    >
+                      Close
+                    </Button>
+                  </Flex>
+                </Flex>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isOpen2} onClose={onClose2}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>Future Updates</ModalHeader>
+            <ModalCloseButton color={"white"} />
+            <ModalBody>
+              <Text color={"white"}>
+                In the future there is a lot of things we want to do to make
+                this be the best application for startups. First of all we would
+                like to create partnerships where you can invite people and call
+                with them to collaborate on projects. We also want to implement
+                custom backgrounds and greater responsiveness. We also have a
+                plan of creating mobile applications for both iOS and Android,
+                and web application for all operating systems in the future. We
+                also want to add more features than just the video game, such as
+                services to help boost startups. If you have any recommendations
+                or feedback, feel free to email us at gloppaglow@gmail.com.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose2}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <Flex
           direction={"row"}
           alignItems={"center"}
-          position={"absolute"}
-          top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
+          justifyContent={"space-between"}
+          paddingLeft={4}
+          paddingRight={4}
+          paddingTop={2.5}
+          paddingBottom={2.5}
+          width={"100vw"}
         >
-          <Text
-            textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-            fontWeight={800}
-            color={"white"}
-            fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
-          >
-            {title} Comments
-          </Text>
-        </Flex>
-        {/* {ProdRevComponent()} */}
-        {ProdRevComponent2(
-          id,
-          idts,
-          website,
-          img,
-          title,
-          phrase,
-          tags,
-          comments,
-          likes,
-          liked,
-          mine
-        )}
-        <Flex
-          width={"90%"}
-          direction={"row"}
-          marginTop={5}
-          alignItems={"center"}
-          justifyContent={"center"}
-          borderTop={"1px solid white"}
-          borderBottom={"1px solid white"}
-        >
-          <Textarea
-            placeholder="Comment..."
-            color="white"
-            border={"none"}
-            resize={"none"}
-            style={{
-              ":focus": {
-                outline: "none",
-                border: "none",
-                boxShadow: "none",
-              },
-            }}
-            value={comment}
-            onChange={(e) => {
-              setComment(e.target.value);
-            }}
-          />
-          <Button type="submit" onClick={submitComment} borderRadius={5}>
-            Submit Comment
-          </Button>
+          <NextLink href={"/app/productreview"}>
+            <Link color={"white"}>
+              <Image
+                src={"/assets/back.png"}
+                alt={"Back"}
+                width={60}
+                height={60}
+              />
+            </Link>
+          </NextLink>
+          <Menu>
+            <MenuButton colorScheme={"transparent"}>
+              <Image
+                src={"/assets/profile.png"}
+                alt={"Gloppa profile"}
+                width={50}
+                height={50}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+              <MenuItem onClick={onOpen}>Update Info</MenuItem>
+              <MenuItem onClick={Logout}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          gap={"2vh"}
-          width={"100%"}
-          overflowY={"scroll"}
-          paddingTop={3}
+          backgroundColor={"#1c1c1c"}
+          height={"89%"}
+          width={"65vw"}
+          borderTopLeftRadius={10}
+          borderTopRightRadius={10}
+          paddingTop={8}
         >
-          {commento}
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            position={"absolute"}
+            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
+          >
+            <Text
+              textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
+              fontWeight={800}
+              color={"white"}
+              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+            >
+              {title} Comments
+            </Text>
+          </Flex>
+          {/* {ProdRevComponent()} */}
+          {ProdRevComponent2(
+            id,
+            idts,
+            website,
+            img,
+            title,
+            phrase,
+            tags,
+            comments,
+            likes,
+            liked,
+            mine
+          )}
+          <Flex
+            width={"90%"}
+            direction={"row"}
+            marginTop={5}
+            alignItems={"center"}
+            justifyContent={"center"}
+            borderTop={"1px solid white"}
+            borderBottom={"1px solid white"}
+          >
+            <Textarea
+              placeholder="Comment..."
+              color="white"
+              border={"none"}
+              resize={"none"}
+              style={{
+                ":focus": {
+                  outline: "none",
+                  border: "none",
+                  boxShadow: "none",
+                },
+              }}
+              value={comment}
+              onChange={(e) => {
+                setComment(e.target.value);
+              }}
+            />
+            <Button type="submit" onClick={submitComment} borderRadius={5}>
+              Submit Comment
+            </Button>
+          </Flex>
+          <Flex
+            direction={"column"}
+            alignItems={"center"}
+            gap={"2vh"}
+            width={"100%"}
+            overflowY={"scroll"}
+            paddingTop={3}
+          >
+            {commento}
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
-  );
+    );
+  }
 };
 
 export default ProdRevComments;

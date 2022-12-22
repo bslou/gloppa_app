@@ -60,7 +60,7 @@ const Login = () => {
             // if (typeof val.get("premium")[0] !== "undefined") {
             //   // does not exist
             //   if (val.get("premium")[0] == "fulltime") {
-            //     router.push("/app/startuplist");
+            router.push("/app/startuplist");
             //   } else if (val.get("premium")[0] == "parttime") {
             //     const date1 = new Date(String(val.get("premium")[1]));
             //     var today = new Date();
@@ -75,14 +75,14 @@ const Login = () => {
             //     if (diffDays <= 31) {
             //       router.push("/app/startuplist");
             //     } else {
-            db.collection("users")
-              .doc(user.uid)
-              .update({
-                premium: arrayRemove([
-                  String(val.get("premium")[0]),
-                  String(val.get("premium")[1]),
-                ]),
-              });
+            // db.collection("users")
+            //   .doc(user.uid)
+            //   .update({
+            //     premium: arrayRemove([
+            //       String(val.get("premium")[0]),
+            //       String(val.get("premium")[1]),
+            //     ]),
+            //   });
             //         router.push("/app/pricing");
             //       }
             //     } else {

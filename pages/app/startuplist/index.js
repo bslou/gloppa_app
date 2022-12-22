@@ -418,6 +418,11 @@ const StartupList = () => {
                 Funding
               </Link>
             </NextLink>
+            <NextLink href={"/app/jobs"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Jobs
+              </Link>
+            </NextLink>
           </Flex>
           <Tooltip
             label={"Personal Settings for " + uname + "!"}

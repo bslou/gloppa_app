@@ -25,6 +25,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
 import ProdRevComponent from "./prodrevcomponent";
+import MyLoadingScreen from "./myloadingscreen";
 
 const ProductReview = () => {
   const router = useRouter();
@@ -56,6 +57,11 @@ const ProductReview = () => {
             n.reverse();
             if (n.length < 1) setLoading(false);
             db.collection("productReview").onSnapshot((yal) => {
+              if (yal.length < 1) {
+                setLoading(false);
+                return;
+              }
+              setProdRev([]);
               yal.forEach(function (doc) {
                 let stid = doc.data().startupId;
                 let cathp = doc.data().catchPhrase;
@@ -107,7 +113,6 @@ const ProductReview = () => {
                       });
                   });
               });
-              setLoading(false);
             });
           });
       } else {
@@ -152,211 +157,223 @@ const ProductReview = () => {
         console.log("Error " + err);
       });
   };
-  return (
-    <Flex
-      width={"100vw"}
-      height={"100vh"}
-      backgroundColor={"#323232"}
-      direction={"column"}
-      alignItems={"center"}
-    >
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>My info</ModalHeader>
-          <ModalCloseButton color={"white"} />
-          <ModalBody>
-            <form onSubmit={changeData}>
-              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"white"}>Username: </Text>
-                  <Input
-                    color={"white"}
-                    value={uname}
-                    onChange={(e) => setUname(e.target.value.toLowerCase())}
-                    minLength={4}
-                    maxLength={12}
-                  />
-                </Flex>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"white"}>Email: </Text>
-                  <Input
-                    color={"white"}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    readOnly
-                  />
-                </Flex>
-                <Flex
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"1vw"}
-                  marginTop={3}
-                  marginBottom={3}
-                >
-                  <Button type="submit" colorScheme={"blue"}>
-                    Change Information
-                  </Button>
-                  <Button
-                    variant={"ghost"}
-                    color={"white"}
-                    colorScheme={"transparent"}
-                    onClick={onClose}
-                  >
-                    Close
-                  </Button>
-                </Flex>
-              </Flex>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      <Modal isOpen={isOpen2} onClose={onClose2}>
-        <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Future Updates</ModalHeader>
-          <ModalCloseButton color={"white"} />
-          <ModalBody>
-            <Text color={"white"}>
-              In the future there is a lot of things we want to do to make this
-              be the best application for startups. First of all we would like
-              to create partnerships where you can invite people and call with
-              them to collaborate on projects. We also want to implement custom
-              backgrounds and greater responsiveness. We also have a plan of
-              creating mobile applications for both iOS and Android, and web
-              application for all operating systems in the future. We also want
-              to add more features than just the video game, such as services to
-              help boost startups. If you have any recommendations or feedback,
-              feel free to email us at gloppaglow@gmail.com.
-            </Text>
-          </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose2}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+  if (loading) {
+    return <MyLoadingScreen />;
+  }
+
+  if (!loading) {
+    return (
       <Flex
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        paddingLeft={7}
-        paddingRight={4}
-        paddingTop={2.5}
-        paddingBottom={2.5}
         width={"100vw"}
-      >
-        <Flex
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap={"2.5vw"}
-        >
-          <NextLink href={"/app/startuplist"}>
-            <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
-              Gloppa
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/productreview"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Product Review
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/funding"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Funding
-            </Link>
-          </NextLink>
-        </Flex>
-        <Menu>
-          <MenuButton colorScheme={"transparent"}>
-            <Image
-              src={"/assets/profile.png"}
-              alt={"Gloppa profile"}
-              width={50}
-              height={50}
-            />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-            <MenuItem onClick={onOpen}>Update Info</MenuItem>
-            <MenuItem onClick={Logout}>Logout</MenuItem>
-          </MenuList>
-        </Menu>
-      </Flex>
-      <Flex
+        height={"100vh"}
+        backgroundColor={"#323232"}
         direction={"column"}
         alignItems={"center"}
-        backgroundColor={"#1c1c1c"}
-        height={"90%"}
-        width={"65vw"}
-        borderTopLeftRadius={10}
-        borderTopRightRadius={10}
       >
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>My info</ModalHeader>
+            <ModalCloseButton color={"white"} />
+            <ModalBody>
+              <form onSubmit={changeData}>
+                <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"white"}>Username: </Text>
+                    <Input
+                      color={"white"}
+                      value={uname}
+                      onChange={(e) => setUname(e.target.value.toLowerCase())}
+                      minLength={4}
+                      maxLength={12}
+                    />
+                  </Flex>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"white"}>Email: </Text>
+                    <Input
+                      color={"white"}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      readOnly
+                    />
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"1vw"}
+                    marginTop={3}
+                    marginBottom={3}
+                  >
+                    <Button type="submit" colorScheme={"blue"}>
+                      Change Information
+                    </Button>
+                    <Button
+                      variant={"ghost"}
+                      color={"white"}
+                      colorScheme={"transparent"}
+                      onClick={onClose}
+                    >
+                      Close
+                    </Button>
+                  </Flex>
+                </Flex>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isOpen2} onClose={onClose2}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#323232"}>
+            <ModalHeader color={"white"}>Future Updates</ModalHeader>
+            <ModalCloseButton color={"white"} />
+            <ModalBody>
+              <Text color={"white"}>
+                In the future there is a lot of things we want to do to make
+                this be the best application for startups. First of all we would
+                like to create partnerships where you can invite people and call
+                with them to collaborate on projects. We also want to implement
+                custom backgrounds and greater responsiveness. We also have a
+                plan of creating mobile applications for both iOS and Android,
+                and web application for all operating systems in the future. We
+                also want to add more features than just the video game, such as
+                services to help boost startups. If you have any recommendations
+                or feedback, feel free to email us at gloppaglow@gmail.com.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose2}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <Flex
           direction={"row"}
           alignItems={"center"}
-          position={"absolute"}
-          top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
+          justifyContent={"space-between"}
+          paddingLeft={7}
+          paddingRight={4}
+          paddingTop={2.5}
+          paddingBottom={2.5}
+          width={"100vw"}
         >
-          <Text
-            textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-            fontWeight={800}
-            color={"white"}
-            fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"2.5vw"}
           >
-            Product Review
-          </Text>
-          <Tooltip label={"Post product for review!"} aria-label="A tooltip">
-            <Button
-              colorScheme="transparent"
-              onClick={() => router.push("/app/productreviewreg")}
-            >
+            <NextLink href={"/app/startuplist"}>
+              <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
+                Gloppa
+              </Link>
+            </NextLink>
+            <NextLink href={"/app/productreview"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Product Review
+              </Link>
+            </NextLink>
+            <NextLink href={"/app/funding"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Funding
+              </Link>
+            </NextLink>
+            <NextLink href={"/app/jobs"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Jobs
+              </Link>
+            </NextLink>
+          </Flex>
+          <Menu>
+            <MenuButton colorScheme={"transparent"}>
               <Image
-                src={"/assets/plus.png"}
-                alt={"Gloppa plus"}
-                width={30}
-                height={30}
+                src={"/assets/profile.png"}
+                alt={"Gloppa profile"}
+                width={50}
+                height={50}
               />
-            </Button>
-          </Tooltip>
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+              <MenuItem onClick={onOpen}>Update Info</MenuItem>
+              <MenuItem onClick={Logout}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          gap={"2vh"}
-          width={"100%"}
-          overflowY={"scroll"}
-          paddingTop={10}
+          backgroundColor={"#1c1c1c"}
+          height={"90%"}
+          width={"65vw"}
+          borderTopLeftRadius={10}
+          borderTopRightRadius={10}
         >
-          <Text
-            color={"white"}
-            textAlign={"center"}
-            fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
-            marginLeft={"5vw"}
-            marginRight={"5vw"}
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            position={"absolute"}
+            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
           >
-            ⚠️ Note: You need to have at least a level 2 startup to be able to
-            apply for funding.
-          </Text>
-          {prodRev}
+            <Text
+              textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
+              fontWeight={800}
+              color={"white"}
+              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+            >
+              Product Review
+            </Text>
+            <Tooltip label={"Post product for review!"} aria-label="A tooltip">
+              <Button
+                colorScheme="transparent"
+                onClick={() => router.push("/app/productreviewreg")}
+              >
+                <Image
+                  src={"/assets/plus.png"}
+                  alt={"Gloppa plus"}
+                  width={30}
+                  height={30}
+                />
+              </Button>
+            </Tooltip>
+          </Flex>
+          <Flex
+            direction={"column"}
+            alignItems={"center"}
+            gap={"2vh"}
+            width={"100%"}
+            overflowY={"scroll"}
+            paddingTop={10}
+          >
+            <Text
+              color={"white"}
+              textAlign={"center"}
+              fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
+              marginLeft={"5vw"}
+              marginRight={"5vw"}
+            >
+              ⚠️ Note: You need to have at least a level 2 startup to be able to
+              apply for funding.
+            </Text>
+            {prodRev}
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
-  );
+    );
+  }
 };
 
 export default ProductReview;

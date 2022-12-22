@@ -192,7 +192,7 @@ const Game = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") == null) {
+      if (localStorage.getItem("id") === null) {
         router.push("/c/main");
       }
     }
@@ -233,10 +233,11 @@ const Game = () => {
                 .update({ factoryCoinsDate: today });
             } else {
               if (data.factoryCoinsDate != today) {
-                const date1 = new Date(String(val.get("factoryCoinsDate")));
+                const date1 = new Date(String(snapshot.data.factoryCoinsDate));
                 const date2 = new Date(String(today));
                 const diffTime = Math.abs(date2 - date1);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                console.log(String(diffDays));
                 db.collection("startups")
                   .doc(router.query.id)
                   .update({
@@ -411,7 +412,7 @@ const Game = () => {
       if (ot < 1) {
         setIsRunning(false);
         clearInterval(intId);
-        setCoins(parseInt(coins) + 5);
+        //setCoins(parseInt(coins) + 5);
         db.collection("startups")
           .doc(router.query.id)
           .update({ coins: increment(5) });

@@ -62,6 +62,7 @@ const Funding = () => {
             db.collection("funding")
               .get()
               .then((val) => {
+                setFunds([]);
                 // if (!val.exists) {
                 //   setLoading(false);
                 //   return;
@@ -97,9 +98,7 @@ const Funding = () => {
                                   website,
                                   true,
                                   doc.id,
-                                  stid,
-                                  show,
-                                  setShow
+                                  stid
                                 ),
                               ]);
                               setLoading(false);
@@ -122,9 +121,7 @@ const Funding = () => {
                                   website,
                                   false,
                                   doc.id,
-                                  stid,
-                                  show,
-                                  setShow
+                                  stid
                                 ),
                               ]);
                               setLoading(false);
@@ -310,6 +307,11 @@ const Funding = () => {
             <NextLink href={"/app/funding"}>
               <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
                 Funding
+              </Link>
+            </NextLink>
+            <NextLink href={"/app/jobs"}>
+              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
+                Jobs
               </Link>
             </NextLink>
           </Flex>
