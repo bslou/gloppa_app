@@ -299,8 +299,8 @@ const Funding = () => {
           height={"90vh"}
           width={"65vw"}
           backgroundColor={"#1C1c1c"}
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
+          borderTopLeftRadius={10}
+          borderTopRightRadius={10}
           paddingTop={10}
         >
           <Flex
