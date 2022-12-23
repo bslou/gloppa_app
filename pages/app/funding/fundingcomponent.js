@@ -27,7 +27,7 @@ const FundingComponent = (
     ) {
       db.collection("users")
         .doc(localStorage.getItem("id"))
-        .update({ arrayRemove: id });
+        .update({ fundingStartupId: arrayRemove(idts) });
       db.collection("startups").doc(idts).update({ fundingId: "" });
       db.collection("funding").doc(id).delete();
       //change out of bottom code in the future!

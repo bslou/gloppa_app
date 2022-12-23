@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
-const ProductReviewReg = () => {
+const JobsReg = () => {
   const [idd, setIdd] = useState("");
   const router = useRouter();
   const [startupName, setStartupName] = useState(null);
@@ -138,27 +138,35 @@ const ProductReviewReg = () => {
             });
             return;
           }
-          db.collection("jobs")
-            .add({
-              startupName: startupName,
-              tagline: tagline,
-              jobtitle: jobtitle,
-              category: categories,
-              location: location,
-              linkjob: linkjob,
-              contactemail: contactemail,
-              startupId: idd,
-            })
-            .then(function (docRef) {
-              console.log("Document written with ID: ", docRef.id);
-              db.collection("users")
-                .doc(id)
-                .update({ jobs: arrayUnion(idd) });
-              db.collection("startups").doc(idd).update({ jobs: docRef.id });
-              router.push("/app/jobs");
-            })
-            .catch(function (error) {
-              console.error("Error adding document: ", error);
+          storage
+            .ref(val.get("img"))
+            .getDownloadURL()
+            .then((url) => {
+              db.collection("jobs")
+                .add({
+                  startupName: startupName,
+                  tagline: tagline,
+                  jobtitle: jobtitle,
+                  category: categories,
+                  location: location,
+                  linkjob: linkjob,
+                  contactemail: contactemail,
+                  startupId: idd,
+                  img: url,
+                })
+                .then(function (docRef) {
+                  console.log("Document written with ID: ", docRef.id);
+                  db.collection("users")
+                    .doc(id)
+                    .update({ jobs: arrayUnion(idd) });
+                  db.collection("startups")
+                    .doc(idd)
+                    .update({ jobs: arrayUnion(docRef.id) });
+                  router.push("/app/jobs");
+                })
+                .catch(function (error) {
+                  console.error("Error adding document: ", error);
+                });
             });
         } else {
           toast({
@@ -265,7 +273,7 @@ const ProductReviewReg = () => {
               color={"white"}
               fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
             >
-              Product Review Post
+              Jobs Post
             </Text>
           </Flex>
           <Flex
@@ -325,7 +333,7 @@ const ProductReviewReg = () => {
             <Input
               backgroundColor={"white"}
               borderRadius={5}
-              minLength={5}
+              minLength={3}
               value={jobtitle}
               onChange={(e) => setJobtitle(e.target.value)}
             />
@@ -437,4 +445,4 @@ const ProductReviewReg = () => {
   );
 };
 
-export default ProductReviewReg;
+export default JobsReg;

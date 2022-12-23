@@ -181,27 +181,35 @@ const FundingRegistration = () => {
           //   .update({ img: `/images/${imgname}` });
           db.collection("startups").doc(idd).update({ website: website });
 
-          db.collection("funding")
-            .add({
-              startupName: startupName,
-              startupId: idd,
-              owner: id,
-              description: description,
-              investment: [parseInt(equity), parseInt(price)],
-              email: eml,
-            })
-            .then(function (docRef) {
-              console.log("Document written with ID: ", docRef.id);
-              db.collection("users")
-                .doc(id)
-                .update({ fundingStartupId: arrayUnion(idd) });
-              db.collection("startups")
-                .doc(idd)
-                .update({ fundingId: docRef.id });
-              router.push("/app/funding");
-            })
-            .catch(function (error) {
-              console.error("Error adding document: ", error);
+          storage
+            .ref(val.get("img"))
+            .getDownloadURL()
+            .then((url) => {
+              db.collection("funding")
+                .add({
+                  startupName: startupName,
+                  startupId: idd,
+                  owner: id,
+                  description: description,
+                  investment: [parseInt(equity), parseInt(price)],
+                  email: eml,
+                  website: website,
+                  foundedDate: foundedDate,
+                  img: url,
+                })
+                .then(function (docRef) {
+                  console.log("Document written with ID: ", docRef.id);
+                  db.collection("users")
+                    .doc(id)
+                    .update({ fundingStartupId: arrayUnion(idd) });
+                  db.collection("startups")
+                    .doc(idd)
+                    .update({ fundingId: docRef.id });
+                  router.push("/app/funding");
+                })
+                .catch(function (error) {
+                  console.error("Error adding document: ", error);
+                });
             });
           // });
         } else {

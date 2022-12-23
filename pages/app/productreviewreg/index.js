@@ -209,29 +209,35 @@ const ProductReviewReg = () => {
               //   .doc(idd)
               //   .update({ img: `/images/${imgname}` });
               db.collection("startups").doc(idd).update({ website: website });
-
-              db.collection("productReview")
-                .add({
-                  startupName: startupName,
-                  startupId: idd,
-                  owner: id,
-                  catchPhrase: catchPhrase,
-                  hashtags: [...tags],
-                  likes: [],
-                  comments: [],
-                })
-                .then(function (docRef) {
-                  console.log("Document written with ID: ", docRef.id);
-                  db.collection("users")
-                    .doc(id)
-                    .update({ productReviewStartupId: arrayUnion(idd) });
-                  db.collection("startups")
-                    .doc(idd)
-                    .update({ productReviewId: docRef.id });
-                  router.push("/app/productreview");
-                })
-                .catch(function (error) {
-                  console.error("Error adding document: ", error);
+              storage
+                .ref(val.get("img"))
+                .getDownloadURL()
+                .then((url) => {
+                  db.collection("productReview")
+                    .add({
+                      startupName: startupName,
+                      startupId: idd,
+                      owner: id,
+                      catchPhrase: catchPhrase,
+                      hashtags: [...tags],
+                      likes: [],
+                      comments: [],
+                      website: website,
+                      img: url,
+                    })
+                    .then(function (docRef) {
+                      console.log("Document written with ID: ", docRef.id);
+                      db.collection("users")
+                        .doc(id)
+                        .update({ productReviewStartupId: arrayUnion(idd) });
+                      db.collection("startups")
+                        .doc(idd)
+                        .update({ productReviewId: docRef.id });
+                      router.push("/app/productreview");
+                    })
+                    .catch(function (error) {
+                      console.error("Error adding document: ", error);
+                    });
                 });
             });
         } else {

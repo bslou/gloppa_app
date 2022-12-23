@@ -76,6 +76,7 @@ const ProdRevComments = () => {
             const data = snapshot.data();
             setPhrase(data.catchPhrase);
             setComments(data.comments);
+            setCommento([]);
             data.comments.reverse().map((comment, index) => {
               db.collection("users")
                 .doc(comment.id)

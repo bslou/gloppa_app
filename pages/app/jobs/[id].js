@@ -25,10 +25,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
 import JobsComponent from "./jobscomponent";
-import MyLoadingScreen from "./myloadingscreen";
 
 const Jobs = () => {
-  //figure out loading situation, it is strange af
   const router = useRouter();
 
   const [oguname, setOgUname] = useState("");
@@ -43,7 +41,14 @@ const Jobs = () => {
   } = useDisclosure();
   const toast = useToast();
 
-  const [jobs, setJobs] = useState([]);
+  const [jobTitle, setJobTitle] = useState("");
+  const [startupName, setStartupName] = useState("");
+  const [link, setLink] = useState("");
+  const [loc, setLoc] = useState("");
+  const [imog, setImog] = useState("");
+  const [id, setId] = useState("");
+  const [idts, setIdts] = useState("");
+  const [mine, setMine] = useState("");
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -55,56 +60,53 @@ const Jobs = () => {
       router.push("/");
       return;
     } else {
-      db.collection("users")
-        .doc(localStorage.getItem("id"))
-        .get()
-        .then((val) => {
-          let n = val.get("startups");
-          setUname(val.get("username"));
-          setOgUname(val.get("username"));
-          setEmail(val.get("email"));
-          n.reverse();
-          if (n.length < 1) setLoading(false);
-          db.collection("jobs")
-            .get()
-            .then((val2) => {
-              setJobs([]);
-              console.log("Type of " + String(typeof val2));
-              val2.forEach(function (doc) {
-                let category = doc.data().category;
-                let contactemail = doc.data().contactemail;
-                let jobtitle = doc.data().jobtitle;
-                let linkjob = doc.data().linkjob;
-                let location = doc.data().location;
-                let name = doc.data().startupName;
-                let tagline = doc.data().tagline;
-                let img = doc.data().img;
-                let mine = false;
-                if (val.get("startups").includes(doc.data().startupId)) {
-                  mine = true;
-                } else {
-                  mine = false;
-                }
-                setJobs((prevJobs) => [
-                  ...prevJobs,
-                  JobsComponent(
-                    linkjob,
-                    doc.id,
-                    doc.data().startupId,
-                    name,
-                    jobtitle,
-                    img,
-                    location,
-                    toast,
-                    mine
-                  ),
-                ]);
+      if (router.isReady) {
+        console.log("on");
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            //let n = val.get("startups");
+            setUname(val.get("username"));
+            setOgUname(val.get("username"));
+            setEmail(val.get("email"));
+            console.log("ID name " + router.query.id);
+            db.collection("jobs")
+              .doc(router.query.id)
+              .get()
+              .then((val2) => {
+                setJobTitle(val2.get("jobtitle"));
+                setStartupName(val2.get("startupName"));
+                setLink(val2.get("linkjob"));
+                setLoc(val2.get("location"));
+                setId(router.query.id);
+                setIdts(val2.get("startupId"));
+                db.collection("startups")
+                  .doc(val2.get("startupId"))
+                  .get()
+                  .then((val3) => {
+                    if (val.get("startups").includes(val2.get("startupId"))) {
+                      setMine(true);
+                    } else {
+                      setMine(false);
+                    }
+                    console.log("Jobs: " + val3.get("jobs"));
+                    let img = val3.get("img");
+                    storage
+                      .ref(img)
+                      .getDownloadURL()
+                      .then((url) => {
+                        setImog(url);
+                        setLoading(false);
+                      });
+                  });
               });
-              setLoading(false);
-            });
-        });
+          });
+      } else {
+        console.log("off");
+      }
     }
-  }, []);
+  }, [router]);
 
   const changeData = (e) => {
     e.preventDefault();
@@ -137,12 +139,6 @@ const Jobs = () => {
         console.log("Error " + err);
       });
   };
-
-  if (loading) {
-    <MyLoadingScreen />;
-  }
-
-  //if (!loading) {
   return (
     <Flex
       width={"100vw"}
@@ -244,7 +240,7 @@ const Jobs = () => {
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        paddingLeft={7}
+        paddingLeft={3}
         paddingRight={4}
         paddingTop={2.5}
         paddingBottom={2.5}
@@ -256,26 +252,19 @@ const Jobs = () => {
           justifyContent={"center"}
           gap={"2.5vw"}
         >
-          <NextLink href={"/app/startuplist"}>
-            <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
-              Gloppa
+          <Button
+            colorScheme={"transparent"}
+            onClick={() => router.push("/app/jobs")}
+          >
+            <Link color={"white"}>
+              <Image
+                src={"/assets/back.png"}
+                alt={"Back"}
+                width={60}
+                height={60}
+              />
             </Link>
-          </NextLink>
-          <NextLink href={"/app/productreview"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Product Review
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/funding"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Funding
-            </Link>
-          </NextLink>
-          <NextLink href={"/app/jobs"}>
-            <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-              Jobs
-            </Link>
-          </NextLink>
+          </Button>
         </Flex>
         <Menu>
           <MenuButton colorScheme={"transparent"}>
@@ -314,21 +303,8 @@ const Jobs = () => {
             color={"white"}
             fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
           >
-            Jobs
+            {startupName} Job
           </Text>
-          <Tooltip label={"Post job for review!"} aria-label="A tooltip">
-            <Button
-              colorScheme="transparent"
-              onClick={() => router.push("/app/jobsreg")}
-            >
-              <Image
-                src={"/assets/plus.png"}
-                alt={"Gloppa plus"}
-                width={30}
-                height={30}
-              />
-            </Button>
-          </Tooltip>
         </Flex>
         <Flex
           direction={"column"}
@@ -338,23 +314,21 @@ const Jobs = () => {
           overflowY={"scroll"}
           paddingTop={10}
         >
-          <Text
-            color={"white"}
-            textAlign={"center"}
-            fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
-            marginLeft={"5vw"}
-            marginRight={"5vw"}
-          >
-            ⚠️ Note: You need to have at least a level 4 startup to be able to
-            <br />
-            post a job. You can only post two available jobs per startup.
-          </Text>
-          {jobs}
+          {JobsComponent(
+            link,
+            id,
+            idts,
+            startupName,
+            jobTitle,
+            imog,
+            loc,
+            toast,
+            mine
+          )}
         </Flex>
       </Flex>
     </Flex>
   );
-  //}
 };
 
 export default Jobs;

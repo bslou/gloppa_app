@@ -18,7 +18,7 @@ const Comments = (username, time, message) => {
         justifyContent={"space-between"}
       >
         <Text fontSize={"17pt"} color={"white"} fontWeight={700}>
-          {username}
+          @{username}
         </Text>
         <Text fontSize={"10pt"} color={"#dfdfdf"}>
           {time}

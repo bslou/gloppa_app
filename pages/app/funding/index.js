@@ -52,86 +52,48 @@ const Funding = () => {
             setUname(val.get("username"));
             setOgUname(val.get("username"));
             setEmail(val.get("email"));
-            //console.log(Object.keys(n).length);
-            // if (Object.keys(n).length == 0) {
-            //   setLoading(false);
-            //   return;
-            // }
             n.reverse();
             if (n.length < 1) setLoading(false);
-            db.collection("funding")
-              .get()
-              .then((val) => {
-                setFunds([]);
-                // if (!val.exists) {
-                //   setLoading(false);
-                //   return;
-                // }
-                val.forEach(function (doc) {
-                  let des = doc.data().description;
-                  let email = doc.data().email;
-                  let stid = doc.data().startupId;
-                  let equity = doc.data().investment[0];
-                  let price = doc.data().investment[1];
-                  let name = doc.data().startupName;
-                  db.collection("startups")
-                    .doc(stid)
-                    .onSnapshot((snapshot2) => {
-                      let foundedDate = snapshot2.data().foundedDate;
-                      let website = snapshot2.data().website;
-                      let img = snapshot2.data().img;
-                      if (n != []) {
-                        if (n.includes(stid)) {
-                          storage
-                            .ref(img)
-                            .getDownloadURL()
-                            .then((url) => {
-                              setFunds((prevFunds) => [
-                                ...prevFunds,
-                                FundingComponent(
-                                  url,
-                                  name,
-                                  [equity, price],
-                                  des,
-                                  email,
-                                  foundedDate,
-                                  website,
-                                  true,
-                                  doc.id,
-                                  stid
-                                ),
-                              ]);
-                              setLoading(false);
-                            });
-                        } else {
-                          console.log("prep");
-                          storage
-                            .ref(img)
-                            .getDownloadURL()
-                            .then((url) => {
-                              setFunds((prevFunds) => [
-                                ...prevFunds,
-                                FundingComponent(
-                                  url,
-                                  name,
-                                  [equity, price],
-                                  des,
-                                  email,
-                                  foundedDate,
-                                  website,
-                                  false,
-                                  doc.id,
-                                  stid
-                                ),
-                              ]);
-                              setLoading(false);
-                            });
-                        }
-                      }
-                    });
-                });
-                setLoading(false);
+            db.collection("funding").onSnapshot((val) => {
+              setFunds([]);
+              val.forEach(function (doc) {
+                let des = doc.data().description;
+                let email = doc.data().email;
+                let stid = doc.data().startupId;
+                let equity = doc.data().investment[0];
+                let price = doc.data().investment[1];
+                let name = doc.data().startupName;
+                let foundedDate = doc.data().foundedDate;
+                let website = doc.data().website;
+                let img = doc.data().img;
+
+                if (n != []) {
+                  let to = false;
+                  if (n.includes(stid)) {
+                    to = true;
+                  } else {
+                    to = false;
+                  }
+                  setFunds((prevFunds) => [
+                    ...prevFunds,
+                    FundingComponent(
+                      img,
+                      name,
+                      [equity, price],
+                      des,
+                      email,
+                      foundedDate,
+                      website,
+                      to,
+                      doc.id,
+                      stid
+                    ),
+                  ]);
+                  setLoading(false);
+                }
               });
+              setLoading(false);
+            });
           });
       } else {
         router.push("/c/main");

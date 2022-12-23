@@ -9,6 +9,7 @@ import Image from "next/image";
 const Direction = () => {
   const router = useRouter();
   useEffect(() => {
+    //localStorage.removeItem("id");
     if (isMobile) {
     } else {
       if (typeof window !== "undefined") {

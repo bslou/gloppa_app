@@ -48,14 +48,16 @@ const ProductReview = () => {
       if (localStorage.getItem("id") !== null) {
         db.collection("users")
           .doc(localStorage.getItem("id"))
-          .onSnapshot((val) => {
+          .get()
+          .then((val) => {
+            //setLoading(false);
             if (!val.exists) return;
-            let n = val.data().startups;
-            setUname(val.data().username);
-            setOgUname(val.data().username);
-            setEmail(val.data().email);
+            let n = val.get("startups");
+            setUname(val.get("username"));
+            setOgUname(val.get("username"));
+            setEmail(val.get("email"));
             n.reverse();
-            if (n.length < 1) setLoading(false);
+            //if (n.length < 1) setLoading(false);
             db.collection("productReview").onSnapshot((yal) => {
               if (yal.length < 1) {
                 setLoading(false);
@@ -69,6 +71,8 @@ const ProductReview = () => {
                 let likess = doc.data().likes;
                 let title = doc.data().startupName;
                 let hashtags = doc.data().hashtags;
+                let website = doc.data().website;
+                let img = doc.data().img;
                 let liked = false;
                 if (
                   likess.length > 0 &&
@@ -78,40 +82,41 @@ const ProductReview = () => {
                 } else {
                   liked = false;
                 }
-                db.collection("startups")
-                  .doc(stid)
-                  .onSnapshot((snapshot2) => {
-                    let website = snapshot2.data().website;
-                    let img = snapshot2.data().img;
-                    let to = false;
-                    if (n.includes(stid)) {
-                      to = true;
-                    } else {
-                      to = false;
-                    }
-                    storage
-                      .ref(img)
-                      .getDownloadURL()
-                      .then((url) => {
-                        setProdRev((prevProdRev) => [
-                          ...prevProdRev,
-                          ProdRevComponent(
-                            doc.id,
-                            stid,
-                            website,
-                            url,
-                            title,
-                            cathp,
-                            hashtags,
-                            commentss,
-                            likess,
-                            liked,
-                            to
-                          ),
-                        ]);
-                        setLoading(false);
-                      });
-                  });
+                // db.collection("startups")
+                //   .doc(stid)
+                //   .get()
+                //   .then((snapshot2) => {
+                //     let website = snapshot2.get("website");
+                //     let img = snapshot2.get("img");
+                let to = false;
+                if (n.includes(stid)) {
+                  to = true;
+                } else {
+                  to = false;
+                }
+                // storage
+                //   .ref(img)
+                //   .getDownloadURL()
+                //   .then((url) => {
+                setProdRev((prevProdRev) => [
+                  ...prevProdRev,
+                  ProdRevComponent(
+                    doc.id,
+                    stid,
+                    website,
+                    img,
+                    title,
+                    cathp,
+                    hashtags,
+                    commentss,
+                    likess,
+                    liked,
+                    to
+                  ),
+                ]);
+                setLoading(false);
+                // });
+                // });
               });
             });
           });
