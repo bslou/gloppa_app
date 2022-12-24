@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { auth, db } from "../../../api/firebaseconfig";
 
 const ProcessPayment = () => {
-  const PRICE = 150;
+  const PRICE = 100;
   useEffect(() => {
     let id = localStorage.getItem("id");
     var today = new Date();
@@ -15,8 +15,8 @@ const ProcessPayment = () => {
 
     db.collection("users")
       .doc(id)
-      .update({ premium: ["fulltime", today] });
-    Router.push("/app/startuplist");
+      .update({ boost: ["yes", today, 366] });
+    Router.push("/app/boost/yearlyofficialactivation");
   }, []);
 };
 

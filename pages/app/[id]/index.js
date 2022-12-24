@@ -33,6 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Progress,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -151,6 +152,7 @@ const Game = () => {
   const [td, setTd] = useState({});
 
   const [intervalId, setIntervalId] = useState();
+  const [progress, setProgress] = useState();
 
   const accessories = [
     [
@@ -216,6 +218,27 @@ const Game = () => {
             setAcc(data.accessories);
             setSelectedAcc(data.selectedAccessory);
             setCoins(String(data.coins));
+            let n = (lvl - 1) * 100;
+            console.log(
+              "Progress " +
+                (data.level < 100
+                  ? String(data.level)
+                  : String(data.level - n)) +
+                "One is " +
+                data.level +
+                " two is " +
+                n +
+                " Level is " +
+                lvl
+            );
+            setProgress(
+              Math.floor(data.level / 100) + 1 != 0
+                ? data.level < 100
+                  ? String(data.level)
+                  : String(data.level - [Math.floor(data.level / 100) * 100]) +
+                    "/100 level complete"
+                : "Progress still processing..."
+            );
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, "0");
             var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -226,27 +249,34 @@ const Game = () => {
             if (data.factoryCoinsDate == "") {
               db.collection("startups")
                 .doc(router.query.id)
-                .update({ coins: increment(accessories[selectedAcc][4]) });
-              setCoins(coins + accessories[selectedAcc][4]);
+                .update({
+                  coins: increment(parseInt(accessories[selectedAcc][4])),
+                });
+              //setCoins(coins + accessories[selectedAcc][4]);
               db.collection("startups")
                 .doc(router.query.id)
                 .update({ factoryCoinsDate: today });
             } else {
+              console.log("Command " + (data.factoryCoinsDate != today));
               if (data.factoryCoinsDate != today) {
-                const date1 = new Date(String(snapshot.data.factoryCoinsDate));
+                const date1 = new Date(String(data.factoryCoinsDate));
                 const date2 = new Date(String(today));
+                console.log("Dates " + date1 + " date 2 " + date2);
                 const diffTime = Math.abs(date2 - date1);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                console.log(String(diffDays));
-                db.collection("startups")
-                  .doc(router.query.id)
-                  .update({
-                    coins: increment(accessories[selectedAcc][4] * diffDays),
-                  });
+                if (isNaN(diffDays)) return;
+                console.log("Diff days " + String(diffDays));
                 db.collection("startups")
                   .doc(router.query.id)
                   .update({ factoryCoinsDate: today });
-                setCoins(coins + accessories[selectedAcc][4] * diffDays);
+                db.collection("startups")
+                  .doc(router.query.id)
+                  .update({
+                    coins: increment(
+                      parseInt(accessories[selectedAcc][4] * diffDays)
+                    ),
+                  });
+                //setCoins(String(coins + accessories[selectedAcc][4] * diffDays));
               }
             }
 
@@ -311,7 +341,8 @@ const Game = () => {
             .get()
             .then(function (querySnapshot) {
               // Loop through the query results
-              querySnapshot.forEach(function (doc) {
+              const tempRowsLeaderboards = [];
+              querySnapshot.docs.map(function (doc, index) {
                 // Get the value of the "name" field for each document
                 let ido = doc.id;
                 var stName = doc.data().startupName;
@@ -319,17 +350,27 @@ const Game = () => {
                 let img = accessories[doc.data().selectedAccessory][1];
                 //console.log(startupName);
                 //console.log(stLvl);
-                setRowsLeaderboards((prevLeaderboards) => [
-                  ...prevLeaderboards,
+                tempRowsLeaderboards.push(
                   Leaderboards(
                     img,
                     stLvl,
                     stName,
-                    String(prevLeaderboards.length + 1),
+                    String(index + 1),
                     router.query.id == ido
-                  ),
-                ]);
+                  )
+                );
+                // setRowsLeaderboards((prevLeaderboards) => [
+                //   ...prevLeaderboards,
+                //   Leaderboards(
+                //     img,
+                //     stLvl,
+                //     stName,
+                //     String(prevLeaderboards.length + 1),
+                //     router.query.id == ido
+                //   ),
+                // ]);
               });
+              setRowsLeaderboards(tempRowsLeaderboards);
             })
             .catch(function (error) {
               // Handle any errors that occurred during the query
@@ -465,7 +506,7 @@ const Game = () => {
       }
     } else {
       if (coins >= accessories[ind][3]) {
-        setCoins(coins - accessories[ind][3]);
+        //setCoins(parseInt(coins) - accessories[ind][3]);
         db.collection("startups")
           .doc(router.query.id)
           .update({
@@ -1447,10 +1488,7 @@ const Game = () => {
                   fontWeight={900}
                   fontSize={{ base: "11pt", md: "13pt", lg: "15pt" }}
                 >
-                  <Tooltip
-                    label={"You are currently level " + lvl + "!"}
-                    aria-label="A tooltip"
-                  >
+                  <Tooltip label={progress} aria-label="A tooltip">
                     {lvl}
                   </Tooltip>
                 </Text>

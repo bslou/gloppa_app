@@ -16,9 +16,9 @@ const ProdRevComponent = (
   comments,
   likes,
   liked,
-  mine
+  mine,
+  router
 ) => {
-  const router = useRouter();
   const deleteIt = () => {
     if (
       window.confirm(
@@ -32,6 +32,9 @@ const ProdRevComponent = (
         .doc(localStorage.getItem("id"))
         .update({ productReviewStartupId: arrayRemove(id) });
       db.collection("productReview").doc(id).delete();
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
     }
   };
   const addLikes = () => {

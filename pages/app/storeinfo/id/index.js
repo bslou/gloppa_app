@@ -14,10 +14,13 @@ const ProcessPayment = () => {
 
     today = mm + "/" + dd + "/" + yyyy;
 
+    // db.collection("users")
+    //   .doc(id)
+    //   .update({ premium: ["parttime", today] });
     db.collection("users")
       .doc(id)
-      .update({ premium: ["parttime", today] });
-    Router.push("/app/startuplist");
+      .update({ boost: ["yes", today, 31] });
+    Router.push("/app/boost/monthlyofficialactivation");
   }, []);
 
   return <MyLoadingScreen />;

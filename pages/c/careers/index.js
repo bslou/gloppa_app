@@ -277,6 +277,9 @@ const Careers = () => {
               direction={"column"}
               alignItems={"center"}
               justifyContent={"center"}
+              _hover={{
+                textDecoration: "underline",
+              }}
             >
               <Text
                 color={"#001AFF"}
@@ -301,6 +304,9 @@ const Careers = () => {
               direction={"column"}
               alignItems={"center"}
               justifyContent={"center"}
+              _hover={{
+                textDecoration: "underline",
+              }}
             >
               <Text
                 color={"#001AFF"}
@@ -333,6 +339,9 @@ const Careers = () => {
               direction={"column"}
               alignItems={"center"}
               justifyContent={"center"}
+              _hover={{
+                textDecoration: "underline",
+              }}
             >
               <Text
                 color={"#001AFF"}
@@ -365,6 +374,9 @@ const Careers = () => {
               direction={"column"}
               alignItems={"center"}
               justifyContent={"center"}
+              _hover={{
+                textDecoration: "underline",
+              }}
             >
               <Text
                 color={"#001AFF"}
@@ -397,6 +409,9 @@ const Careers = () => {
               direction={"column"}
               alignItems={"center"}
               justifyContent={"center"}
+              _hover={{
+                textDecoration: "underline",
+              }}
             >
               <Text
                 color={"#001AFF"}

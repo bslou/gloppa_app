@@ -452,9 +452,9 @@ const ProductReviewReg = () => {
 
             <Input
               backgroundColor={"white"}
-              placeholder="hashtag"
+              placeholder="Press enter after inputing hashtag"
               onKeyDown={handleChange}
-              maxLength={30}
+              maxLength={25}
               minLength={2}
             />
           </Flex>

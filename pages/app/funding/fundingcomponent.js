@@ -15,7 +15,8 @@ const FundingComponent = (
   website,
   mine,
   id,
-  idts
+  idts,
+  toast
   // show,
   // setShow
 ) => {
@@ -30,6 +31,15 @@ const FundingComponent = (
         .update({ fundingStartupId: arrayRemove(idts) });
       db.collection("startups").doc(idts).update({ fundingId: "" });
       db.collection("funding").doc(id).delete();
+      toast({
+        title: "Deleting Fund",
+        status: "info",
+        duration: 9000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
       //change out of bottom code in the future!
       //window.location.reload();
     }
@@ -43,7 +53,7 @@ const FundingComponent = (
       _hover={{
         boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
       }}
-      backgroundColor={mine ? "#1F90FF" : "#323232"}
+      backgroundColor={mine ? "#545454" : "#323232"}
       width={"90%"}
       paddingLeft={5}
       paddingRight={5}
@@ -69,8 +79,8 @@ const FundingComponent = (
           <Flex direction={"row"} alignItems={"center"}>
             <Text
               color={"white"}
-              fontWeight={800}
-              fontSize={{ base: "21pt", md: "23pt", lg: "25pt" }}
+              fontWeight={700}
+              fontSize={{ base: "15pt", md: "17pt", lg: "20pt" }}
             >
               {startupName}
             </Text>

@@ -35,6 +35,7 @@ const ProductReview = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [prodRev, setProdRev] = useState([]);
+  const [boostRev, setBoostRev] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpen2,
@@ -45,7 +46,7 @@ const ProductReview = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") !== null) {
+      if (localStorage.getItem("id") !== null && db && router) {
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .get()
@@ -63,7 +64,10 @@ const ProductReview = () => {
                 setLoading(false);
                 return;
               }
+              console.log("like");
+
               setProdRev([]);
+              setBoostRev([]);
               yal.forEach(function (doc) {
                 let stid = doc.data().startupId;
                 let cathp = doc.data().catchPhrase;
@@ -82,49 +86,115 @@ const ProductReview = () => {
                 } else {
                   liked = false;
                 }
-                // db.collection("startups")
-                //   .doc(stid)
-                //   .get()
-                //   .then((snapshot2) => {
-                //     let website = snapshot2.get("website");
-                //     let img = snapshot2.get("img");
                 let to = false;
                 if (n.includes(stid)) {
                   to = true;
                 } else {
                   to = false;
                 }
-                // storage
-                //   .ref(img)
-                //   .getDownloadURL()
-                //   .then((url) => {
-                setProdRev((prevProdRev) => [
-                  ...prevProdRev,
-                  ProdRevComponent(
-                    doc.id,
-                    stid,
-                    website,
-                    img,
-                    title,
-                    cathp,
-                    hashtags,
-                    commentss,
-                    likess,
-                    liked,
-                    to
-                  ),
-                ]);
-                setLoading(false);
-                // });
-                // });
+
+                db.collection("startups")
+                  .doc(stid)
+                  .onSnapshot((val2) => {
+                    let dot = val2.data();
+                    db.collection("users")
+                      .doc(dot.owner)
+                      .onSnapshot((val3) => {
+                        let dat = val3.data();
+                        var today = new Date();
+                        var dd = String(today.getDate()).padStart(2, "0");
+                        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                        var yyyy = today.getFullYear();
+                        today = mm + "/" + dd + "/" + yyyy;
+
+                        if (dat.boost !== undefined) {
+                          const date1 = new Date(String(dat.boost[1]));
+                          const date2 = new Date(String(today));
+                          const diffTime = Math.abs(date2 - date1);
+                          const diffDays = Math.ceil(
+                            diffTime / (1000 * 60 * 60 * 24)
+                          );
+                          if (
+                            dat.boost[0] == "yes" &&
+                            diffDays <= dat.boost[2]
+                          ) {
+                            setBoostRev((prevRows) => [
+                              ...prevRows,
+                              ProdRevComponent(
+                                doc.id,
+                                stid,
+                                website,
+                                img,
+                                title,
+                                cathp,
+                                hashtags,
+                                commentss,
+                                likess,
+                                liked,
+                                to,
+                                router
+                              ),
+                            ]);
+                            setLoading(false);
+                          } else {
+                            setProdRev((prevRows) => [
+                              ...prevRows,
+                              ProdRevComponent(
+                                doc.id,
+                                stid,
+                                website,
+                                img,
+                                title,
+                                cathp,
+                                hashtags,
+                                commentss,
+                                likess,
+                                liked,
+                                to,
+                                router
+                              ),
+                            ]);
+                            // setProdRev((prevProd) =>
+                            //   prevProd.concat(tempSetProdRev)
+                            // );
+                            setLoading(false);
+                          }
+                        } else {
+                          setProdRev((prevRows) => [
+                            ...prevRows,
+                            ProdRevComponent(
+                              doc.id,
+                              stid,
+                              website,
+                              img,
+                              title,
+                              cathp,
+                              hashtags,
+                              commentss,
+                              likess,
+                              liked,
+                              to,
+                              router
+                            ),
+                          ]);
+                          // setProdRev((prevProd) =>
+                          //   prevProd.concat(tempSetProdRev)
+                          // );
+                          setLoading(false);
+                        }
+                      });
+                  });
+                //setProdRev((prevProd) => [...prevProd, ...boostRev]);
               });
             });
           });
+        // setBoostRev(tempSetBoostRev);
+        // setProdRev(tempSetProdRev);
       } else {
         router.push("/c/main");
       }
     }
-  }, []);
+  }, [db, router]);
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -302,21 +372,40 @@ const ProductReview = () => {
               </Link>
             </NextLink>
           </Flex>
-          <Menu>
-            <MenuButton colorScheme={"transparent"}>
-              <Image
-                src={"/assets/profile.png"}
-                alt={"Gloppa profile"}
-                width={50}
-                height={50}
-              />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-              <MenuItem onClick={onOpen}>Update Info</MenuItem>
-              <MenuItem onClick={Logout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"2vw"}
+          >
+            <Button
+              bgGradient={"linear(to-r, #7928CA, #FF0080)"}
+              color={"white"}
+              fontSize={"16pt"}
+              fontWeight={400}
+              borderRadius={20}
+              _hover={{ bgGradient: "linear(to-r, #6704CB, #CF0068)" }}
+              onClick={() => router.push("/app/boost")}
+              colorScheme={"transparent"}
+            >
+              🚀 Boost
+            </Button>
+            <Menu>
+              <MenuButton colorScheme={"transparent"}>
+                <Image
+                  src={"/assets/profile.png"}
+                  alt={"Gloppa profile"}
+                  width={50}
+                  height={50}
+                />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+                <MenuItem onClick={onOpen}>Update Info</MenuItem>
+                <MenuItem onClick={Logout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Flex>
         <Flex
           direction={"column"}
@@ -373,6 +462,7 @@ const ProductReview = () => {
               ⚠️ Note: You need to have at least a level 2 startup to be able to
               apply for funding.
             </Text>
+            {boostRev}
             {prodRev}
           </Flex>
         </Flex>

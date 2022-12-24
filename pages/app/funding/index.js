@@ -17,6 +17,7 @@ import {
   ModalOverlay,
   Input,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Image from "next/image";
@@ -27,11 +28,13 @@ import Router, { useRouter } from "next/router";
 import MyLoadingScreen from "./myloadingscreen";
 
 const Funding = () => {
+  const toast = useToast();
   const [uname, setUname] = useState("");
   const [loading, setLoading] = useState(true);
   const [oguname, setOgUname] = useState("");
   const [email, setEmail] = useState("");
   const [funds, setFunds] = useState([]);
+  const [boost, setBoost] = useState([]);
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [show, setShow] = useState(false);
@@ -44,6 +47,8 @@ const Funding = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
+        const tempSetBoostRev = [];
+        const tempSetFundRev = [];
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .get()
@@ -74,21 +79,89 @@ const Funding = () => {
                   } else {
                     to = false;
                   }
-                  setFunds((prevFunds) => [
-                    ...prevFunds,
-                    FundingComponent(
-                      img,
-                      name,
-                      [equity, price],
-                      des,
-                      email,
-                      foundedDate,
-                      website,
-                      to,
-                      doc.id,
-                      stid
-                    ),
-                  ]);
+                  db.collection("startups")
+                    .doc(stid)
+                    .onSnapshot((val2) => {
+                      let dot = val2.data();
+                      db.collection("users")
+                        .doc(dot.owner)
+                        .onSnapshot((val3) => {
+                          let dat = val3.data();
+                          var today = new Date();
+                          var dd = String(today.getDate()).padStart(2, "0");
+                          var mm = String(today.getMonth() + 1).padStart(
+                            2,
+                            "0"
+                          ); //January is 0!
+                          var yyyy = today.getFullYear();
+                          today = mm + "/" + dd + "/" + yyyy;
+
+                          if (dat.boost !== undefined) {
+                            const date1 = new Date(String(dat.boost[1]));
+                            const date2 = new Date(String(today));
+                            const diffTime = Math.abs(date2 - date1);
+                            const diffDays = Math.ceil(
+                              diffTime / (1000 * 60 * 60 * 24)
+                            );
+                            if (
+                              dat.boost[0] == "yes" &&
+                              diffDays <= dat.boost[2]
+                            ) {
+                              tempSetBoostRev.push(
+                                FundingComponent(
+                                  img,
+                                  name,
+                                  [equity, price],
+                                  des,
+                                  email,
+                                  foundedDate,
+                                  website,
+                                  to,
+                                  doc.id,
+                                  stid,
+                                  toast
+                                )
+                              );
+                              setBoost(tempSetBoostRev);
+                            } else {
+                              tempSetFundRev.push(
+                                FundingComponent(
+                                  img,
+                                  name,
+                                  [equity, price],
+                                  des,
+                                  email,
+                                  foundedDate,
+                                  website,
+                                  to,
+                                  doc.id,
+                                  stid,
+                                  toast
+                                )
+                              );
+                              setFunds(tempSetFundRev);
+                            }
+                          } else {
+                            tempSetFundRev.push(
+                              FundingComponent(
+                                img,
+                                name,
+                                [equity, price],
+                                des,
+                                email,
+                                foundedDate,
+                                website,
+                                to,
+                                doc.id,
+                                stid,
+                                toast
+                              )
+                            );
+                            setFunds(tempSetFundRev);
+                          }
+                        });
+                    });
+                  setFunds((prevProd) => [...prevProd, ...boost]);
                   setLoading(false);
                 }
               });
@@ -99,7 +172,7 @@ const Funding = () => {
         router.push("/c/main");
       }
     }
-  }, []);
+  }, [router, db]);
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -277,21 +350,40 @@ const Funding = () => {
               </Link>
             </NextLink>
           </Flex>
-          <Menu>
-            <MenuButton colorScheme={"transparent"}>
-              <Image
-                src={"/assets/profile.png"}
-                alt={"Gloppa profile"}
-                width={50}
-                height={50}
-              />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-              <MenuItem onClick={onOpen}>Update Info</MenuItem>
-              <MenuItem onClick={Logout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"2vw"}
+          >
+            <Button
+              bgGradient={"linear(to-r, #7928CA, #FF0080)"}
+              color={"white"}
+              fontSize={"16pt"}
+              fontWeight={400}
+              borderRadius={20}
+              _hover={{ bgGradient: "linear(to-r, #6704CB, #CF0068)" }}
+              onClick={() => router.push("/app/boost")}
+              colorScheme={"transparent"}
+            >
+              🚀 Boost
+            </Button>
+            <Menu>
+              <MenuButton colorScheme={"transparent"}>
+                <Image
+                  src={"/assets/profile.png"}
+                  alt={"Gloppa profile"}
+                  width={50}
+                  height={50}
+                />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+                <MenuItem onClick={onOpen}>Update Info</MenuItem>
+                <MenuItem onClick={Logout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Flex>
         <Flex
           direction={"column"}
@@ -352,6 +444,7 @@ const Funding = () => {
               ⚠️ Note: You need to have at least a level 3 startup to be able to
               apply for funding.
             </Text>
+            {boost}
             {
               //funds.length > 0 ? (
               funds

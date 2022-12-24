@@ -34,9 +34,9 @@ const JobsComponent = (
   image,
   location,
   toast,
-  mine
+  mine,
+  router
 ) => {
-  const router = useRouter();
   const deleteIt = () => {
     if (
       window.confirm("Do you really want to delete " + company + " fund post?")
@@ -50,12 +50,16 @@ const JobsComponent = (
       db.collection("jobs").doc(id).delete();
       if (router.pathname == "/app/jobs/[id]") {
         router.push("/app/jobs");
+      } else {
+        setTimeout(() => {
+          window.location.reload();
+        }, 400);
       }
       //change out of bottom code in the future!
       //window.location.reload();
       toast({
         title: "Deleted successfully",
-        status: "error",
+        status: "info",
         duration: 9000,
         isClosable: true,
       });
@@ -68,7 +72,7 @@ const JobsComponent = (
       justifyContent={"space-between"}
       width={"90%"}
       padding={5}
-      backgroundColor={"#323232"}
+      backgroundColor={mine ? "#545454" : "#323232"}
       borderRadius={5}
     >
       <Flex
@@ -95,7 +99,11 @@ const JobsComponent = (
         <Button
           onClick={() => {
             {
-              navigator.clipboard.writeText("https://gloppa.co/app/jobs/" + id);
+              navigator.clipboard.writeText(
+                "Check out my job post at: https://gloppa.co/app/jobs/" +
+                  id +
+                  "!"
+              );
               toast({
                 title: "Copied to clipboard",
                 status: "success",

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
-            price: "price_1M7tZiGeoqyJBYDEyiXtS1km",
+            price: "price_1MI7olGeoqyJBYDE07JC3fp0",
             quantity: 1,
           },
         ],
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         //success_url: `${req.headers.origin}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
         //cancel_url: `${req.headers.origin}/?canceled=true`,
         success_url: `${req.headers.origin}/app/storeinfo/id`,
-        cancel_url: `${req.headers.origin}/app/pricing`,
+        cancel_url: `${req.headers.origin}/app/boost`,
       });
       res.redirect(303, session.url);
     } catch (err) {

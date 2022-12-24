@@ -8,16 +8,16 @@ export default async function handler(req, res) {
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
-            price: "price_1M7tiVGeoqyJBYDEKKGJVMOL",
+            price: "price_1MI7pZGeoqyJBYDEx4WLJ6zf",
             quantity: 1,
           },
         ],
         payment_method_types: ["card"],
-        mode: "payment",
+        mode: "subscription",
         //success_url: `${req.headers.origin}/?success=true&session_id={CHECKOUT_SESSION_ID}`,
         //cancel_url: `${req.headers.origin}/?canceled=true`,
         success_url: `${req.headers.origin}/app/storeinfo2/id`,
-        cancel_url: `${req.headers.origin}/app/pricing`,
+        cancel_url: `${req.headers.origin}/app/boost`,
       });
       console.log(session.url);
       res.redirect(303, session.url);

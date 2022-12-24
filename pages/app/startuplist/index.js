@@ -223,13 +223,13 @@ const StartupList = () => {
                   "Name " + startupName + " Level " + lvl + " Image " + img
                 );*/
                   setRows((prevRows) => [
-                    ...prevRows,
                     StartupComponent(
                       accessories[res.get("selectedAccessory")][1],
                       lvl,
                       startupName,
                       String(document)
                     ),
+                    ...prevRows,
                   ]);
                   setLoading(false);
                 });
@@ -424,26 +424,45 @@ const StartupList = () => {
               </Link>
             </NextLink>
           </Flex>
-          <Tooltip
-            label={"Personal Settings for " + uname + "!"}
-            aria-label="A tooltip"
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            gap={"2vw"}
           >
-            <Menu>
-              <MenuButton colorScheme={"transparent"}>
-                <Image
-                  src={"/assets/profile.png"}
-                  alt={"Gloppa profile"}
-                  width={50}
-                  height={50}
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-                <MenuItem onClick={onOpen}>Update Info</MenuItem>
-                <MenuItem onClick={Logout}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          </Tooltip>
+            <Button
+              bgGradient={"linear(to-r, #7928CA, #FF0080)"}
+              color={"white"}
+              fontSize={"16pt"}
+              fontWeight={400}
+              borderRadius={20}
+              _hover={{ bgGradient: "linear(to-r, #6704CB, #CF0068)" }}
+              onClick={() => router.push("/app/boost")}
+              colorScheme={"transparent"}
+            >
+              🚀 Boost
+            </Button>
+            <Tooltip
+              label={"Personal Settings for " + uname + "!"}
+              aria-label="A tooltip"
+            >
+              <Menu>
+                <MenuButton colorScheme={"transparent"}>
+                  <Image
+                    src={"/assets/profile.png"}
+                    alt={"Gloppa profile"}
+                    width={50}
+                    height={50}
+                  />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+                  <MenuItem onClick={onOpen}>Update Info</MenuItem>
+                  <MenuItem onClick={Logout}>Logout</MenuItem>
+                </MenuList>
+              </Menu>
+            </Tooltip>
+          </Flex>
         </Flex>
         <Flex
           direction={"column"}
