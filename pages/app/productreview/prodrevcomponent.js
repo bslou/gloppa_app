@@ -55,11 +55,14 @@ const ProdRevComponent = (
       backgroundColor={mine ? "#545454" : "#323232"}
       boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
       _hover={{
-        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+        //boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+        opacity: 0.8,
       }}
       justifyContent={"space-between"}
       padding={5}
       borderRadius={5}
+      as={"a"}
+      href={"/app/prodrevcomments/" + id}
     >
       <Flex
         direction={"row"}
