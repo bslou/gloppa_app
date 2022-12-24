@@ -1,26 +1,21 @@
 import {
   Button,
   Flex,
-  Text,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Input,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
   useToast,
-  Link,
-  IconButton,
 } from "@chakra-ui/react";
-import { auth, db } from "../../api/firebaseconfig";
-import Image from "next/image";
-import NextLink from "next/link";
-import { useEffect, useState } from "react";
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import BottomNavBar from "../bottomnavbar";
+import NavBar from "../navbar";
 
 const Partners = () => {
   const router = useRouter();
@@ -41,34 +36,7 @@ const Partners = () => {
 
   useEffect(() => {
     if (localStorage.getItem("id") !== null) {
-      // db.collection("users")
-      //   .doc(localStorage.getItem("id"))
-      //   .get()
-      //   .then((val) => {
-      //     if (!val.exists) return;
-      //     if (typeof val.get("premium")[0] !== "undefined") {
-      //       // does not exist
-      //       if (val.get("premium")[0] == "fulltime") {
       router.push("/app/startuplist");
-      //     } else if (val.get("premium")[0] == "parttime") {
-      //       const date1 = new Date(String(val.get("premium")[1]));
-      //       var today = new Date();
-      //       var dd = String(today.getDate()).padStart(2, "0");
-      //       var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-      //       var yyyy = today.getFullYear();
-
-      //       today = mm + "/" + dd + "/" + yyyy;
-      //       const date2 = new Date(String(today));
-      //       const diffTime = Math.abs(date2 - date1);
-      //       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      //       if (diffDays <= 31) {
-      //         router.push("/app/startuplist");
-      //       } else {
-      //         //router.push("/app/pricing");
-      //       }
-      //     }
-      //   }
-      // });
     }
   });
 
@@ -101,7 +69,11 @@ const Partners = () => {
   const [display, changeDisplay] = useState("none");
   const [display2, changeDisplay2] = useState("none");
   return (
-    <Flex direction={"column"} alignItems={"center"} width={"100vw"}>
+    <Flex
+      direction={"column"}
+      alignItems={"center"}
+      backgroundColor={"#1c1c1c"}
+    >
       <Modal isOpen={isOpen2} onClose={onClose2}>
         <ModalOverlay />
         <ModalContent>
@@ -136,219 +108,51 @@ const Partners = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-
-      {/**Desktop */}
+      <NavBar />
       <Flex
-        direction={"row"}
-        width={"100vw"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        backgroundColor={"#000"}
-        padding={"4"}
-        position={"fixed"}
-        top={0}
-        left={0}
-        as="nav"
-        zIndex={100}
-      >
-        <NextLink href={"/"}>
-          <Link color={"white"} fontWeight={600} fontSize={"20pt"}>
-            Gloppa
-          </Link>
-        </NextLink>
-        <Flex
-          direction={"row"}
-          alignItems={"center"}
-          gap={"10"}
-          display={["none", "none", "flex", "flex"]}
-        >
-          <NextLink href={"/c/product"}>
-            <Link color={"white"}>Product</Link>
-          </NextLink>
-          <NextLink href={"/c/about"}>
-            <Link color={"white"}>About</Link>
-          </NextLink>
-          <NextLink href={"/c/partners"}>
-            <Link color={"white"}>Partners</Link>
-          </NextLink>
-          <NextLink href={"/c/careers"}>
-            <Link color={"white"}>Careers</Link>
-          </NextLink>
-          <NextLink href={"/c/contact"}>
-            <Link color={"white"}>Contact</Link>
-          </NextLink>
-
-          <Button
-            backgroundColor={"#0094FF"}
-            paddingLeft={5}
-            paddingRight={5}
-            paddingTop={2}
-            paddingBottom={2}
-            color={"black"}
-            borderRadius={20}
-            onClick={() => router.push("/app/register")}
-          >
-            Join
-          </Button>
-        </Flex>
-        <IconButton
-          aria-label="Open Menu"
-          size="lg"
-          mr={2}
-          icon={<HamburgerIcon />}
-          onClick={() => changeDisplay("flex")}
-          display={["flex", "flex", "none", "none"]}
-        />
-        {/**Mobile */}
-
-        <Flex
-          w="100vw"
-          display={display}
-          bgColor="gray.50"
-          zIndex={20}
-          h="100vh"
-          pos="fixed"
-          top="0"
-          left="0"
-          overflowY="auto"
-          flexDir="column"
-        >
-          <Flex justify="flex-end">
-            <IconButton
-              mt={2}
-              mr={2}
-              aria-label="Open Menu"
-              size="lg"
-              icon={<CloseIcon />}
-              onClick={() => changeDisplay("none")}
-            />
-          </Flex>
-
-          <Flex flexDir="column" align="center">
-            <NextLink href="/" passHref>
-              <Button
-                fontWeight={600}
-                fontSize={"20pt"}
-                as="a"
-                variant="ghost"
-                aria-label="Home"
-                my={5}
-                w="100%"
-              >
-                Gloppa
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/product" passHref>
-              <Button as="a" variant="ghost" aria-label="About" my={5} w="100%">
-                Product
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/about" passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                About
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/partners" passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Partners
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/careers" passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Careers
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/contact" passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Contact
-              </Button>
-            </NextLink>
-
-            <Button
-              backgroundColor={"#0094FF"}
-              paddingLeft={5}
-              paddingRight={5}
-              paddingTop={2}
-              paddingBottom={2}
-              color={"black"}
-              borderRadius={20}
-              onClick={() => router.push("/app/register")}
-            >
-              Join
-            </Button>
-          </Flex>
-        </Flex>
-      </Flex>
-
-      <Flex
-        marginTop={90}
         direction={"column"}
         alignItems={"center"}
-        width={"90vw"}
-        gap={10}
-        marginBottom={20}
+        justifyContent={"center"}
+        gap={5}
+        width={"90%"}
+        marginTop={10}
       >
-        <Flex direction={"column"} alignItems={"center"}>
-          <Text
-            fontWeight={600}
-            fontSize={{ base: "14pt", md: "22pt", lg: "30pt" }}
-          >
-            partner with
-          </Text>
-          <Text
-            fontWeight={600}
-            fontSize={{ base: "40pt", md: "50pt", lg: "60pt" }}
-          >
-            Gloppa
-          </Text>
-        </Flex>
         <Text
-          fontSize={{ base: "14pt", md: "22pt", lg: "30pt" }}
-          fontWeight={200}
           textAlign={"center"}
+          color={"white"}
+          fontWeight={900}
+          fontSize={{ base: "34pt", md: "37pt", lg: "40pt" }}
         >
-          We are making startups funner and easier for others to work and
-          create. If you are a startup also looking to help other startups, we
-          would love to connect and possibly partner! If you'd rather prefer
-          emailing, then our email is dreammateofficial@gmail.com. We look
-          forward to connecting soon :)
+          Partner with Gloppa
+        </Text>
+        <Text
+          textAlign={"center"}
+          color={"white"}
+          fontSize={{ base: "14pt", md: "17pt", lg: "20pt" }}
+        >
+          Companies should partner with Gloppa because our unique approach to
+          startup acceleration combines the excitement and engagement of video
+          games with the practical strategies and support needed for business
+          success. By gamifying the startup process, we provide a fun and
+          interactive way for entrepreneurs to learn and grow their businesses,
+          while also fostering a sense of community and collaboration among our
+          clients. Our team of experts has a wealth of experience in both the
+          startup world and the gaming industry, making us uniquely qualified to
+          help companies achieve their goals in a way that is both enjoyable and
+          effective. Plus, our comprehensive services and resources ensure that
+          our clients have access to the tools and support they need to succeed.
+          Partnering with Gloppa is a win-win for any company looking to take
+          their startup to the next level. If you'd rather prefer emailing, then
+          our email is dreammateofficial@gmail.com. We look forward to
+          connecting soon :)
         </Text>
         <Button
-          width={{ base: 90, md: 130, lg: 180 }}
-          height={{ base: 90, md: 130, lg: 180 }}
-          backgroundColor={"black"}
+          width={{ base: 90, md: 120, lg: 150 }}
+          height={{ base: 90, md: 120, lg: 150 }}
+          backgroundColor={"#fff"}
           borderRadius={"50%"}
-          color={"white"}
-          fontSize={{ base: "16pt", md: "22pt", lg: "25pt" }}
+          color={"#000"}
+          fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
           onClick={onOpen2}
         >
           Get
@@ -356,161 +160,7 @@ const Partners = () => {
           Started
         </Button>
       </Flex>
-
-      <Flex
-        direction={"row"}
-        alignItems={"center"}
-        backgroundColor={"black"}
-        padding={7}
-        width={"100vw"}
-        fontSize={"14pt"}
-        marginTop={100}
-        justify="space-between"
-      >
-        <NextLink href={"/"}>
-          <Link
-            color={"white"}
-            fontWeight={700}
-            fontSize={"25pt"}
-            marginRight={"33vw"}
-          >
-            Gloppa
-          </Link>
-        </NextLink>
-        <Flex
-          direction={"row"}
-          alignItems={"center"}
-          gap={20}
-          display={["none", "none", "none", "none", "flex"]}
-        >
-          <NextLink
-            href={"https://www.linkedin.com/in/benjamin-sloutsky-9b9b09235/"}
-            target={"_blank"}
-            passHref
-          >
-            <Link color={"white"}>LinkedIn</Link>
-          </NextLink>
-          <NextLink
-            href={"https://twitter.com/GloppaG"}
-            target={"_blank"}
-            passHref
-          >
-            <Link color={"white"}>Twitter</Link>
-          </NextLink>
-          <NextLink href={"/c/terms"}>
-            <Link color={"white"}>Terms</Link>
-          </NextLink>
-          <NextLink href={"/c/privacy"}>
-            <Link color={"white"}>Privacy</Link>
-          </NextLink>
-          <Text color={"white"} width={"10vw"} fontSize={"13pt"}>
-            ©Gloppa, 2022 All rights reserved
-          </Text>
-        </Flex>
-        <IconButton
-          aria-label="Open Menu"
-          size="lg"
-          mr={2}
-          icon={<HamburgerIcon />}
-          onClick={() => changeDisplay2("flex")}
-          display={["flex", "flex", "flex", "flex", "none"]}
-        />
-        {/**Mobile */}
-
-        <Flex
-          w="100vw"
-          display={display2}
-          bgColor="gray.50"
-          zIndex={2000000}
-          h="100vh"
-          pos="fixed"
-          top="0"
-          left="0"
-          overflowY="auto"
-          flexDir="column"
-        >
-          <Flex justify="flex-end">
-            <IconButton
-              mt={2}
-              mr={2}
-              aria-label="Open Menu"
-              size="lg"
-              icon={<CloseIcon />}
-              onClick={() => changeDisplay2("none")}
-            />
-          </Flex>
-
-          <Flex flexDir="column" align="center">
-            <NextLink href="/" passHref>
-              <Button
-                fontWeight={600}
-                fontSize={"20pt"}
-                as="a"
-                variant="ghost"
-                aria-label="Home"
-                my={5}
-                w="100%"
-              >
-                Gloppa
-              </Button>
-            </NextLink>
-
-            <NextLink
-              href={"https://www.linkedin.com/in/benjamin-sloutsky-9b9b09235/"}
-              target={"_blank"}
-              passHref
-            >
-              <Button as="a" variant="ghost" aria-label="About" my={5} w="100%">
-                LinkedIn
-              </Button>
-            </NextLink>
-
-            <NextLink
-              href={"https://twitter.com/GloppaG"}
-              target={"_blank"}
-              passHref
-            >
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Twitter
-              </Button>
-            </NextLink>
-
-            <NextLink href={"/c/terms"} passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Terms
-              </Button>
-            </NextLink>
-
-            <NextLink href="/c/privacy" passHref>
-              <Button
-                as="a"
-                variant="ghost"
-                aria-label="Contact"
-                my={5}
-                w="100%"
-              >
-                Privacy
-              </Button>
-            </NextLink>
-
-            <Text color={"white"} width={"10vw"} fontSize={"13pt"}>
-              ©Gloppa, 2022 All rights reserved
-            </Text>
-          </Flex>
-        </Flex>
-      </Flex>
+      <BottomNavBar />
     </Flex>
   );
 };
