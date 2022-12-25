@@ -7,10 +7,9 @@ import { auth, db } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 const StartupComponent = (img, level, name, id) => {
-  let idd = localStorage.getItem("id");
-
   const deleteIt = () => {
     if (window.confirm("Do you really want to delete " + name + "?")) {
+      let idd = localStorage.getItem("id");
       db.collection("startups")
         .doc(id)
         .get()

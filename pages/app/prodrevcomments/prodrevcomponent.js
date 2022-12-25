@@ -111,7 +111,7 @@ const ProdRevComponent2 = (
                 height={25}
               />
               <Text color={"white"} fontWeight={900}>
-                {comments.length}
+                {Object.keys(comments).length === 0 ? 0 : comments.length}
               </Text>
             </Link>
             <Flex
@@ -156,7 +156,7 @@ const ProdRevComponent2 = (
           height={40}
         />
         <Text color={"#fff"} fontSize={"17pt"}>
-          {likes.length}
+          {Object.keys(likes).length === 0 ? 0 : likes.length}
         </Text>
       </Button>
     </Flex>

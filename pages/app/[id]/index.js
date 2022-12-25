@@ -38,7 +38,7 @@ import {
 import { useRouter } from "next/router";
 import Image from "next/image";
 import NextLink from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
@@ -128,11 +128,6 @@ const Game = () => {
     onOpen: onOpen13,
     onClose: onClose13,
   } = useDisclosure();
-  const cancelRef5 = useRef();
-  const cancelRef4 = useRef();
-  const cancelRef3 = useRef();
-  const cancelRef2 = useRef();
-  const cancelRef = useRef();
   const toast = useToast();
   const toast2 = useToast();
   const toast3 = useToast();
@@ -838,11 +833,7 @@ const Game = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <AlertDialog
-        isOpen={isOpen11}
-        leastDestructiveRef={cancelRef5}
-        onClose={onClose11}
-      >
+      <AlertDialog isOpen={isOpen11} onClose={onClose11}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -855,9 +846,7 @@ const Game = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef5} onClick={onClose11}>
-                Cancel
-              </Button>
+              <Button onClick={onClose11}>Cancel</Button>
               <Button
                 colorScheme="green"
                 onClick={() => {
@@ -872,11 +861,7 @@ const Game = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <AlertDialog
-        isOpen={isOpen10}
-        leastDestructiveRef={cancelRef4}
-        onClose={onClose10}
-      >
+      <AlertDialog isOpen={isOpen10} onClose={onClose10}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -889,9 +874,7 @@ const Game = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef4} onClick={onClose10}>
-                Cancel
-              </Button>
+              <Button onClick={onClose10}>Cancel</Button>
               <Button
                 colorScheme="green"
                 onClick={() => {
@@ -906,11 +889,7 @@ const Game = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <AlertDialog
-        isOpen={isOpen9}
-        leastDestructiveRef={cancelRef3}
-        onClose={onClose9}
-      >
+      <AlertDialog isOpen={isOpen9} onClose={onClose9}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -923,9 +902,7 @@ const Game = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef3} onClick={onClose9}>
-                Cancel
-              </Button>
+              <Button onClick={onClose9}>Cancel</Button>
               <Button
                 colorScheme="red"
                 onClick={() => {
@@ -940,11 +917,7 @@ const Game = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <AlertDialog
-        isOpen={isOpen8}
-        leastDestructiveRef={cancelRef2}
-        onClose={onClose8}
-      >
+      <AlertDialog isOpen={isOpen8} onClose={onClose8}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -957,9 +930,7 @@ const Game = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef2} onClick={onClose8}>
-                Cancel
-              </Button>
+              <Button onClick={onClose8}>Cancel</Button>
               <Button
                 colorScheme="red"
                 onClick={() => {
@@ -975,11 +946,7 @@ const Game = () => {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <AlertDialog
-        isOpen={isOpen7}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose7}
-      >
+      <AlertDialog isOpen={isOpen7} onClose={onClose7}>
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -991,9 +958,7 @@ const Game = () => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose7}>
-                Cancel
-              </Button>
+              <Button onClick={onClose7}>Cancel</Button>
               <Button
                 colorScheme="red"
                 onClick={() => {

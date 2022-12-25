@@ -36,10 +36,7 @@ const Leaderboards = (img, lvl, startupName, index, eq) => {
             fontWeight={500}
             fontSize={"15pt"}
           >
-            <Tooltip
-              label={"Position " + index + " on leaderboard"}
-              aria-label="A tooltip"
-            >
+            <Tooltip label={"Position " + index + " on leaderboard"}>
               {index}
             </Tooltip>
           </Text>
