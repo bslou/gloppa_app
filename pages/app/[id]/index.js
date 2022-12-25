@@ -491,7 +491,7 @@ const Game = () => {
         ),
       });
     setStartupText2("");
-    setUrgency2("");
+    setUrgency2("High");
     toast2({
       title: "Brainstorm Created",
       description: "Brainstorm was successfully created.",
@@ -2018,7 +2018,7 @@ const Game = () => {
                           fontSize={{ base: "8pt", md: "11.5pt", lg: "15pt" }}
                           fontWeight={700}
                         >
-                          {todo.probability}
+                          {todo.probability == "" ? "High" : todo.probability}
                         </Text>
                         <Flex zIndex={10}>
                           <Button
@@ -2031,7 +2031,9 @@ const Game = () => {
                           >
                             <Checkbox
                               size={{ base: "sm", md: "md", lg: "lg" }}
-                              colorScheme={todo.color}
+                              colorScheme={
+                                todo.color == "" ? "green" : todo.color
+                              }
                               defaultChecked={true}
                               isReadOnly={true}
                               zIndex={-1}
