@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { db } from "../../api/firebaseconfig";
 import BottomNavBar from "../bottomnavbar";
 import NavBar from "../navbar";
 
