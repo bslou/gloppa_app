@@ -74,6 +74,8 @@ const Partners = () => {
       direction={"column"}
       alignItems={"center"}
       backgroundColor={"#1c1c1c"}
+      width={"100vw"}
+      minHeight={"100vh"}
     >
       <Modal isOpen={isOpen2} onClose={onClose2}>
         <ModalOverlay />
