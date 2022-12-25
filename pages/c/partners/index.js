@@ -146,8 +146,8 @@ const Partners = () => {
           our clients have access to the tools and support they need to succeed.
           Partnering with Gloppa is a win-win for any company looking to take
           their startup to the next level. If you'd rather prefer emailing, then
-          our email is dreammateofficial@gmail.com. We look forward to
-          connecting soon :)
+          our email is gloppaofficial@gmail.com. We look forward to connecting
+          soon :)
         </Text>
         <Button
           width={{ base: 90, md: 120, lg: 150 }}
