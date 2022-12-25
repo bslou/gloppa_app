@@ -74,8 +74,8 @@ const JobsComponent = (
       padding={5}
       backgroundColor={mine ? "#545454" : "#323232"}
       borderRadius={5}
-      as={"a"}
-      href={"/app/jobs/" + id}
+      // as={"a"}
+      // href={"/app/jobs/" + id}
       _hover={{
         opacity: 0.8,
       }}
