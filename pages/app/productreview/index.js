@@ -60,9 +60,9 @@ const ProductReview = () => {
             n.reverse();
             //if (n.length < 1) setLoading(false);
             db.collection("productReview").onSnapshot((yal) => {
-              if (yal.length < 1) {
+              console.log("Length + " + Object.keys(yal).length);
+              if (Object.keys(yal).length < 3) {
                 setLoading(false);
-                return;
               }
               console.log("like");
 
