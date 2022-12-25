@@ -75,7 +75,7 @@ const Boost = () => {
   const { success, canceled } = router.query;
 
   loadStripe(
-    "pk_test_51M7Ro4GeoqyJBYDECjxzLIS0mmOak6AX7wxWGKhnMQILtAWIj8vqtFnsTSzDsaBKS55oiavFulwWMVYxcvPtNNyO00rjWkemcz"
+    "pk_live_51M7Ro4GeoqyJBYDE3XdbPEVHJJTQQt7tHlOF2nfaevexkkwXMq4S85r4bxASfarebzLBNBwmxkkn336xtk7FX33m00Dbu6w3RL"
   );
 
   useEffect(() => {

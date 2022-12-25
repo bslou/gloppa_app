@@ -123,6 +123,15 @@ const ProdRevComments = () => {
                     setImg(url);
                   });
               });
+          } else {
+            router.push("/app/productreview");
+            toast({
+              title: "ID does not exist",
+              description: "The id either got removed or it does not exist.",
+              status: "error",
+              duration: 4000,
+              isClosable: true,
+            });
           }
           setLoading(false);
         });

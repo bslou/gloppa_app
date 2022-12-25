@@ -61,6 +61,21 @@ const Jobs = () => {
       return;
     } else {
       if (router.isReady) {
+        db.collection("jobs")
+          .doc(router.query.id)
+          .onSnapshot((snapshot) => {
+            if (typeof snapshot.data() === "undefined") {
+              router.push("/app/jobs");
+              toast({
+                title: "ID does not exist",
+                description: "The id either got removed or it does not exist.",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+              });
+              return;
+            }
+          });
         console.log("on");
         db.collection("users")
           .doc(localStorage.getItem("id"))

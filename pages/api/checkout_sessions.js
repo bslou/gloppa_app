@@ -1,5 +1,5 @@
 const stripe = require("stripe")(
-  "sk_test_51M7Ro4GeoqyJBYDEdMmGsYfDad2uEvDYFQFaMQZqS6UY5GwN7USQzUBNzVoOY7azHXeZJush7uWUZNQ4tnrGgHmA004f2BeJFH"
+  "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"
 );
 
 export default async function handler(req, res) {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const session = await stripe.checkout.sessions.create({
         line_items: [
           {
-            price: "price_1MI7olGeoqyJBYDE07JC3fp0",
+            price: "price_1MIlOWGeoqyJBYDEwGalWHhb",
             quantity: 1,
           },
         ],

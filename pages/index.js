@@ -14,6 +14,15 @@ const Direction = () => {
     } else {
       if (typeof window !== "undefined") {
         if (localStorage.getItem("id") !== null) {
+          db.collection("users")
+            .doc(localStorage.getItem("id"))
+            .get()
+            .then((val) => {
+              if (!val.exists) {
+                localStorage.removeItem("id");
+                return;
+              }
+            });
           router.push("/app/startuplist");
         } else {
           router.push("/c/main");
