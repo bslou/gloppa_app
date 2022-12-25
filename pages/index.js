@@ -51,7 +51,7 @@ const Direction = () => {
         </Flex>
         <Heading textAlign={"center"}>Hey, Mobile Friend!</Heading>
         <Text textAlign={"center"}>
-          The Glppa Website is best viewed on a tablet or desktop computer. We
+          The Gloppa Website is best viewed on a tablet or desktop computer. We
           do not support usage of our website on mobile at this moment!
         </Text>
         <Flex direction={"row"} alignItems={"center"} justifyContent={"center"}>

@@ -93,7 +93,7 @@ const Contact = () => {
             </Text>
             <Text color={"white"} fontSize={"20pt"} fontWeight={200}>
               We are looking forward to hearing from you! (📧&nbsp;
-              gloppaglow@gmail.com)
+              gloppaofficial@gmail.com)
             </Text>
           </Flex>
           <Flex

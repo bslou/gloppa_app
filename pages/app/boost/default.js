@@ -220,7 +220,7 @@ const Boost = () => {
               application for all operating systems in the future. We also want
               to add more features than just the video game, such as services to
               help boost startups. If you have any recommendations or feedback,
-              feel free to email us at gloppaglow@gmail.com.
+              feel free to email us at gloppaofficial@gmail.com.
             </Text>
           </ModalBody>
 
@@ -326,7 +326,7 @@ const Boost = () => {
           being at the front of job deals, funding, and product review. You will
           also receive at least 1000 coins and an increase in level. For a
           greater outer boost or if you have any feedback, feel free to email us
-          at gloppaglow@gmail.com :)
+          at gloppaofficial@gmail.com :)
         </Text>
       </Flex>
       <Flex marginTop={5} width={"70vw"} justifyContent={"space-between"}>
