@@ -524,7 +524,7 @@ const StartupList = () => {
                 height={"90%"}
               >
                 <Image
-                  src={"/assets/nodata.png"}
+                  src={"/assets/nodata2.png"}
                   alt={"No data"}
                   width={400}
                   height={400}

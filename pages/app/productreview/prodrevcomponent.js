@@ -61,8 +61,6 @@ const ProdRevComponent = (
       justifyContent={"space-between"}
       padding={5}
       borderRadius={5}
-      as={"a"}
-      href={"/app/prodrevcomments/" + id}
     >
       <Flex
         direction={"row"}

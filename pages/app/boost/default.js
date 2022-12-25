@@ -323,11 +323,10 @@ const Boost = () => {
           textAlign={"center"}
         >
           With the boost you will have the chance to progress your startup by
-          being at the front of job deals, funding, and product review. There
-          will be way more updates done with Gloppa, so consequently people with
-          the boost, will have the chance to accelerate and make their startup
-          journey more enjoyable. For a greater outer boost or if you have any
-          feedback, feel free to email us at gloppaglow@gmail.com :)
+          being at the front of job deals, funding, and product review. You will
+          also receive at least 1000 coins and an increase in level. For a
+          greater outer boost or if you have any feedback, feel free to email us
+          at gloppaglow@gmail.com :)
         </Text>
       </Flex>
       <Flex marginTop={5} width={"70vw"} justifyContent={"space-between"}>
@@ -339,20 +338,32 @@ const Boost = () => {
             width={"34vw"}
             backgroundColor={"#1c1c1c"}
             gap={5}
-            height={"45vh"}
+            height={"50vh"}
             paddingLeft={3}
             paddingRight={3}
             borderRadius={10}
           >
-            <Text color={"white"} fontSize={"22pt"} fontWeight={900}>
+            <Text
+              color={"white"}
+              fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
+              fontWeight={900}
+            >
               😲 Monthly Boost
             </Text>
-            <Text color={"white"} fontSize={"16pt"} textAlign={"center"}>
+            <Text
+              color={"white"}
+              fontSize={{ base: "10pt", md: "13pt", lg: "16pt" }}
+              textAlign={"center"}
+            >
               Monthly marketing costs $10 a month. With the payment your startup
-              has great acceleration and you will have a better experience on
-              Gloppa.
+              has great acceleration and you will receive an increase in level
+              along with 1000 more coins for each startup.
             </Text>
-            <Button type="submit" role={"link"} fontSize={"16pt"}>
+            <Button
+              type="submit"
+              role={"link"}
+              fontSize={{ base: "10pt", md: "13pt", lg: "16pt" }}
+            >
               Purchase Monthly Boost
             </Button>
           </Flex>
@@ -364,22 +375,34 @@ const Boost = () => {
             justifyContent={"center"}
             width={"34vw"}
             gap={5}
-            height={"45vh"}
+            height={"50vh"}
             backgroundColor={"#1c1c1c"}
             borderRadius={10}
             paddingLeft={3}
             paddingRight={3}
           >
-            <Text color={"white"} fontSize={"22pt"} fontWeight={900}>
+            <Text
+              color={"white"}
+              fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
+              fontWeight={900}
+            >
               🥳 Yearly Boost
             </Text>
-            <Text color={"white"} fontSize={"16pt"} textAlign={"center"}>
+            <Text
+              color={"white"}
+              fontSize={{ base: "10pt", md: "13pt", lg: "16pt" }}
+              textAlign={"center"}
+            >
               Yearly marketing costs $100 a month! This is the most bought
               booster pack and it gives you the same props as monthly plan,
-              however, if you want a greater startup acceleration, feel free to
-              email us at gloppaglow@gmail.com.
+              however, it also provides users with 5000 coins and an increase by
+              2 levels for each startup.
             </Text>
-            <Button type="submit" fontSize={"16pt"} role="link">
+            <Button
+              type="submit"
+              fontSize={{ base: "10pt", md: "13pt", lg: "16pt" }}
+              role="link"
+            >
               Purchase Yearly Boost
             </Button>
           </Flex>
