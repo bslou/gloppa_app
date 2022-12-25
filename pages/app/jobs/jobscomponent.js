@@ -105,9 +105,7 @@ const JobsComponent = (
           onClick={() => {
             {
               navigator.clipboard.writeText(
-                "Check out my job post at: https://gloppa.co/app/jobs/" +
-                  id +
-                  "!"
+                "Check out my job post at: https://gloppa.co/app/jobs/" + id
               );
               toast({
                 title: "Copied to clipboard",
