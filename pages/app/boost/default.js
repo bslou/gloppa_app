@@ -393,7 +393,7 @@ const Boost = () => {
               fontSize={{ base: "10pt", md: "13pt", lg: "16pt" }}
               textAlign={"center"}
             >
-              Yearly marketing costs $100 a month! This is the most bought
+              Yearly marketing costs $100 a year! This is the most bought
               booster pack and it gives you the same props as monthly plan,
               however, it also provides users with 5000 coins and an increase by
               2 levels for each startup.
