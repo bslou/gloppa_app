@@ -53,7 +53,9 @@ const FundingComponent = (
       _hover={{
         boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
       }}
-      backgroundColor={mine ? "#545454" : "#323232"}
+      backgroundColor={
+        mine != null ? (mine ? "#545454" : "#323232") : "#323232"
+      }
       width={"90%"}
       paddingLeft={5}
       paddingRight={5}
@@ -137,7 +139,27 @@ const FundingComponent = (
         justifyContent={"center"}
         gap={"1vh"}
       >
-        {!mine ? (
+        {mine != null ? (
+          !mine ? (
+            <Text
+              color={"white"}
+              fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
+              fontWeight={900}
+              textAlign={"center"}
+            >
+              Contact them!&nbsp;
+            </Text>
+          ) : (
+            <Text
+              color={"red"}
+              fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
+              fontWeight={900}
+              textAlign={"center"}
+            >
+              Delete fund!&nbsp;
+            </Text>
+          )
+        ) : (
           <Text
             color={"white"}
             fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
@@ -146,17 +168,34 @@ const FundingComponent = (
           >
             Contact them!&nbsp;
           </Text>
-        ) : (
-          <Text
-            color={"red"}
-            fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
-            fontWeight={900}
-            textAlign={"center"}
-          >
-            Delete fund!&nbsp;
-          </Text>
         )}
-        {!mine ? (
+        {mine != null ? (
+          !mine ? (
+            <Tooltip label={"Send email!"} aria-label="A tooltip">
+              <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
+                <Link>
+                  <Image
+                    src={"/assets/Envelope.png"}
+                    alt={"Envelope"}
+                    width={30}
+                    height={30}
+                  />
+                </Link>
+              </NextLink>
+            </Tooltip>
+          ) : (
+            <Tooltip label={"Delete startup fund!"} aria-label="A tooltip">
+              <Button colorScheme={"transparent"} onClick={deleteIt}>
+                <Image
+                  src={"/assets/trash.png"}
+                  alt={"Trash"}
+                  width={30}
+                  height={30}
+                />
+              </Button>
+            </Tooltip>
+          )
+        ) : (
           <Tooltip label={"Send email!"} aria-label="A tooltip">
             <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
               <Link>
@@ -168,17 +207,6 @@ const FundingComponent = (
                 />
               </Link>
             </NextLink>
-          </Tooltip>
-        ) : (
-          <Tooltip label={"Delete startup fund!"} aria-label="A tooltip">
-            <Button colorScheme={"transparent"} onClick={deleteIt}>
-              <Image
-                src={"/assets/trash.png"}
-                alt={"Trash"}
-                width={30}
-                height={30}
-              />
-            </Button>
           </Tooltip>
         )}
         <NextLink href={website} passHref target={"_blank"}>

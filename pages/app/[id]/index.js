@@ -316,9 +316,27 @@ const Game = () => {
                 break;
               }
               let urr = JSON.parse(achs[o]);
-              setRowsAchievements((prevAchs) => [
+              setRowsAchievements((prevAchs, index) => [
                 ...prevAchs,
-                Achievements(urr[0], 5),
+                <ListItem key={index}>
+                  <Flex direction={"row"} alignItems={"center"}>
+                    <Text
+                      color={"white"}
+                      marginRight={"1vw"}
+                      fontSize={{ base: "6pt", md: "9pt", lg: "12pt" }}
+                    >
+                      {urr[0]}
+                    </Text>
+                    <Image
+                      src={"/assets/coin.png"}
+                      alt={"Gloppa coin"}
+                      width={25}
+                      height={25}
+                      marginRight={"0.2vw"}
+                    />
+                    <Text>+5</Text>
+                  </Flex>
+                </ListItem>,
               ]);
             }
           } else {
