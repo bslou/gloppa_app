@@ -45,48 +45,48 @@ const FundingComponent = (
     }
   };
 
-  return (
-    <Flex
-      direction={"row"}
-      alignItems={"center"}
-      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
-      _hover={{
-        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
-      }}
-      backgroundColor={
-        mine != null ? (mine ? "#545454" : "#323232") : "#323232"
-      }
-      width={"90%"}
-      paddingLeft={5}
-      paddingRight={5}
-      paddingTop={3}
-      paddingBottom={3}
-      justifyContent={"space-between"}
-      borderRadius={5}
-    >
+  //comment out below line later if needed!
+  if (investment !== undefined && investment.length == 0) {
+    return (
       <Flex
         direction={"row"}
         alignItems={"center"}
-        justifyContent={"center"}
-        gap={"2vw"}
-        maxWidth={"77%"}
+        boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+        _hover={{
+          boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+        }}
+        backgroundColor={mine ? "#545454" : "#323232"}
+        width={"90%"}
+        paddingLeft={5}
+        paddingRight={5}
+        paddingTop={3}
+        paddingBottom={3}
+        justifyContent={"space-between"}
+        borderRadius={5}
       >
-        <img src={img} alt={"Startup Logo"} width={"13%"} height={"13%"} />
         <Flex
-          direction={"column"}
-          alignItems={"left"}
+          direction={"row"}
+          alignItems={"center"}
           justifyContent={"center"}
-          width={"100%"}
+          gap={"2vw"}
+          maxWidth={"77%"}
         >
-          <Flex direction={"row"} alignItems={"center"}>
-            <Text
-              color={"white"}
-              fontWeight={700}
-              fontSize={{ base: "15pt", md: "17pt", lg: "20pt" }}
-            >
-              {startupName}
-            </Text>
-            {/* <Tooltip
+          <img src={img} alt={"Startup Logo"} width={"13%"} height={"13%"} />
+          <Flex
+            direction={"column"}
+            alignItems={"left"}
+            justifyContent={"center"}
+            width={"100%"}
+          >
+            <Flex direction={"row"} alignItems={"center"}>
+              <Text
+                color={"white"}
+                fontWeight={700}
+                fontSize={{ base: "15pt", md: "17pt", lg: "20pt" }}
+              >
+                {startupName}
+              </Text>
+              {/* <Tooltip
               label={"Show " + (show ? "less!" : "more!")}
               aria-label="A tooltip"
             >
@@ -101,46 +101,45 @@ const FundingComponent = (
                 {show ? "-" : "+"}
               </Button>
             </Tooltip> */}
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            width={"35vw"}
-          >
+            </Flex>
+            <Flex
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+              width={"35vw"}
+            >
+              <Text
+                color={"white"}
+                fontWeight={900}
+                fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
+              >
+                {String(investment[0])}% equity for ${String(investment[1])}
+              </Text>
+              <Text
+                color={"white"}
+                fontWeight={900}
+                fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
+              >
+                Founded: {String(foundedYear)}
+              </Text>
+            </Flex>
+            {/* <Collapse startingHeight={22} in={show}> */}
             <Text
               color={"white"}
-              fontWeight={900}
-              fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
+              fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
             >
-              {String(investment[0])}% equity for ${String(investment[1])}
+              {des}
             </Text>
-            <Text
-              color={"white"}
-              fontWeight={900}
-              fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
-            >
-              Founded: {String(foundedYear)}
-            </Text>
+            {/* </Collapse> */}
           </Flex>
-          {/* <Collapse startingHeight={22} in={show}> */}
-          <Text
-            color={"white"}
-            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
-          >
-            {des}
-          </Text>
-          {/* </Collapse> */}
         </Flex>
-      </Flex>
-      <Flex
-        direction={"column"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        gap={"1vh"}
-      >
-        {mine != null ? (
-          !mine ? (
+        <Flex
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={"1vh"}
+        >
+          {!mine ? (
             <Text
               color={"white"}
               fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
@@ -158,19 +157,8 @@ const FundingComponent = (
             >
               Delete fund!&nbsp;
             </Text>
-          )
-        ) : (
-          <Text
-            color={"white"}
-            fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
-            fontWeight={900}
-            textAlign={"center"}
-          >
-            Contact them!&nbsp;
-          </Text>
-        )}
-        {mine != null ? (
-          !mine ? (
+          )}
+          {!mine ? (
             <Tooltip label={"Send email!"} aria-label="A tooltip">
               <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
                 <Link>
@@ -194,32 +182,19 @@ const FundingComponent = (
                 />
               </Button>
             </Tooltip>
-          )
-        ) : (
-          <Tooltip label={"Send email!"} aria-label="A tooltip">
-            <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
-              <Link>
-                <Image
-                  src={"/assets/Envelope.png"}
-                  alt={"Envelope"}
-                  width={30}
-                  height={30}
-                />
-              </Link>
-            </NextLink>
-          </Tooltip>
-        )}
-        <NextLink href={website} passHref target={"_blank"}>
-          <Link
-            color={"white"}
-            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
-          >
-            Website
-          </Link>
-        </NextLink>
+          )}
+          <NextLink href={website} passHref target={"_blank"}>
+            <Link
+              color={"white"}
+              fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+            >
+              Website
+            </Link>
+          </NextLink>
+        </Flex>
       </Flex>
-    </Flex>
-  );
+    );
+  }
 };
 
 export default FundingComponent;

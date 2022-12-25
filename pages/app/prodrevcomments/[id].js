@@ -27,7 +27,6 @@ import { useEffect, useState } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import ProdRevComponent2 from "./prodrevcomponent";
 import { arrayUnion } from "firebase/firestore";
-import Comments from "./comments";
 import MyLoadingScreen from "./myloadingscreen";
 
 const ProdRevComments = () => {
@@ -75,7 +74,7 @@ const ProdRevComments = () => {
             console.log("Test often Test totototot");
             const data = snapshot.data();
             setPhrase(data.catchPhrase);
-            setComments(data.comments);
+            setComments(Object.values(data.comments));
             setCommento([]);
             data.comments.reverse().map((comment, index) => {
               db.collection("users")
@@ -85,16 +84,41 @@ const ProdRevComments = () => {
                   let doto = snapshot3.data();
                   setCommento((prevc) => [
                     ...prevc,
-                    Comments(
-                      doto.username,
-                      String(comment.time),
-                      comment.comment
-                    ),
+                    <Flex
+                      direction={"column"}
+                      alignItems={"left"}
+                      justifyContent={"center"}
+                      backgroundColor={"#323232"}
+                      gap={2}
+                      padding={5}
+                      width={"90%"}
+                      borderRadius={5}
+                    >
+                      <Flex
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <Text
+                          fontSize={"17pt"}
+                          color={"white"}
+                          fontWeight={700}
+                        >
+                          @{doto.username}
+                        </Text>
+                        <Text fontSize={"10pt"} color={"#dfdfdf"}>
+                          {String(comment.time)}
+                        </Text>
+                      </Flex>
+                      <Text color={"white"} fontSize={"13pt"}>
+                        {comment.comment}
+                      </Text>
+                    </Flex>,
                   ]);
                 });
             });
-            setTags(data.hashtags);
-            setLikes(data.likes);
+            setTags(Object.values(data.hashtags));
+            setLikes(Object.values(data.likes));
             setTitle(data.startupName);
             setIdts(data.startupId);
             setId(router.query.id);

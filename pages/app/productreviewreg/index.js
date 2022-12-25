@@ -118,7 +118,7 @@ const ProductReviewReg = () => {
 
   const handleChange = (event) => {
     const value = event.target.value;
-    if (event.key === "Enter" && tags.length < 3) {
+    if (event.key === "Enter" && tags.length < 3 && value.length >= 2) {
       setTags([...tags, value]);
       event.target.value = "";
     }
@@ -150,7 +150,8 @@ const ProductReviewReg = () => {
     if (tags.length < 1) {
       toast({
         title: "No hashtags",
-        description: "You have to select hashtags.",
+        description:
+          "You have to select hashtags. Make sure each hashtag is at least 2 characters.",
         status: "error",
         duration: 9000,
         isClosable: true,

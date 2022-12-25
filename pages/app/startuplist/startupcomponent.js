@@ -57,60 +57,62 @@ const StartupComponent = (img, level, name, id) => {
     }
   };
 
-  return (
-    <Flex
-      direction={"row"}
-      alignItems={"center"}
-      justifyContent={"center"}
-      backgroundColor={"#303030"}
-      width={"90%"}
-      paddingTop={5}
-      paddingBottom={5}
-      paddingLeft={5}
-      borderRadius={3}
-      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
-      _hover={{
-        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
-      }}
-    >
+  if (name) {
+    return (
       <Flex
-        position={"absolute"}
-        left={"28vw"}
         direction={"row"}
         alignItems={"center"}
         justifyContent={"center"}
+        backgroundColor={"#303030"}
+        width={"90%"}
+        paddingTop={5}
+        paddingBottom={5}
+        paddingLeft={5}
+        borderRadius={3}
+        boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+        _hover={{
+          boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+        }}
       >
-        <Image src={img} alt={"Gloppa spacer"} width={70} height={70} />
-        <Text color={"white"} fontWeight={300}>
-          {level}
-        </Text>
-      </Flex>
-      <NextLink href={"/app/" + id}>
-        <Link
-          color={"white"}
-          fontWeight={600}
-          fontSize={{ base: "14pt", md: "18pt", lg: "25pt" }}
-        >
-          {name}
-        </Link>
-      </NextLink>
-      <Tooltip label={"Delete " + name + "..."} aria-label="A tooltip">
-        <Button
+        <Flex
           position={"absolute"}
-          right={"28vw"}
-          onClick={deleteIt}
-          colorScheme={"transparent"}
+          left={"28vw"}
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
         >
-          <Image
-            src={"/assets/trash.png"}
-            alt={"Gloppa menu"}
-            width={35}
-            height={35}
-          />
-        </Button>
-      </Tooltip>
-    </Flex>
-  );
+          <Image src={img} alt={"Gloppa spacer"} width={70} height={70} />
+          <Text color={"white"} fontWeight={300}>
+            {level}
+          </Text>
+        </Flex>
+        <NextLink href={"/app/" + id}>
+          <Link
+            color={"white"}
+            fontWeight={600}
+            fontSize={{ base: "14pt", md: "18pt", lg: "25pt" }}
+          >
+            {name}
+          </Link>
+        </NextLink>
+        <Tooltip label={"Delete " + name + "..."} aria-label="A tooltip">
+          <Button
+            position={"absolute"}
+            right={"28vw"}
+            onClick={deleteIt}
+            colorScheme={"transparent"}
+          >
+            <Image
+              src={"/assets/trash.png"}
+              alt={"Gloppa menu"}
+              width={35}
+              height={35}
+            />
+          </Button>
+        </Tooltip>
+      </Flex>
+    );
+  }
 };
 
 export default StartupComponent;

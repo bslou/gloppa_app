@@ -71,10 +71,10 @@ const ProductReview = () => {
               yal.forEach(function (doc) {
                 let stid = doc.data().startupId;
                 let cathp = doc.data().catchPhrase;
-                let commentss = doc.data().comments;
-                let likess = doc.data().likes;
+                let commentss = Object.values(doc.data().comments);
+                let likess = Object.values(doc.data().likes);
                 let title = doc.data().startupName;
-                let hashtags = doc.data().hashtags;
+                let hashtags = Object.values(doc.data().hashtags);
                 let website = doc.data().website;
                 let img = doc.data().img;
                 let liked = false;

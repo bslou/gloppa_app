@@ -42,8 +42,6 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
-import Achievements from "./achievements";
-import Leaderboards from "./leaderboards";
 import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const Game = () => {
@@ -316,9 +314,9 @@ const Game = () => {
                 break;
               }
               let urr = JSON.parse(achs[o]);
-              setRowsAchievements((prevAchs, index) => [
+              setRowsAchievements((prevAchs) => [
                 ...prevAchs,
-                <ListItem key={index}>
+                <ListItem>
                   <Flex direction={"row"} alignItems={"center"}>
                     <Text
                       color={"white"}
@@ -364,13 +362,75 @@ const Game = () => {
                 //console.log(startupName);
                 //console.log(stLvl);
                 tempRowsLeaderboards.push(
-                  Leaderboards(
-                    img,
-                    stLvl,
-                    stName,
-                    String(index + 1),
-                    router.query.id == ido
-                  )
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    width={"90%"}
+                    backgroundColor={
+                      router.query.id == ido ? "#1F90FF" : "#dfdfdf"
+                    }
+                    paddingTop={3}
+                    paddingBottom={3}
+                    paddingLeft={5}
+                    paddingRight={5}
+                    borderRadius={2}
+                    boxShadow={
+                      router.query.id == ido
+                        ? "0 0 5px 1px #004C97"
+                        : "0 0 5px 1px rgba(255, 255, 255, 0.9)"
+                    }
+                    _hover={{
+                      boxShadow: "0 0 5px 1px rgba(100, 100, 100, 0.9)",
+                    }}
+                  >
+                    <Box position="relative" display="flex">
+                      <Box
+                        as="img"
+                        width={50}
+                        src={"/assets/coina.png"}
+                        alt="My Image"
+                      />
+                      <Box
+                        position="absolute"
+                        top="50%"
+                        right={"38.5%"}
+                        transform="translateY(-50%)"
+                        textAlign="center"
+                      >
+                        <Text
+                          fontFamily={"monospace"}
+                          color={router.query.id == ido ? "#fff" : "#000"}
+                          fontWeight={500}
+                          fontSize={"15pt"}
+                        >
+                          <Tooltip
+                            label={"Position " + index + " on leaderboard"}
+                          >
+                            {String(index + 1)}
+                          </Tooltip>
+                        </Text>
+                      </Box>
+                    </Box>
+
+                    <Text
+                      color={router.query.id == ido ? "#fff" : "#000"}
+                      fontWeight={700}
+                    >
+                      {stName}
+                    </Text>
+                    <Flex>
+                      <Image
+                        src={img}
+                        width={30}
+                        height={30}
+                        alt={"Gloppa Image"}
+                      />
+                      <Text color={router.query.id == ido ? "#fff" : "#000"}>
+                        {stLvl}
+                      </Text>
+                    </Flex>
+                  </Flex>
                 );
                 // setRowsLeaderboards((prevLeaderboards) => [
                 //   ...prevLeaderboards,
