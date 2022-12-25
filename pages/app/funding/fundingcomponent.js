@@ -46,7 +46,8 @@ const FundingComponent = (
   };
 
   //comment out below line later if needed!
-  if (investment !== undefined && investment.length == 0) {
+  if (eml) {
+    console.log("Output");
     return (
       <Flex
         direction={"row"}
