@@ -27,6 +27,7 @@ import { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import StartupComponent from "./startupcomponent";
 import MyLoadingScreen from "./myloadingscreen";
+import NavBar from "../navbar";
 
 const StartupList = () => {
   const router = useRouter();
@@ -127,84 +128,14 @@ const StartupList = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
-        // db.collection("users")
-        //   .doc(localStorage.getItem("id"))
-        //   .get()
-        //   .then((val) => {
-        //     if (!val.exists) return;
-        //     if (typeof val.get("premium")[0] !== "undefined") {
-        //       // does not exist
-        //       if (val.get("premium")[0] == "fulltime") {
-        //         // router.push("/app/startuplist");
-        //         if (dataFetchedRef.current) return;
-        //         dataFetchedRef.current = true;
-        //         db.collection("users")
-        //           .doc(localStorage.getItem("id"))
-        //           .onSnapshot((snapshot) => {
-        //             const data = snapshot.data();
-        //             let n = data.startups;
-        //             setRows([]);
-        //             setUname(data.username);
-        //             setOgUname(data.username);
-        //             setEmail(data.email);
-        //             //console.log(Object.keys(n).length);
-        //             if (Object.keys(n).length == 0) {
-        //               setLoading(false);
-        //               return;
-        //             }
-        //             n.reverse();
-        //             if (n.length < 1) setLoading(false);
-        //             n.forEach((document) => {
-        //               db.collection("startups")
-        //                 .doc(document)
-        //                 .get()
-        //                 .then((res) => {
-        //                   let startupName = String(res.get("startupName"));
-        //                   let lvl = String(
-        //                     Math.floor(res.get("level") / 100) + 1
-        //                   );
-        //                   let img = "/assets/spacer1.png";
-        //                   /*console.log(
-        //           "Name " + startupName + " Level " + lvl + " Image " + img
-        //         );*/
-        //                   setRows((prevRows) => [
-        //                     ...prevRows,
-        //                     StartupComponent(
-        //                       accessories[res.get("selectedAccessory")][1],
-        //                       lvl,
-        //                       startupName,
-        //                       String(document)
-        //                     ),
-        //                   ]);
-        //                   setLoading(false);
-        //                 });
-        //             });
-        //           });
-        //       } else if (val.get("premium")[0] == "parttime") {
-        //         const date1 = new Date(String(val.get("premium")[1]));
-        //         var today = new Date();
-        //         var dd = String(today.getDate()).padStart(2, "0");
-        //         var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-        //         var yyyy = today.getFullYear();
-
-        //         today = mm + "/" + dd + "/" + yyyy;
-        //         const date2 = new Date(String(today));
-        //         const diffTime = Math.abs(date2 - date1);
-        //         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        //         if (diffDays <= 31) {
-        // router.push("/app/startuplist");
-        if (dataFetchedRef.current) return;
-        dataFetchedRef.current = true;
+        // if (dataFetchedRef.current) return;
+        // dataFetchedRef.current = true;
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .onSnapshot((snapshot) => {
             setRows([]);
             const data = snapshot.data();
             let n = data.startups;
-            //console.log(Object.keys(n).length);
-            setUname(data.username);
-            setOgUname(data.username);
-            setEmail(data.email);
             if (Object.keys(n).length == 0) {
               setLoading(false);
               return;
@@ -218,10 +149,6 @@ const StartupList = () => {
                 .then((res) => {
                   let startupName = String(res.get("startupName"));
                   let lvl = String(Math.floor(res.get("level") / 100) + 1);
-                  let img = "/assets/spacer1.png";
-                  /*console.log(
-                  "Name " + startupName + " Level " + lvl + " Image " + img
-                );*/
                   setRows((prevRows) => [
                     StartupComponent(
                       accessories[res.get("selectedAccessory")][1],
@@ -235,15 +162,6 @@ const StartupList = () => {
                 });
             });
           });
-        //           } else {
-        //             router.push("/app/pricing");
-        //           }
-        //         }
-        //       }
-        //     });
-        // } else {
-        //   router.push("/c/main");
-        // }
       }
     }
   }, []);
@@ -251,43 +169,6 @@ const StartupList = () => {
   if (loading) {
     return <MyLoadingScreen />;
   }
-
-  const Logout = () => {
-    localStorage.removeItem("id");
-    router.push("/");
-  };
-
-  const changeData = (e) => {
-    e.preventDefault();
-    let nummers = db.collection("users").where("username", "==", uname);
-    nummers
-      .get()
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty && uname != oguname) {
-          toast({
-            title: "Username exists.",
-            description: "The username already exists in our database.",
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-          });
-        } else {
-          console.log("Doesn't exist!");
-          let id = localStorage.getItem("id");
-          db.collection("users").doc(id).update({ username: uname });
-          toast({
-            title: "Username updated.",
-            description: "The username got updated successfully.",
-            status: "success",
-            duration: 9000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log("Error " + err);
-      });
-  };
 
   if (!loading) {
     return (
@@ -298,172 +179,7 @@ const StartupList = () => {
         direction={"column"}
         alignItems={"center"}
       >
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent backgroundColor={"#323232"}>
-            <ModalHeader color={"white"}>My info</ModalHeader>
-            <ModalCloseButton color={"white"} />
-            <ModalBody>
-              <form onSubmit={changeData}>
-                <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
-                  <Flex
-                    width={"95%"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    gap={"0.3vw"}
-                  >
-                    <Text color={"white"}>Username: </Text>
-                    <Input
-                      color={"white"}
-                      value={uname}
-                      onChange={(e) => setUname(e.target.value.toLowerCase())}
-                      minLength={4}
-                      maxLength={12}
-                    />
-                  </Flex>
-                  <Flex
-                    width={"95%"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    gap={"0.3vw"}
-                  >
-                    <Text color={"white"}>Email: </Text>
-                    <Input
-                      color={"white"}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      readOnly
-                    />
-                  </Flex>
-                  <Flex
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    gap={"1vw"}
-                    marginTop={3}
-                    marginBottom={3}
-                  >
-                    <Button type="submit" colorScheme={"blue"}>
-                      Change Information
-                    </Button>
-                    <Button
-                      variant={"ghost"}
-                      color={"white"}
-                      colorScheme={"transparent"}
-                      onClick={onClose}
-                    >
-                      Close
-                    </Button>
-                  </Flex>
-                </Flex>
-              </form>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-        <Modal isOpen={isOpen2} onClose={onClose2}>
-          <ModalOverlay />
-          <ModalContent backgroundColor={"#323232"}>
-            <ModalHeader color={"white"}>Future Updates</ModalHeader>
-            <ModalCloseButton color={"white"} />
-            <ModalBody>
-              <Text color={"white"}>
-                In the future there is a lot of things we want to do to make
-                this be the best application for startups. First of all we would
-                like to create partnerships where you can invite people and call
-                with them to collaborate on projects. We also want to implement
-                custom backgrounds and greater responsiveness. We also have a
-                plan of creating mobile applications for both iOS and Android,
-                and web application for all operating systems in the future. We
-                also want to add more features than just the video game, such as
-                services to help boost startups. If you have any recommendations
-                or feedback, feel free to email us at gloppaglow@gmail.com.
-              </Text>
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose2}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-        <Flex
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"space-between"}
-          paddingLeft={7}
-          paddingRight={4}
-          paddingTop={2.5}
-          paddingBottom={2.5}
-          width={"100vw"}
-        >
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={"2.5vw"}
-          >
-            <NextLink href={"/app/startuplist"}>
-              <Link color={"white"} fontWeight={700} fontSize={"20pt"}>
-                Gloppa
-              </Link>
-            </NextLink>
-            <NextLink href={"/app/productreview"}>
-              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-                Product Review
-              </Link>
-            </NextLink>
-            <NextLink href={"/app/funding"}>
-              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-                Funding
-              </Link>
-            </NextLink>
-            <NextLink href={"/app/jobs"}>
-              <Link color={"white"} fontWeight={400} fontSize={"16pt"}>
-                Jobs
-              </Link>
-            </NextLink>
-          </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={"2vw"}
-          >
-            <Button
-              bgGradient={"linear(to-r, #7928CA, #FF0080)"}
-              color={"white"}
-              fontSize={"16pt"}
-              fontWeight={400}
-              borderRadius={20}
-              _hover={{ bgGradient: "linear(to-r, #6704CB, #CF0068)" }}
-              onClick={() => router.push("/app/boost")}
-              colorScheme={"transparent"}
-            >
-              🚀 Boost
-            </Button>
-            <Tooltip
-              label={"Personal Settings for " + uname + "!"}
-              aria-label="A tooltip"
-            >
-              <Menu>
-                <MenuButton colorScheme={"transparent"}>
-                  <Image
-                    src={"/assets/profile.png"}
-                    alt={"Gloppa profile"}
-                    width={50}
-                    height={50}
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
-                  <MenuItem onClick={onOpen}>Update Info</MenuItem>
-                  <MenuItem onClick={Logout}>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Tooltip>
-          </Flex>
-        </Flex>
+        <NavBar />
         <Flex
           direction={"column"}
           alignItems={"center"}
@@ -535,10 +251,6 @@ const StartupList = () => {
                 </Text>
               </Flex>
             )}
-            {/* {StartupComponent("/assets/spacer.png", "13", "DreamMate")}
-          {StartupComponent("/assets/spacer.png", "13", "Krunker")}
-          {StartupComponent("/assets/spacer.png", "13", "Lol")}
-          {StartupComponent("/assets/spacer.png", "13", "Gloppa")} */}
           </Flex>
         </Flex>
       </Flex>
