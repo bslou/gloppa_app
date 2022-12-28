@@ -23,8 +23,6 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 import NavBar from "../navbar";
-import Message from "./message";
-import Messagee from "./messagee";
 
 const Messages = () => {
   const router = useRouter();
@@ -104,6 +102,7 @@ const Messages = () => {
             }),
           });
         setInp("");
+        setComments([]);
         //scrollToBottom();
       } else {
         toast({
