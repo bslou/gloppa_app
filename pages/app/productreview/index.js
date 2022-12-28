@@ -240,7 +240,7 @@ const ProductReview = () => {
             overflowY={"scroll"}
             paddingTop={10}
           >
-            <Text
+            {/* <Text
               color={"white"}
               textAlign={"center"}
               fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
@@ -249,7 +249,7 @@ const ProductReview = () => {
             >
               ⚠️ Note: You need to have at least a level 2 startup to be able to
               apply for funding.
-            </Text>
+            </Text> */}
             {boostRev}
             {prodRev}
           </Flex>

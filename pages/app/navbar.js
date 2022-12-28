@@ -43,6 +43,16 @@ const NavBar = () => {
     onOpen: onOpen3,
     onClose: onClose3,
   } = useDisclosure();
+  const {
+    isOpen: isOpen4,
+    onOpen: onOpen4,
+    onClose: onClose4,
+  } = useDisclosure();
+  const {
+    isOpen: isOpen5,
+    onOpen: onOpen5,
+    onClose: onClose5,
+  } = useDisclosure();
   const Logout = () => {
     localStorage.removeItem("id");
     router.push("/");
@@ -226,6 +236,37 @@ const NavBar = () => {
               </MenuItem>
               <MenuItem onClick={() => router.push("/app/jobs")}>
                 ‍💻 Jobs
+              </MenuItem>
+            </MenuList>
+          </Menu>
+          <Menu isOpen={isOpen4}>
+            <MenuButton
+              color={"white"}
+              onMouseEnter={onOpen4}
+              onMouseLeave={onClose4}
+            >
+              Community {isOpen4 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </MenuButton>
+            <MenuList onMouseEnter={onOpen4} onMouseLeave={onClose4}>
+              <MenuItem onClick={() => router.push("/app/messages")}>
+                💬 Private Messages
+              </MenuItem>
+              <MenuItem onClick={() => router.push("/app/forum")}>
+                📢 Public Forum
+              </MenuItem>
+            </MenuList>
+          </Menu>
+          <Menu isOpen={isOpen5}>
+            <MenuButton
+              color={"white"}
+              onMouseEnter={onOpen5}
+              onMouseLeave={onClose5}
+            >
+              Education {isOpen5 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </MenuButton>
+            <MenuList onMouseEnter={onOpen5} onMouseLeave={onClose5}>
+              <MenuItem onClick={() => router.push("/app/education")}>
+                🎥 Educational Videos
               </MenuItem>
             </MenuList>
           </Menu>

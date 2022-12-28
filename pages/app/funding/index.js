@@ -231,7 +231,7 @@ const Funding = () => {
             width={"100%"}
             overflowY={"scroll"}
           >
-            <Text
+            {/* <Text
               color={"white"}
               textAlign={"center"}
               fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
@@ -240,7 +240,7 @@ const Funding = () => {
             >
               ⚠️ Note: You need to have at least a level 3 startup to be able to
               apply for funding.
-            </Text>
+            </Text> */}
             {boost}
             {
               //funds.length > 0 ? (

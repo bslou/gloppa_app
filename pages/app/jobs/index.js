@@ -219,7 +219,7 @@ const Jobs = () => {
           overflowY={"scroll"}
           paddingTop={10}
         >
-          <Text
+          {/* <Text
             color={"white"}
             textAlign={"center"}
             fontSize={{ base: "9pt", md: "10.5pt", lg: "12pt" }}
@@ -229,7 +229,7 @@ const Jobs = () => {
             ⚠️ Note: You need to have at least a level 4 startup to be able to
             <br />
             post a job. You can only post two available jobs per startup.
-          </Text>
+          </Text> */}
           {boost}
           {jobs}
         </Flex>

@@ -77,20 +77,20 @@ const ProductReviewReg = () => {
                 .then((res) => {
                   let startupName = String(res.get("startupName"));
                   let lvl = Math.floor(res.get("level") / 100) + 1;
-                  if (lvl >= 2) {
-                    if (res.get("productReviewId") == "") {
-                      console.log(String(document));
-                      setStartups((prevStartups) => [
-                        ...prevStartups,
-                        <option
-                          value={res.get("startupName")}
-                          id={String(document)}
-                        >
-                          {res.get("startupName")}
-                        </option>,
-                      ]);
-                    }
+                  // if (lvl >= 2) {
+                  if (res.get("productReviewId") == "") {
+                    console.log(String(document));
+                    setStartups((prevStartups) => [
+                      ...prevStartups,
+                      <option
+                        value={res.get("startupName")}
+                        id={String(document)}
+                      >
+                        {res.get("startupName")}
+                      </option>,
+                    ]);
                   }
+                  // }
                 });
             });
           });
@@ -323,9 +323,9 @@ const ProductReviewReg = () => {
           minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
-          paddingTop={8}
+          paddingTop={12}
         >
-          <Text
+          {/* <Text
             color={"white"}
             textAlign={"center"}
             marginLeft={"2vw"}
@@ -333,7 +333,7 @@ const ProductReviewReg = () => {
           >
             ⚠️ Note: You need to have at least a level 2 startup to be able to
             apply for funding.
-          </Text>
+          </Text> */}
           <Flex
             direction={"row"}
             alignItems={"center"}

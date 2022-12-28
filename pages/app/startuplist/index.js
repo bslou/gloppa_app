@@ -249,6 +249,14 @@ const StartupList = () => {
                   No startups <br />
                   found here... 😔
                 </Text>
+                <br />
+                <Button
+                  onClick={() => router.push("/app/startupregistration")}
+                  fontSize={"18pt"}
+                  padding={5}
+                >
+                  Create a Startup
+                </Button>
               </Flex>
             )}
           </Flex>

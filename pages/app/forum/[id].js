@@ -1,0 +1,517 @@
+import {
+  Flex,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  Tooltip,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Input,
+  Button,
+  useToast,
+  Textarea,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { use, useEffect, useState } from "react";
+import { db } from "../../api/firebaseconfig";
+import ForumComponent from "./forumcomponent";
+import { arrayRemove, arrayUnion } from "firebase/firestore";
+
+const ForumReplies = () => {
+  const [uname, setUname] = useState("");
+  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const [usname, setUsname] = useState("");
+  const [msg, setMsg] = useState("");
+  const [tags, setTags] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [ownerId, setOwnerId] = useState("");
+  const [comments, setComments] = useState([]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2,
+  } = useDisclosure();
+  const toast = useToast();
+  const [comment, setComment] = useState("");
+
+  const deleteIt = (ind) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      db.collection("forum")
+        .doc(router.query.id)
+        .get()
+        .then((val) => {
+          let arr = val.get("replies");
+          arr.splice(ind, 1);
+          db.collection("forum").doc(router.query.id).update({ replies: arr });
+        });
+      //   setTimeout(() => {
+      //     window.location.reload();
+      //   }, 400);
+    }
+  };
+
+  const addLikes = (ind) => {
+    console.log("ID " + router.query.id);
+    console.log("Index " + String(ind));
+    db.collection("forum")
+      .doc(router.query.id)
+      .get()
+      .then((val) => {
+        let arr = val.get("replies");
+        console.log(
+          "First arr " + Object.keys(arr) + "\nThird arr" + Object.values(arr)
+        );
+        console.log("Second arr " + Object.values(arr[ind])[3]);
+        if (arr[ind].upvotes !== undefined) {
+          if (arr[ind].upvotes.includes(localStorage.getItem("id"))) {
+            const index = arr[ind].upvotes.indexOf(localStorage.getItem("id"));
+            arr[ind].upvotes.splice(index, 1);
+          } else {
+            arr[ind].upvotes.push(localStorage.getItem("id"));
+          }
+          db.collection("forum").doc(router.query.id).update({ replies: arr });
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("id") === null) {
+      router.push("/");
+      return;
+    }
+    db.collection("users")
+      .doc(localStorage.getItem("id"))
+      .onSnapshot((val) => {
+        setEmail(val.data().email);
+        setUname(val.data().username);
+      });
+    if (router.isReady) {
+      console.log("ID " + router.query.id);
+      setId(router.query.id);
+      db.collection("forum")
+        .doc(router.query.id)
+        .onSnapshot((val) => {
+          let data = val.data();
+          db.collection("users")
+            .doc(data.ownerId)
+            .get()
+            .then((val2) => {
+              setUsname(val2.get("username"));
+            });
+          setMsg(data.statement);
+          setTags(data.hashtags);
+          setLikes(data.likes);
+          setComments([]);
+          data.replies.map((val4, index) =>
+            setComments((prevCom) => [
+              <Flex
+                direction={"column"}
+                alignItems={"left"}
+                justifyContent={"center"}
+                backgroundColor={
+                  data.ownerId == localStorage.getItem("id")
+                    ? "#545454"
+                    : "#323232"
+                }
+                gap={2}
+                padding={5}
+                width={"90%"}
+                borderRadius={5}
+              >
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={3}
+                  width={"100%"}
+                >
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    width={"100%"}
+                  >
+                    <Flex direction={"row"}>
+                      <Text fontSize={"17pt"} color={"white"} fontWeight={700}>
+                        @{val4.username}
+                      </Text>
+                      {val4.id == localStorage.getItem("id") ? (
+                        <Button
+                          objectFit={"cover"}
+                          height={"2vw"}
+                          colorScheme={"transparent"}
+                          onClick={() => deleteIt(index)}
+                        >
+                          <img
+                            src={"/assets/trash.png"}
+                            alt={"trash"}
+                            width={30}
+                            height={30}
+                            layout={"responsive"}
+                          />
+                        </Button>
+                      ) : null}
+                    </Flex>
+                    <Text fontSize={"10pt"} color={"#dfdfdf"}>
+                      {String(val4.time)}
+                    </Text>
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    width={"100%"}
+                  >
+                    <Text color={"white"} fontSize={"13pt"}>
+                      {val4.comment}
+                    </Text>
+                    <Button
+                      display={"flex"}
+                      flexDirection={"column"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      border={
+                        val4.upvotes !== undefined
+                          ? val4.upvotes.includes(localStorage.getItem("id"))
+                            ? "1px solid #1F90FF"
+                            : "1px solid white"
+                          : "1px solid white"
+                      }
+                      borderRadius={3}
+                      colorScheme={"transparent"}
+                      height={"100%"}
+                      //   backgroundColor={"#323232"}
+                      padding={3}
+                      onClick={(e) => addLikes(index)}
+                    >
+                      <Image
+                        src={
+                          val4.upvotes !== undefined
+                            ? val4.upvotes.includes(localStorage.getItem("id"))
+                              ? "/assets/blueup.png"
+                              : "/assets/up.png"
+                            : "/assets/up.png"
+                        }
+                        alt="Gloppa up"
+                        width={40}
+                        height={40}
+                      />
+                      <Text color={"#fff"} fontSize={"17pt"}>
+                        {val4.upvotes !== undefined
+                          ? Object.keys(val4.upvotes).length === 0
+                            ? 0
+                            : val4.upvotes.length
+                          : 0}
+                      </Text>
+                    </Button>
+                  </Flex>
+                </Flex>
+              </Flex>,
+              ...prevCom,
+            ])
+          );
+          setOwnerId(data.ownerId);
+        });
+    }
+  }, [router, db]);
+
+  const changeData = (e) => {
+    e.preventDefault();
+    let nummers = db.collection("users").where("username", "==", uname);
+    nummers
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty && uname != oguname) {
+          toast({
+            title: "Username exists.",
+            description: "The username already exists in our database.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          console.log("Doesn't exist!");
+          let id = localStorage.getItem("id");
+          db.collection("users").doc(id).update({ username: uname });
+          toast({
+            title: "Username updated.",
+            description: "The username got updated successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error " + err);
+      });
+  };
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
+  };
+
+  const submitComment = () => {
+    if (comment.length > 3) {
+      var currentdate = new Date();
+      var datetime =
+        currentdate.getDate() +
+        "/" +
+        (currentdate.getMonth() + 1) +
+        "/" +
+        currentdate.getFullYear() +
+        " @ " +
+        currentdate.getHours() +
+        ":" +
+        currentdate.getMinutes() +
+        ":" +
+        currentdate.getSeconds();
+      db.collection("users")
+        .doc(localStorage.getItem("id"))
+        .get()
+        .then((val) => {
+          db.collection("forum")
+            .doc(id)
+            .update({
+              replies: arrayUnion({
+                id: localStorage.getItem("id"),
+                username: val.get("username"),
+                comment: comment,
+                upvotes: [],
+                time: datetime,
+              }),
+            });
+        });
+    } else {
+      toast({
+        title: "Message has to be longer...",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
+  return (
+    <Flex
+      width={"100vw"}
+      height={"100vh"}
+      backgroundColor={"#323232"}
+      direction={"column"}
+      alignItems={"center"}
+    >
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>My info</ModalHeader>
+          <ModalCloseButton color={"white"} />
+          <ModalBody>
+            <form onSubmit={changeData}>
+              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"white"}>Username: </Text>
+                  <Input
+                    color={"white"}
+                    value={uname}
+                    onChange={(e) => setUname(e.target.value.toLowerCase())}
+                    minLength={4}
+                    maxLength={12}
+                  />
+                </Flex>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"white"}>Email: </Text>
+                  <Input
+                    color={"white"}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly
+                  />
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"1vw"}
+                  marginTop={3}
+                  marginBottom={3}
+                >
+                  <Button type="submit" colorScheme={"blue"}>
+                    Change Information
+                  </Button>
+                  <Button
+                    variant={"ghost"}
+                    color={"white"}
+                    colorScheme={"transparent"}
+                    onClick={onClose}
+                  >
+                    Close
+                  </Button>
+                </Flex>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen2} onClose={onClose2}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#323232"}>
+          <ModalHeader color={"white"}>Future Updates</ModalHeader>
+          <ModalCloseButton color={"white"} />
+          <ModalBody>
+            <Text color={"white"}>
+              In the future there is a lot of things we want to do to make this
+              be the best application for startups. First of all we would like
+              to create partnerships where you can invite people and call with
+              them to collaborate on projects. We also want to implement custom
+              backgrounds and greater responsiveness. We also have a plan of
+              creating mobile applications for both iOS and Android, and web
+              application for all operating systems in the future. We also want
+              to add more features than just the video game, such as services to
+              help boost startups. If you have any recommendations or feedback,
+              feel free to email us at gloppaglow@gmail.com.
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose2}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        paddingLeft={4}
+        paddingRight={4}
+        paddingTop={2.5}
+        paddingBottom={2.5}
+        width={"100vw"}
+      >
+        <NextLink href={"/app/forum"}>
+          <Link color={"white"}>
+            <Image
+              src={"/assets/back.png"}
+              alt={"Back"}
+              width={60}
+              height={60}
+            />
+          </Link>
+        </NextLink>
+        <Menu>
+          <MenuButton colorScheme={"transparent"}>
+            <Image
+              src={"/assets/profile.png"}
+              alt={"Gloppa profile"}
+              width={50}
+              height={50}
+            />
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={onOpen2}>Future Updates</MenuItem>
+            <MenuItem onClick={onOpen}>Update Info</MenuItem>
+            <MenuItem onClick={Logout}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
+      </Flex>
+      <Flex
+        direction={"column"}
+        alignItems={"center"}
+        backgroundColor={"#1c1c1c"}
+        height={"89%"}
+        width={"65vw"}
+        borderTopLeftRadius={10}
+        borderTopRightRadius={10}
+        paddingTop={8}
+      >
+        {ForumComponent(
+          usname,
+          id,
+          msg,
+          tags,
+          likes,
+          typeof window !== "undefined"
+            ? likes.includes(localStorage.getItem("id"))
+            : false,
+          comments,
+          typeof window !== "undefined"
+            ? localStorage.getItem("id") == ownerId
+            : false
+        )}
+        <Flex
+          width={"90%"}
+          direction={"row"}
+          marginTop={5}
+          alignItems={"center"}
+          justifyContent={"center"}
+          borderTop={"1px solid white"}
+          borderBottom={"1px solid white"}
+        >
+          <Textarea
+            placeholder="Comment..."
+            color="white"
+            border={"none"}
+            resize={"none"}
+            style={{
+              ":focus": {
+                outline: "none",
+                border: "none",
+                boxShadow: "none",
+              },
+            }}
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+          />
+          {/*onClick={submitComment}*/}
+          <Button type="submit" borderRadius={5} onClick={submitComment}>
+            Submit Comment
+          </Button>
+        </Flex>
+        <Flex
+          direction={"column"}
+          alignItems={"center"}
+          gap={"2vh"}
+          width={"100%"}
+          overflowY={"scroll"}
+          paddingBottom={5}
+          paddingTop={3}
+        >
+          {/* {commento} */}
+          {comments}
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
+export default ForumReplies;

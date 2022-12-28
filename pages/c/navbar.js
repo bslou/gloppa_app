@@ -1,5 +1,20 @@
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { Button, Flex, IconButton, Link } from "@chakra-ui/react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CloseIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
+import {
+  Button,
+  Flex,
+  IconButton,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useDisclosure,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -7,6 +22,7 @@ import { useState } from "react";
 const NavBar = () => {
   const router = useRouter();
   const [display, changeDisplay] = useState("none");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex
       direction={"row"}
@@ -26,9 +42,25 @@ const NavBar = () => {
         <Link color={"white"} fontSize={"16pt"}>
           <NextLink href={"/c/main"}>Gloppa</NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
-          <NextLink href={"/c/main/#first"}>Product</NextLink>
-        </Link>
+        <Menu isOpen={isOpen}>
+          <MenuButton
+            color={"white"}
+            onMouseEnter={onOpen}
+            onMouseLeave={onClose}
+            fontSize={"14pt"}
+          >
+            Startups {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          </MenuButton>
+          <MenuList onMouseEnter={onOpen} onMouseLeave={onClose}>
+            <MenuItem onClick={() => router.push("/c/productreview")}>
+              📦 Product Review
+            </MenuItem>
+            <MenuItem onClick={() => router.push("/c/funding")}>
+              💸 Funding
+            </MenuItem>
+            <MenuItem onClick={() => router.push("/c/jobs")}>‍💻 Jobs</MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
       <Flex
         direction={"row"}

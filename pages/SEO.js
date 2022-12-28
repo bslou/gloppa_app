@@ -8,7 +8,9 @@ const SEO = () => {
     <Head>
       <meta
         name="description"
-        content={"Launching a startup is like playing a video game at Gloppa!"}
+        content={
+          "Many people struggle with various things such as productivity, funding, finding people, and knowing whether their idea is good or not when creating a startup! Gloppa solves all these issues by creating a startup application which has all the features that help founders create and profit from their startups."
+        }
       />
       <meta
         name="keywords"
@@ -16,19 +18,21 @@ const SEO = () => {
           "Fun, Startups, Videogames, Games, Company, Tasks, Todolist, Strategy, Gloppa"
         }
       />
-      <title>Gloppa - Startups are now like videogames</title>
+      <title>Gloppa - Creating a successful startup is easier than ever</title>
       <meta
         property="og:title"
-        content={"Gloppa - Startups are now like videogames"}
+        content={"Gloppa - Creating a successful startup is easier than ever"}
       />
       <meta property="og:type" content="website" />
       <meta
         property="og:description"
-        content={"Launching a startup is like playing a video game at Gloppa!"}
+        content={
+          "Many people struggle with various things such as productivity, funding, finding people, and knowing whether their idea is good or not when creating a startup! Gloppa solves all these issues by creating a startup application which has all the features that help founders create and profit from their startups."
+        }
       />
       <meta
         property="og:site_name"
-        content={"Gloppa - Startups are now like videogames"}
+        content={"Gloppa - Creating a successful startup is easier than ever"}
       />
     </Head>
   );

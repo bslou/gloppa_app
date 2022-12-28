@@ -74,7 +74,7 @@ const JobsReg = () => {
                   let startupName = String(res.get("startupName"));
                   let lvl = Math.floor(res.get("level") / 100) + 1;
                   let jobs = res.get("jobs");
-                  if (lvl >= 4 && jobs.length < 2) {
+                  if (/*lvl >= 4 &&*/ jobs.length < 2) {
                     console.log(String(document));
                     setStartups((prevStartups) => [
                       ...prevStartups,
@@ -250,9 +250,9 @@ const JobsReg = () => {
           minHeight={"90vh"}
           borderTopLeftRadius={20}
           borderTopRightRadius={20}
-          paddingTop={8}
+          paddingTop={12}
         >
-          <Text
+          {/* <Text
             color={"white"}
             textAlign={"center"}
             marginLeft={"2vw"}
@@ -260,7 +260,7 @@ const JobsReg = () => {
           >
             ⚠️ Note: You need to have at least a level 4 startup to be able to
             apply for funding. 2 job posts max!
-          </Text>
+          </Text> */}
           <Flex
             direction={"row"}
             alignItems={"center"}

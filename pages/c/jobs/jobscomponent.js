@@ -34,7 +34,6 @@ const JobsComponent = (
   image,
   location,
   toast,
-  mine,
   router
 ) => {
   const deleteIt = () => {
@@ -72,7 +71,7 @@ const JobsComponent = (
       justifyContent={"space-between"}
       width={"90%"}
       padding={5}
-      backgroundColor={mine ? "#545454" : "#323232"}
+      backgroundColor={"#323232"}
       borderRadius={5}
       // as={"a"}
       // href={"/app/jobs/" + id}
@@ -118,25 +117,9 @@ const JobsComponent = (
         >
           Share
         </Button>
-        {!mine ? (
-          <Button as={"a"} href={website} target={"_blank"}>
-            Apply
-          </Button>
-        ) : (
-          <Tooltip
-            label={"Delete " + company + " job post..."}
-            aria-label="A tooltip"
-          >
-            <Button colorScheme={"transparent"} onClick={deleteIt}>
-              <Image
-                src={"/assets/trash.png"}
-                alt={"Delete"}
-                width={30}
-                height={30}
-              />
-            </Button>
-          </Tooltip>
-        )}
+        <Button as={"a"} href={website} target={"_blank"}>
+          Apply
+        </Button>
       </Flex>
     </Flex>
   );
