@@ -380,8 +380,8 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
-            Using our videos for creating startups, users can educate themselves
-            on how to best succeed from professionals.
+            Using our videos for creating startups, you can educate yourself on
+            how to best succeed from professionals.
           </Text>
         </Flex>
       </Flex>
