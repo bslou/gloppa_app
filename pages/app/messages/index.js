@@ -92,14 +92,39 @@ const Messages = () => {
           ("0" + m.getUTCMinutes()).slice(-2) +
           ":" +
           ("0" + m.getUTCSeconds()).slice(-2);
-        db.collection("messages")
-          .doc(id)
-          .update({
-            messages: arrayUnion({
-              msg: inp,
-              id: localStorage.getItem("id"),
-              date: dateString,
-            }),
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            db.collection("messages")
+              .doc(id)
+              .get()
+              .then((valo) => {
+                console.log("Valo = " + valo.get("messages").length);
+                console.log(
+                  valo.get("messages").length == 0
+                    ? "null"
+                    : String(valo.get("messages")[0].id)
+                );
+                db.collection("messages")
+                  .doc(id)
+                  .update({
+                    messages: arrayUnion({
+                      msg: inp,
+                      uname: val.get("username"),
+                      id: localStorage.getItem("id"),
+                      prevId:
+                        valo.get("messages").length == 0
+                          ? "null"
+                          : String(
+                              valo.get("messages")[
+                                valo.get("messages").length - 1
+                              ].id
+                            ),
+                      date: dateString,
+                    }),
+                  });
+              });
           });
         setInp("");
         setComments([]);
@@ -341,103 +366,46 @@ const Messages = () => {
           let msgs = val.data().messages;
           setComments([]);
           msgs.forEach((val2, index) => {
-            db.collection("users")
-              .doc(val2.id)
-              .get()
-              .then((valk) => {
-                {
-                  index - 1 != -1
-                    ? db
-                        .collection("users")
-                        .doc(msgs[index - 1].id)
-                        .get()
-                        .then((valki) => {
-                          setComments((prevC) => [
-                            ...prevC,
-                            <Flex
-                              direction={"column"}
-                              alignItems={
-                                val2.id == localStorage.getItem("id")
-                                  ? "flex-end"
-                                  : "flex-start"
-                              }
-                              width={"100%"}
-                              marginRight={
-                                val2.id == localStorage.getItem("id") ? 5 : 0
-                              }
-                              gap={1}
-                            >
-                              {valki.get("username") ==
-                              valk.get("username") ? null : (
-                                <Text
-                                  color={"#bcbcbc"}
-                                  fontSize={"11pt"}
-                                  marginLeft={1}
-                                  marginRight={1}
-                                >
-                                  {" "}
-                                  @{valk.get("username")}
-                                </Text>
-                              )}
-                              <Flex
-                                backgroundColor={
-                                  val2.id == localStorage.getItem("id")
-                                    ? "#41A3E7"
-                                    : "#323232"
-                                }
-                                maxWidth={"50%"}
-                                borderRadius={20}
-                                padding={3}
-                                marginBottom={1}
-                                flexWrap={"wrap"}
-                              >
-                                <Text color={"white"}>{val2.msg}</Text>
-                              </Flex>
-                            </Flex>,
-                          ]);
-                        })
-                    : setComments((prevC) => [
-                        ...prevC,
-                        <Flex
-                          direction={"column"}
-                          alignItems={
-                            val2.id == localStorage.getItem("id")
-                              ? "flex-end"
-                              : "flex-start"
-                          }
-                          width={"100%"}
-                          marginRight={
-                            val2.id == localStorage.getItem("id") ? 5 : 0
-                          }
-                          gap={1}
-                        >
-                          <Text
-                            color={"#bcbcbc"}
-                            fontSize={"11pt"}
-                            marginLeft={1}
-                            marginRight={1}
-                          >
-                            {" "}
-                            @{valk.get("username")}
-                          </Text>
-                          <Flex
-                            backgroundColor={
-                              val2.id == localStorage.getItem("id")
-                                ? "#41A3E7"
-                                : "#323232"
-                            }
-                            maxWidth={"50%"}
-                            borderRadius={20}
-                            padding={3}
-                            marginBottom={1}
-                            flexWrap={"wrap"}
-                          >
-                            <Text color={"white"}>{val2.msg}</Text>
-                          </Flex>
-                        </Flex>,
-                      ]);
+            setComments((prevC) => [
+              ...prevC,
+              <Flex
+                direction={"column"}
+                alignItems={
+                  val2.id == localStorage.getItem("id")
+                    ? "flex-end"
+                    : "flex-start"
                 }
-              });
+                width={"100%"}
+                marginRight={val2.id == localStorage.getItem("id") ? 5 : 0}
+                gap={1}
+              >
+                {val2.id == val2.prevId ? null : (
+                  <Text
+                    color={"#bcbcbc"}
+                    fontSize={"11pt"}
+                    marginLeft={1}
+                    marginRight={1}
+                  >
+                    {" "}
+                    @{val2.uname}
+                  </Text>
+                )}
+                <Flex
+                  backgroundColor={
+                    val2.id == localStorage.getItem("id")
+                      ? "#41A3E7"
+                      : "#323232"
+                  }
+                  maxWidth={"50%"}
+                  borderRadius={20}
+                  padding={3}
+                  marginBottom={1}
+                  flexWrap={"wrap"}
+                >
+                  <Text color={"white"}>{val2.msg}</Text>
+                </Flex>
+              </Flex>,
+            ]);
           });
         });
     }
