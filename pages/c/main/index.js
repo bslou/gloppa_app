@@ -260,6 +260,132 @@ const Main = () => {
         </Flex>
       </Flex>
       <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100vw"}
+        height={{ base: "70vh", md: "80vh", lg: "90vh" }}
+        gap={10}
+      >
+        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+          <Image
+            src={"/assets/five.png"}
+            alt={"Five"}
+            width={900}
+            height={500}
+            layout={"responsive"}
+          />
+        </Flex>
+        <Flex
+          width={"30%"}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={5}
+        >
+          <Text
+            color={"white"}
+            fontWeight={800}
+            fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
+            textAlign={"center"}
+          >
+            Connect between your cofounders and team
+          </Text>
+          <Text
+            color={"white"}
+            fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
+            textAlign={"center"}
+          >
+            With our private messaging platform you can contact and connect with
+            your team on various tasks.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100vw"}
+        height={{ base: "70vh", md: "80vh", lg: "90vh" }}
+        gap={10}
+      >
+        <Flex
+          width={"30%"}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={5}
+        >
+          <Text
+            color={"white"}
+            fontWeight={800}
+            fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
+            textAlign={"center"}
+          >
+            Access a public forum
+          </Text>
+          <Text
+            color={"white"}
+            fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
+            textAlign={"center"}
+          >
+            With the public forum users can discuss various aspects of startups
+            and the mentality involved to succeed.
+          </Text>
+        </Flex>
+        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+          <Image
+            src={"/assets/six.png"}
+            alt={"Six"}
+            width={900}
+            height={500}
+            layout={"responsive"}
+          />
+        </Flex>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100vw"}
+        height={{ base: "70vh", md: "80vh", lg: "90vh" }}
+        gap={10}
+      >
+        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+          <Image
+            src={"/assets/seven.png"}
+            alt={"Seven"}
+            width={900}
+            height={500}
+            layout={"responsive"}
+          />
+        </Flex>
+        <Flex
+          width={"30%"}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={5}
+        >
+          <Text
+            color={"white"}
+            fontWeight={800}
+            fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
+            textAlign={"center"}
+          >
+            Learn from professionals
+          </Text>
+          <Text
+            color={"white"}
+            fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
+            textAlign={"center"}
+          >
+            Using our videos for creating startups, users can educate themselves
+            on how to best succeed from professionals.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex
         direction={"column"}
         alignItems={"center"}
         justifyContent={"center"}
