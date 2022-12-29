@@ -31,6 +31,7 @@ import { arrayRemove, arrayUnion } from "firebase/firestore";
 const ForumReplies = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
+  const [oguname, setOgUname] = useState("");
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -152,8 +153,10 @@ const ForumReplies = () => {
                 alignItems={"left"}
                 justifyContent={"center"}
                 backgroundColor={
-                  data.ownerId == localStorage.getItem("id")
-                    ? "#545454"
+                  typeof window !== "undefined"
+                    ? val4.id == localStorage.getItem("id")
+                      ? "#545454"
+                      : "#323232"
                     : "#323232"
                 }
                 gap={2}
@@ -162,12 +165,51 @@ const ForumReplies = () => {
                 borderRadius={5}
               >
                 <Flex
-                  direction={"column"}
+                  direction={"row"}
                   alignItems={"center"}
-                  justifyContent={"center"}
+                  justifyContent={"space-between"}
                   gap={3}
                   width={"100%"}
                 >
+                  <Button
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    border={
+                      val4.upvotes !== undefined
+                        ? val4.upvotes.includes(localStorage.getItem("id"))
+                          ? "1px solid #1F90FF"
+                          : "1px solid white"
+                        : "1px solid white"
+                    }
+                    borderRadius={3}
+                    colorScheme={"transparent"}
+                    height={"100%"}
+                    //   backgroundColor={"#323232"}
+                    padding={3}
+                    onClick={(e) => addLikes(index)}
+                  >
+                    <Image
+                      src={
+                        val4.upvotes !== undefined
+                          ? val4.upvotes.includes(localStorage.getItem("id"))
+                            ? "/assets/blueup.png"
+                            : "/assets/up.png"
+                          : "/assets/up.png"
+                      }
+                      alt="Gloppa up"
+                      width={40}
+                      height={40}
+                    />
+                    <Text color={"#fff"} fontSize={"17pt"}>
+                      {val4.upvotes !== undefined
+                        ? Object.keys(val4.upvotes).length === 0
+                          ? 0
+                          : val4.upvotes.length
+                        : 0}
+                    </Text>
+                  </Button>
                   <Flex
                     direction={"row"}
                     alignItems={"center"}
@@ -175,9 +217,23 @@ const ForumReplies = () => {
                     width={"100%"}
                   >
                     <Flex direction={"row"}>
-                      <Text fontSize={"17pt"} color={"white"} fontWeight={700}>
-                        @{val4.username}
-                      </Text>
+                      <Flex
+                        direction={"column"}
+                        gap={2}
+                        alignItems={"flex-start"}
+                        justifyContent={"center"}
+                      >
+                        <Text
+                          fontSize={"12pt"}
+                          color={"white"}
+                          fontWeight={800}
+                        >
+                          @{val4.username}
+                        </Text>
+                        <Text color={"white"} fontSize={"13pt"}>
+                          {val4.comment}
+                        </Text>
+                      </Flex>
                       {val4.id == localStorage.getItem("id") ? (
                         <Button
                           objectFit={"cover"}
@@ -195,20 +251,20 @@ const ForumReplies = () => {
                         </Button>
                       ) : null}
                     </Flex>
-                    <Text fontSize={"10pt"} color={"#dfdfdf"}>
-                      {String(val4.time)}
-                    </Text>
                   </Flex>
-                  <Flex
+                  <Text fontSize={"10pt"} color={"#dfdfdf"}>
+                    {String(val4.time)}
+                  </Text>
+                  {/* <Flex
                     direction={"row"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
                     width={"100%"}
-                  >
-                    <Text color={"white"} fontSize={"13pt"}>
+                  > */}
+                  {/* <Text color={"white"} fontSize={"13pt"}>
                       {val4.comment}
-                    </Text>
-                    <Button
+                    </Text> */}
+                  {/* <Button
                       display={"flex"}
                       flexDirection={"column"}
                       alignItems={"center"}
@@ -246,8 +302,8 @@ const ForumReplies = () => {
                             : val4.upvotes.length
                           : 0}
                       </Text>
-                    </Button>
-                  </Flex>
+                    </Button> */}
+                  {/* </Flex> */}
                 </Flex>
               </Flex>,
               ...prevCom,
