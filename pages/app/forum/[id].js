@@ -19,13 +19,13 @@ import {
   Button,
   useToast,
   Textarea,
+  Tag,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { use, useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
-import ForumComponent from "./forumcomponent";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
 
 const ForumReplies = () => {
@@ -89,6 +89,32 @@ const ForumReplies = () => {
           db.collection("forum").doc(router.query.id).update({ replies: arr });
         }
       });
+  };
+
+  const deleteIt2 = (id, msg) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this forum post:\n" + msg + "?"
+      )
+    ) {
+      db.collection("users")
+        .doc(localStorage.getItem("id"))
+        .update({ forumsId: arrayRemove(id) });
+      db.collection("forum").doc(id).delete();
+      router.push("/app/forum");
+    }
+  };
+
+  const addLikes2 = (id, likes) => {
+    if (likes.includes(localStorage.getItem("id"))) {
+      db.collection("forum")
+        .doc(id)
+        .update({ likes: arrayRemove(localStorage.getItem("id")) });
+    } else {
+      db.collection("forum")
+        .doc(id)
+        .update({ likes: arrayUnion(localStorage.getItem("id")) });
+    }
   };
 
   useEffect(() => {
@@ -269,7 +295,7 @@ const ForumReplies = () => {
   };
 
   const submitComment = () => {
-    if (comment.length > 3) {
+    if (comment.length > 2) {
       var currentdate = new Date();
       var datetime =
         currentdate.getDate() +
@@ -298,10 +324,11 @@ const ForumReplies = () => {
                 time: datetime,
               }),
             });
+          setComment("");
         });
     } else {
       toast({
-        title: "Message has to be longer...",
+        title: "Message has to be at least 3 characters long...",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -452,7 +479,114 @@ const ForumReplies = () => {
         borderTopRightRadius={10}
         paddingTop={8}
       >
-        {ForumComponent(
+        <Flex
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          width={"90%"}
+          padding={5}
+          borderRadius={5}
+          backgroundColor={
+            typeof window !== "undefined"
+              ? localStorage.getItem("id") == ownerId
+                ? "#545454"
+                : "#323232"
+              : "#323232"
+          }
+          _hover={{
+            opacity: 0.8,
+          }}
+        >
+          <Flex
+            direction={"column"}
+            //alignItems={"left"}
+            justifyContent={"center"}
+            width={"80%"}
+            gap={0.5}
+          >
+            <Flex direction={"row"} alignItems={"center"}>
+              <Text color={"white"} fontWeight={900} fontSize={"10pt"}>
+                @{usname}
+              </Text>
+              {typeof window !== "undefined" ? (
+                localStorage.getItem("id") == ownerId
+              ) : false ? (
+                <Button
+                  objectFit={"cover"}
+                  height={"2vw"}
+                  colorScheme={"transparent"}
+                  onClick={() => deleteIt2(id, msg)}
+                >
+                  <Image
+                    src={"/assets/trash.png"}
+                    alt={"trash"}
+                    layout={"fill"}
+                  />
+                </Button>
+              ) : null}
+            </Flex>
+            <Text color={"white"} fontSize={"15pt"}>
+              {msg}
+            </Text>
+            <Flex
+              direction={"row"}
+              alignItems={"center"}
+              //justifyContent={"center"}
+              gap={2.5}
+            >
+              {tags.map((val) => (
+                <Tag colorScheme={"green"} fontSize={"10pt"} size={"lg"}>
+                  {val}
+                </Tag>
+              ))}
+              <Link color={"white"} fontWeight={900} href={"/app/forum/" + id}>
+                {comments !== undefined ? comments.length : 0} replies
+              </Link>
+            </Flex>
+          </Flex>
+          <Button
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            border={
+              typeof window !== "undefined"
+                ? likes.includes(localStorage.getItem("id"))
+                  ? "1px solid #1F90FF"
+                  : "1px solid white"
+                : "1px solid white"
+            }
+            borderRadius={3}
+            colorScheme={"transparent"}
+            height={"100%"}
+            backgroundColor={
+              typeof window !== "undefined"
+                ? localStorage.getItem("id") == ownerId
+                  ? "#545454"
+                  : "#323232"
+                : "#323232"
+            }
+            onClick={() => addLikes2(id, likes)}
+            // onClick={addLikes}
+          >
+            <Image
+              src={
+                typeof window !== "undefined"
+                  ? likes.includes(localStorage.getItem("id"))
+                    ? "/assets/blueup.png"
+                    : "/assets/up.png"
+                  : "/assets/up.png"
+              }
+              alt="Gloppa up"
+              width={40}
+              height={40}
+            />
+            <Text color={"#fff"} fontSize={"17pt"}>
+              {Object.keys(likes).length === 0 ? 0 : likes.length}
+            </Text>
+          </Button>
+        </Flex>
+        {/* {ForumComponent(
           usname,
           id,
           msg,
@@ -465,7 +599,7 @@ const ForumReplies = () => {
           typeof window !== "undefined"
             ? localStorage.getItem("id") == ownerId
             : false
-        )}
+        )} */}
         <Flex
           width={"90%"}
           direction={"row"}
