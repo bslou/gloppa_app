@@ -71,7 +71,7 @@ const FundingComponent = (
           gap={"2vw"}
           maxWidth={"77%"}
         >
-          <img src={img} alt={"Startup Logo"} width={"13%"} height={"13%"} />
+          <img src={img} alt={startupName} width={"13%"} height={"13%"} />
           <Flex
             direction={"column"}
             alignItems={"left"}

@@ -70,7 +70,7 @@ const ProdRevComponent = (
           justifyContent={"center"}
           gap={5}
         >
-          <img src={img} alt={"startup logo"} width={70} height={70} />
+          <img src={img} alt={title} width={70} height={70} />
           <Flex
             direction={"column"}
             alignItems={"left"}

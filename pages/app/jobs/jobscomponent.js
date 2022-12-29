@@ -86,7 +86,7 @@ const JobsComponent = (
         justifyContent={"center"}
         gap={5}
       >
-        <img src={image} alt="Logo" width={75} height={75} />
+        <img src={image} alt={company} width={75} height={75} />
         <Flex direction={"column"} justifyContent={"center"}>
           <Text color={"#ccc"}>{company}</Text>
           <Text color={"#fff"} fontWeight={800}>
