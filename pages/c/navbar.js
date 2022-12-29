@@ -47,7 +47,7 @@ const NavBar = () => {
             color={"white"}
             onMouseEnter={onOpen}
             onMouseLeave={onClose}
-            fontSize={"14pt"}
+            // fontSize={"14pt"}
           >
             Startups {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
           </MenuButton>
