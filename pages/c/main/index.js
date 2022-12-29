@@ -54,7 +54,7 @@ const Main = () => {
             fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
             textAlign={"center"}
           >
-            Business is a game and every win counts!
+            The secret ingredient for startup success
           </Text>
           <Text
             fontWeight={300}
@@ -62,8 +62,8 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "18pt", lg: "23pt" }}
             textAlign={"center"}
           >
-            Gloppa is the ultimate startup accelerator where the fun of gaming
-            meets the thrill of business success!
+            Gloppa provides all the necessary resources and support for other
+            startups to achieve success.
           </Text>
           <Button
             backgroundColor={"white"}
