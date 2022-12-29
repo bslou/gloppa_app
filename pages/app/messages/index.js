@@ -29,6 +29,7 @@ const Messages = () => {
   const [inp, setInp] = useState("");
   const [tags, setTags] = useState([]);
   const [users, setUsers] = useState([]);
+  const [myuname, setmyUname] = useState("");
   const [messagePost, setMessagePost] = useState([]);
   const [comments, setComments] = useState([]);
   const [id, setId] = useState("");
@@ -54,10 +55,17 @@ const Messages = () => {
           console.log("Length " + val.data().usernames.length);
           let name = "";
           val.data().usernames.map((val2, index) => {
-            if (index < val.data().usernames.length - 1) {
-              name += val2 + ", ";
-            } else {
+            if (
+              (index == val.data().usernames.length - 2 &&
+                val.data().usernames[index + 1] == myuname) ||
+              (index >= val.data().usernames.length - 1 && val2 != myuname)
+            ) {
               name += val2;
+            } else if (
+              index < val.data().usernames.length - 1 &&
+              val2 != myuname
+            ) {
+              name += val2 + ", ";
             }
           });
           setName(name);
@@ -253,6 +261,9 @@ const Messages = () => {
       .then((val) => {
         val.forEach((valo) => {
           let data = valo.data();
+          if (valo.id == localStorage.getItem("id")) {
+            setmyUname(data.username);
+          }
           setUsers((prevUsers) => [...prevUsers, data.username]);
           if (valo.id == localStorage.getItem("id")) {
             setTags([data.username]);
@@ -307,22 +318,31 @@ const Messages = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
                 height={"100%"}
-                width={"90%"}
+                width={"60%"}
                 marginLeft={3}
+                gap={1}
               >
                 <Text
                   color={"white"}
-                  fontSize={"9pt"}
-                  fontWeight={700}
-                  width={"70%"}
+                  fontSize={"11pt"}
+                  fontWeight={900}
                   whiteSpace={"nowrap"}
                   overflow="hidden"
                   textOverflow="ellipsis"
                 >
                   {dat.usernames.map((user, index) => {
-                    if (index >= dat.usernames.length - 1) {
+                    console.log("Indo " + index);
+                    console.log("Inds " + dat.usernames.length);
+                    if (
+                      (index == dat.usernames.length - 2 &&
+                        dat.usernames[index + 1] == myuname) ||
+                      (index >= dat.usernames.length - 1 && user != myuname)
+                    ) {
                       return user;
-                    } else {
+                    } else if (
+                      index < dat.usernames.length - 1 &&
+                      user != myuname
+                    ) {
                       return user + ", ";
                     }
                   })}
@@ -331,19 +351,21 @@ const Messages = () => {
                   color={"white"}
                   fontSize={"8pt"}
                   whiteSpace={"nowrap"}
-                  width={"70%"}
                   overflow={"hidden"}
                   textOverflow={"ellipsis"}
                   as={"i"}
+                  fontWeight={400}
                 >
-                  {"No messages yet..."}
+                  {dat.messages.length == 0
+                    ? "No messages yet..."
+                    : dat.messages[dat.messages.length - 1].msg}
                 </Text>
               </Flex>
               <Button
                 onClick={() => deleteIt(doc.id)}
                 colorScheme={"transparent"}
-                minWidth={"10%"}
-                minHeight={"10%"}
+                minWidth={"30%"}
+                minHeight={"30%"}
               >
                 <Image
                   src={"/assets/trash.png"}
@@ -428,7 +450,7 @@ const Messages = () => {
     //       });
     //     });
     // }
-  }, [db, id]);
+  }, [db, id, myuname]);
 
   return (
     <Flex
