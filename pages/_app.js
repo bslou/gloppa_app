@@ -7,9 +7,11 @@ import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    console.log(String(process.env.NODE_ENV));
     if (process.env.NODE_ENV === "production") {
+      console.log("In production mode...");
       hotjar.initialize(3300873, 6);
+    } else {
+      console.log("In development mode...");
     }
   }, []);
   return (
