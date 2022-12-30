@@ -17,6 +17,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
       <Head>
+        <script
+          src="//code.tidio.co/brouaqx7lo1cdavlobag05zmz3pgoebo.js"
+          async
+        ></script>
         {/* <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7343484395424686"
