@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
+    console.log(String(process.env.NODE_ENV));
     if (process.env.NODE_ENV === "production") {
       hotjar.initialize(3300873, 6);
     }
