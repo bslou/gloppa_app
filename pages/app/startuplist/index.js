@@ -140,7 +140,7 @@ const StartupList = () => {
               setLoading(false);
               return;
             }
-            n.reverse();
+            //n.reverse();
             if (n.length < 1) setLoading(false);
             n.forEach((document) => {
               db.collection("startups")
