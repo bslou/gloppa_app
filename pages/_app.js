@@ -2,8 +2,15 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "../styles/globals.css";
 import Head from "next/head";
 import SEO from "./SEO";
+import { hotjar } from "react-hotjar";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      hotjar.initialize(3300873, 6);
+    }
+  }, []);
   return (
     <ChakraProvider>
       <Head>
