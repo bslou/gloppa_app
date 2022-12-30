@@ -20,7 +20,7 @@ import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 const ForumReg = () => {
   const [idd, setIdd] = useState("");
@@ -95,6 +95,7 @@ const ForumReg = () => {
           hashtags: tags,
           likes: [],
           replies: [],
+          timestamp: serverTimestamp(),
         })
         .then((docRef) => {
           db.collection("users")

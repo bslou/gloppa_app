@@ -38,134 +38,140 @@ const Forum = () => {
     }
   };
   useEffect(() => {
-    db.collection("forum").onSnapshot((val) => {
-      setFors([]);
-      val.forEach((docs) => {
-        let data = docs.data();
-        db.collection("users")
-          .doc(data.ownerId)
-          .get()
-          .then((val2) => {
-            let thi = true;
-            if (data.likes.includes(localStorage.getItem("id"))) {
-              thi = true;
-            } else {
-              thi = false;
-            }
-            let mine = true;
-            if (data.ownerId == localStorage.getItem("id")) {
-              mine = true;
-            } else {
-              mine = false;
-            }
-            setFors((prevF) => [
-              ...prevF,
-              <Flex
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-                width={"90%"}
-                padding={5}
-                borderRadius={5}
-                backgroundColor={mine ? "#545454" : "#323232"}
-                _hover={{
-                  opacity: 0.8,
-                }}
-              >
+    db.collection("forum")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((val) => {
+        setFors([]);
+        val.forEach((docs) => {
+          let data = docs.data();
+          db.collection("users")
+            .doc(data.ownerId)
+            .get()
+            .then((val2) => {
+              let thi = true;
+              if (data.likes.includes(localStorage.getItem("id"))) {
+                thi = true;
+              } else {
+                thi = false;
+              }
+              let mine = true;
+              if (data.ownerId == localStorage.getItem("id")) {
+                mine = true;
+              } else {
+                mine = false;
+              }
+              setFors((prevF) => [
+                ...prevF,
                 <Flex
-                  direction={"column"}
-                  //alignItems={"left"}
-                  justifyContent={"center"}
-                  width={"80%"}
-                  gap={0.5}
-                >
-                  <Flex direction={"row"} alignItems={"center"}>
-                    <Text color={"white"} fontWeight={900} fontSize={"10pt"}>
-                      @{val2.get("username")}
-                    </Text>
-                    {mine ? (
-                      <Button
-                        objectFit={"cover"}
-                        height={"2vw"}
-                        colorScheme={"transparent"}
-                        onClick={() => deleteIt(docs.id, data.statement)}
-                      >
-                        <Image
-                          src={"/assets/trash.png"}
-                          alt={"trash"}
-                          layout={"fill"}
-                        />
-                      </Button>
-                    ) : null}
-                  </Flex>
-                  <Text color={"white"} fontSize={"15pt"}>
-                    {data.statement}
-                  </Text>
-                  <Flex
-                    direction={"row"}
-                    alignItems={"center"}
-                    //justifyContent={"center"}
-                    gap={2.5}
-                  >
-                    {data.hashtags.map((val) => (
-                      <Tag colorScheme={"green"} fontSize={"10pt"} size={"lg"}>
-                        {val}
-                      </Tag>
-                    ))}
-                    <Link href={"/app/forum/" + docs.id}>
-                      <Text
-                        color={"white"}
-                        fontWeight={900}
-                        _hover={{
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {data.replies !== undefined ? data.replies.length : 0}{" "}
-                        replies
-                      </Text>
-                    </Link>
-                  </Flex>
-                </Flex>
-                <Button
-                  display={"flex"}
-                  flexDirection={"column"}
+                  direction={"row"}
                   alignItems={"center"}
-                  justifyContent={"center"}
-                  border={thi ? "1px solid #1F90FF" : "1px solid white"}
-                  borderRadius={3}
-                  colorScheme={"transparent"}
-                  height={"100%"}
+                  justifyContent={"space-between"}
+                  width={"90%"}
+                  padding={5}
+                  borderRadius={5}
                   backgroundColor={mine ? "#545454" : "#323232"}
-                  onClick={() => addLikes(docs.id, data.likes)}
-                  // onClick={addLikes}
+                  _hover={{
+                    opacity: 0.8,
+                  }}
                 >
-                  <Image
-                    src={thi ? "/assets/blueup.png" : "/assets/up.png"}
-                    alt="Gloppa up"
-                    width={40}
-                    height={40}
-                  />
-                  <Text color={"#fff"} fontSize={"17pt"}>
-                    {Object.keys(data.likes).length === 0
-                      ? 0
-                      : data.likes.length}
-                  </Text>
-                </Button>
-              </Flex>,
-              // ForumComponent(
-              //   val2.get("username"),
-              //   docs.id,
-              //   data.statement,
-              //   data.hashtags,
-              //   data.likes,
-              //   thi,
-              //   data.replies,
-              //   mine
-              // ),
-            ]);
-          });
+                  <Flex
+                    direction={"column"}
+                    //alignItems={"left"}
+                    justifyContent={"center"}
+                    width={"80%"}
+                    gap={0.5}
+                  >
+                    <Flex direction={"row"} alignItems={"center"}>
+                      <Text color={"white"} fontWeight={900} fontSize={"10pt"}>
+                        @{val2.get("username")}
+                      </Text>
+                      {mine ? (
+                        <Button
+                          objectFit={"cover"}
+                          height={"2vw"}
+                          colorScheme={"transparent"}
+                          onClick={() => deleteIt(docs.id, data.statement)}
+                        >
+                          <Image
+                            src={"/assets/trash.png"}
+                            alt={"trash"}
+                            layout={"fill"}
+                          />
+                        </Button>
+                      ) : null}
+                    </Flex>
+                    <Text color={"white"} fontSize={"15pt"}>
+                      {data.statement}
+                    </Text>
+                    <Flex
+                      direction={"row"}
+                      alignItems={"center"}
+                      //justifyContent={"center"}
+                      gap={2.5}
+                    >
+                      {data.hashtags.map((val) => (
+                        <Tag
+                          colorScheme={"green"}
+                          fontSize={"10pt"}
+                          size={"lg"}
+                        >
+                          {val}
+                        </Tag>
+                      ))}
+                      <Link href={"/app/forum/" + docs.id}>
+                        <Text
+                          color={"white"}
+                          fontWeight={900}
+                          _hover={{
+                            textDecoration: "underline",
+                          }}
+                        >
+                          {data.replies !== undefined ? data.replies.length : 0}{" "}
+                          replies
+                        </Text>
+                      </Link>
+                    </Flex>
+                  </Flex>
+                  <Button
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    border={thi ? "1px solid #1F90FF" : "1px solid white"}
+                    borderRadius={3}
+                    colorScheme={"transparent"}
+                    height={"100%"}
+                    backgroundColor={mine ? "#545454" : "#323232"}
+                    onClick={() => addLikes(docs.id, data.likes)}
+                    // onClick={addLikes}
+                  >
+                    <Image
+                      src={thi ? "/assets/blueup.png" : "/assets/up.png"}
+                      alt="Gloppa up"
+                      width={40}
+                      height={40}
+                    />
+                    <Text color={"#fff"} fontSize={"17pt"}>
+                      {Object.keys(data.likes).length === 0
+                        ? 0
+                        : data.likes.length}
+                    </Text>
+                  </Button>
+                </Flex>,
+                // ForumComponent(
+                //   val2.get("username"),
+                //   docs.id,
+                //   data.statement,
+                //   data.hashtags,
+                //   data.likes,
+                //   thi,
+                //   data.replies,
+                //   mine
+                // ),
+              ]);
+            });
+        });
       });
-    });
   }, [db]);
   return (
     <Flex

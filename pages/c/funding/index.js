@@ -39,56 +39,75 @@ const Funding = () => {
     if (typeof window !== "undefined") {
       const tempSetBoostRev = [];
       const tempSetFundRev = [];
-      db.collection("funding").onSnapshot((val) => {
-        setFunds([]);
-        val.forEach(function (doc) {
-          let des = doc.data().description;
-          let email = doc.data().email;
-          let stid = doc.data().startupId;
-          let equity = doc.data().investment[0];
-          let price = doc.data().investment[1];
-          let name = doc.data().startupName;
-          let foundedDate = doc.data().foundedDate;
-          let website = doc.data().website;
-          let img = doc.data().img;
+      db.collection("funding")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((val) => {
+          setFunds([]);
+          val.forEach(function (doc) {
+            let des = doc.data().description;
+            let email = doc.data().email;
+            let stid = doc.data().startupId;
+            let equity = doc.data().investment[0];
+            let price = doc.data().investment[1];
+            let name = doc.data().startupName;
+            let foundedDate = doc.data().foundedDate;
+            let website = doc.data().website;
+            let img = doc.data().img;
 
-          db.collection("startups")
-            .doc(stid)
-            .onSnapshot((val2) => {
-              let dot = val2.data();
-              db.collection("users")
-                .doc(dot.owner)
-                .onSnapshot((val3) => {
-                  let dat = val3.data();
-                  var today = new Date();
-                  var dd = String(today.getDate()).padStart(2, "0");
-                  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                  var yyyy = today.getFullYear();
-                  today = mm + "/" + dd + "/" + yyyy;
+            db.collection("startups")
+              .doc(stid)
+              .onSnapshot((val2) => {
+                let dot = val2.data();
+                db.collection("users")
+                  .doc(dot.owner)
+                  .onSnapshot((val3) => {
+                    let dat = val3.data();
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, "0");
+                    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                    var yyyy = today.getFullYear();
+                    today = mm + "/" + dd + "/" + yyyy;
 
-                  if (dat.boost !== undefined) {
-                    const date1 = new Date(String(dat.boost[1]));
-                    const date2 = new Date(String(today));
-                    const diffTime = Math.abs(date2 - date1);
-                    const diffDays = Math.ceil(
-                      diffTime / (1000 * 60 * 60 * 24)
-                    );
-                    if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
-                      tempSetBoostRev.push(
-                        FundingComponent(
-                          img,
-                          name,
-                          [equity, price],
-                          des,
-                          email,
-                          foundedDate,
-                          website,
-                          doc.id,
-                          stid,
-                          toast
-                        )
+                    if (dat.boost !== undefined) {
+                      const date1 = new Date(String(dat.boost[1]));
+                      const date2 = new Date(String(today));
+                      const diffTime = Math.abs(date2 - date1);
+                      const diffDays = Math.ceil(
+                        diffTime / (1000 * 60 * 60 * 24)
                       );
-                      setBoost(tempSetBoostRev);
+                      if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
+                        tempSetBoostRev.push(
+                          FundingComponent(
+                            img,
+                            name,
+                            [equity, price],
+                            des,
+                            email,
+                            foundedDate,
+                            website,
+                            doc.id,
+                            stid,
+                            toast
+                          )
+                        );
+                        setBoost(tempSetBoostRev);
+                      } else {
+                        tempSetFundRev.push(
+                          FundingComponent(
+                            img,
+                            name,
+                            [equity, price],
+                            des,
+                            email,
+                            foundedDate,
+                            website,
+                            doc.id,
+                            stid,
+                            toast
+                          )
+                        );
+                        setFunds(tempSetFundRev);
+                      }
                     } else {
                       tempSetFundRev.push(
                         FundingComponent(
@@ -106,30 +125,13 @@ const Funding = () => {
                       );
                       setFunds(tempSetFundRev);
                     }
-                  } else {
-                    tempSetFundRev.push(
-                      FundingComponent(
-                        img,
-                        name,
-                        [equity, price],
-                        des,
-                        email,
-                        foundedDate,
-                        website,
-                        doc.id,
-                        stid,
-                        toast
-                      )
-                    );
-                    setFunds(tempSetFundRev);
-                  }
-                });
-            });
-          setFunds((prevProd) => [...prevProd, ...boost]);
+                  });
+              });
+            setFunds((prevProd) => [...prevProd, ...boost]);
+            setLoading(false);
+          });
           setLoading(false);
         });
-        setLoading(false);
-      });
     }
   }, [router, db]);
 

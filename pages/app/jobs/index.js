@@ -50,6 +50,7 @@ const Jobs = () => {
           n.reverse();
           if (n.length < 1) setLoading(false);
           db.collection("jobs")
+            .orderBy("timestamp", "desc")
             .get()
             .then((val2) => {
               setJobs([]);

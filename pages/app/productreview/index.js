@@ -27,6 +27,7 @@ import Router, { useRouter } from "next/router";
 import ProdRevComponent from "./prodrevcomponent";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
+import { serverTimestamp } from "firebase/firestore";
 
 const ProductReview = () => {
   const router = useRouter();
@@ -38,6 +39,7 @@ const ProductReview = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null && db && router) {
+        console.log(serverTimestamp());
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .get()
@@ -47,83 +49,111 @@ const ProductReview = () => {
             let n = val.get("startups");
             n.reverse();
             //if (n.length < 1) setLoading(false);
-            db.collection("productReview").onSnapshot((yal) => {
-              console.log("Length + " + Object.keys(yal).length);
-              if (Object.keys(yal).length < 3) {
-                setLoading(false);
-              }
-              console.log("like");
-
-              setProdRev([]);
-              setBoostRev([]);
-              yal.forEach(function (doc) {
-                let stid = doc.data().startupId;
-                let cathp = doc.data().catchPhrase;
-                let commentss = Object.values(doc.data().comments);
-                let likess = Object.values(doc.data().likes);
-                let title = doc.data().startupName;
-                let hashtags = Object.values(doc.data().hashtags);
-                let website = doc.data().website;
-                let img = doc.data().img;
-                let liked = false;
-                if (
-                  likess.length > 0 &&
-                  likess.includes(localStorage.getItem("id"))
-                ) {
-                  liked = true;
-                } else {
-                  liked = false;
+            db.collection("productReview")
+              .orderBy("timestamp", "desc")
+              .onSnapshot((yal) => {
+                console.log("Length + " + Object.keys(yal).length);
+                if (Object.keys(yal).length < 3) {
+                  setLoading(false);
                 }
-                let to = false;
-                if (n.includes(stid)) {
-                  to = true;
-                } else {
-                  to = false;
-                }
+                console.log("like");
 
-                db.collection("startups")
-                  .doc(stid)
-                  .onSnapshot((val2) => {
-                    let dot = val2.data();
-                    db.collection("users")
-                      .doc(dot.owner)
-                      .onSnapshot((val3) => {
-                        let dat = val3.data();
-                        var today = new Date();
-                        var dd = String(today.getDate()).padStart(2, "0");
-                        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                        var yyyy = today.getFullYear();
-                        today = mm + "/" + dd + "/" + yyyy;
+                setProdRev([]);
+                setBoostRev([]);
+                yal.forEach(function (doc) {
+                  let stid = doc.data().startupId;
+                  let cathp = doc.data().catchPhrase;
+                  let commentss = Object.values(doc.data().comments);
+                  let likess = Object.values(doc.data().likes);
+                  let title = doc.data().startupName;
+                  let hashtags = Object.values(doc.data().hashtags);
+                  let website = doc.data().website;
+                  let img = doc.data().img;
+                  let liked = false;
+                  if (
+                    likess.length > 0 &&
+                    likess.includes(localStorage.getItem("id"))
+                  ) {
+                    liked = true;
+                  } else {
+                    liked = false;
+                  }
+                  let to = false;
+                  if (n.includes(stid)) {
+                    to = true;
+                  } else {
+                    to = false;
+                  }
 
-                        if (dat.boost !== undefined) {
-                          const date1 = new Date(String(dat.boost[1]));
-                          const date2 = new Date(String(today));
-                          const diffTime = Math.abs(date2 - date1);
-                          const diffDays = Math.ceil(
-                            diffTime / (1000 * 60 * 60 * 24)
-                          );
-                          if (
-                            dat.boost[0] == "yes" &&
-                            diffDays <= dat.boost[2]
-                          ) {
-                            setBoostRev((prevRows) => [
-                              ...prevRows,
-                              ProdRevComponent(
-                                doc.id,
-                                stid,
-                                website,
-                                img,
-                                title,
-                                cathp,
-                                hashtags,
-                                commentss,
-                                likess,
-                                liked,
-                                to,
-                                router
-                              ),
-                            ]);
-                            setLoading(false);
+                  db.collection("startups")
+                    .doc(stid)
+                    .onSnapshot((val2) => {
+                      let dot = val2.data();
+                      db.collection("users")
+                        .doc(dot.owner)
+                        .onSnapshot((val3) => {
+                          let dat = val3.data();
+                          var today = new Date();
+                          var dd = String(today.getDate()).padStart(2, "0");
+                          var mm = String(today.getMonth() + 1).padStart(
+                            2,
+                            "0"
+                          ); //January is 0!
+                          var yyyy = today.getFullYear();
+                          today = mm + "/" + dd + "/" + yyyy;
+
+                          if (dat.boost !== undefined) {
+                            const date1 = new Date(String(dat.boost[1]));
+                            const date2 = new Date(String(today));
+                            const diffTime = Math.abs(date2 - date1);
+                            const diffDays = Math.ceil(
+                              diffTime / (1000 * 60 * 60 * 24)
+                            );
+                            if (
+                              dat.boost[0] == "yes" &&
+                              diffDays <= dat.boost[2]
+                            ) {
+                              setBoostRev((prevRows) => [
+                                ...prevRows,
+                                ProdRevComponent(
+                                  doc.id,
+                                  stid,
+                                  website,
+                                  img,
+                                  title,
+                                  cathp,
+                                  hashtags,
+                                  commentss,
+                                  likess,
+                                  liked,
+                                  to,
+                                  router
+                                ),
+                              ]);
+                              setLoading(false);
+                            } else {
+                              setProdRev((prevRows) => [
+                                ...prevRows,
+                                ProdRevComponent(
+                                  doc.id,
+                                  stid,
+                                  website,
+                                  img,
+                                  title,
+                                  cathp,
+                                  hashtags,
+                                  commentss,
+                                  likess,
+                                  liked,
+                                  to,
+                                  router
+                                ),
+                              ]);
+                              // setProdRev((prevProd) =>
+                              //   prevProd.concat(tempSetProdRev)
+                              // );
+                              setLoading(false);
+                            }
                           } else {
                             setProdRev((prevRows) => [
                               ...prevRows,
@@ -147,33 +177,10 @@ const ProductReview = () => {
                             // );
                             setLoading(false);
                           }
-                        } else {
-                          setProdRev((prevRows) => [
-                            ...prevRows,
-                            ProdRevComponent(
-                              doc.id,
-                              stid,
-                              website,
-                              img,
-                              title,
-                              cathp,
-                              hashtags,
-                              commentss,
-                              likess,
-                              liked,
-                              to,
-                              router
-                            ),
-                          ]);
-                          // setProdRev((prevProd) =>
-                          //   prevProd.concat(tempSetProdRev)
-                          // );
-                          setLoading(false);
-                        }
-                      });
-                  });
+                        });
+                    });
+                });
               });
-            });
           });
       } else {
         router.push("/c/main");

@@ -17,7 +17,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { arrayRemove, arrayUnion } from "firebase/firestore";
+import { arrayRemove, arrayUnion, serverTimestamp } from "firebase/firestore";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -100,6 +100,9 @@ const Messages = () => {
           ("0" + m.getUTCMinutes()).slice(-2) +
           ":" +
           ("0" + m.getUTCSeconds()).slice(-2);
+        db.collection("messages")
+          .doc(id)
+          .update({ timestamp: serverTimestamp() });
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .get()
@@ -215,6 +218,7 @@ const Messages = () => {
           users: [],
           usernames: [],
           messages: [],
+          timestamp: serverTimestamp(),
         })
         .then((docRef) => {
           let id = docRef.id;
@@ -280,6 +284,7 @@ const Messages = () => {
     //       data.messagesId.forEach((ido, index) => {
     db.collection("messages")
       .where("users", "array-contains", localStorage.getItem("id"))
+      // .orderBy("timestamp", "desc")
       .onSnapshot((val2) => {
         setMessagePost([]);
         val2.forEach((doc) => {

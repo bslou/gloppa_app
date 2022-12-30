@@ -39,6 +39,7 @@ const Jobs = () => {
 
   useEffect(() => {
     db.collection("jobs")
+      .orderBy("timestamp", "desc")
       .get()
       .then((val2) => {
         setJobs([]);

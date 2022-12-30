@@ -20,7 +20,7 @@ import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 const ProductReviewReg = () => {
   const [idd, setIdd] = useState("");
@@ -225,6 +225,7 @@ const ProductReviewReg = () => {
                       comments: [],
                       website: website,
                       img: url,
+                      timestamp: serverTimestamp(),
                     })
                     .then(function (docRef) {
                       console.log("Document written with ID: ", docRef.id);

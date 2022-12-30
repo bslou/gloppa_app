@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 const StartupRegistration = () => {
   const router = useRouter();
@@ -110,6 +110,7 @@ const StartupRegistration = () => {
         boost: [],
         jobs: [],
         img: `/images/${imgname}`,
+        timestamp: serverTimestamp(),
         //completedTasks: {},
         //completedBrainstorm: {},
       })

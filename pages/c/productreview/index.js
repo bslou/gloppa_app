@@ -38,63 +38,83 @@ const ProductReview = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (db && router) {
-        db.collection("productReview").onSnapshot((yal) => {
-          console.log("Length + " + Object.keys(yal).length);
-          if (Object.keys(yal).length < 3) {
-            setLoading(false);
-          }
-          console.log("like");
+        db.collection("productReview")
+          .orderBy("timestamp", "desc")
+          .onSnapshot((yal) => {
+            console.log("Length + " + Object.keys(yal).length);
+            if (Object.keys(yal).length < 3) {
+              setLoading(false);
+            }
+            console.log("like");
 
-          setProdRev([]);
-          setBoostRev([]);
-          yal.forEach(function (doc) {
-            let stid = doc.data().startupId;
-            let cathp = doc.data().catchPhrase;
-            let commentss = Object.values(doc.data().comments);
-            let likess = Object.values(doc.data().likes);
-            let title = doc.data().startupName;
-            let hashtags = Object.values(doc.data().hashtags);
-            let website = doc.data().website;
-            let img = doc.data().img;
+            setProdRev([]);
+            setBoostRev([]);
+            yal.forEach(function (doc) {
+              let stid = doc.data().startupId;
+              let cathp = doc.data().catchPhrase;
+              let commentss = Object.values(doc.data().comments);
+              let likess = Object.values(doc.data().likes);
+              let title = doc.data().startupName;
+              let hashtags = Object.values(doc.data().hashtags);
+              let website = doc.data().website;
+              let img = doc.data().img;
 
-            db.collection("startups")
-              .doc(stid)
-              .onSnapshot((val2) => {
-                let dot = val2.data();
-                db.collection("users")
-                  .doc(dot.owner)
-                  .onSnapshot((val3) => {
-                    let dat = val3.data();
-                    var today = new Date();
-                    var dd = String(today.getDate()).padStart(2, "0");
-                    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                    var yyyy = today.getFullYear();
-                    today = mm + "/" + dd + "/" + yyyy;
+              db.collection("startups")
+                .doc(stid)
+                .onSnapshot((val2) => {
+                  let dot = val2.data();
+                  db.collection("users")
+                    .doc(dot.owner)
+                    .onSnapshot((val3) => {
+                      let dat = val3.data();
+                      var today = new Date();
+                      var dd = String(today.getDate()).padStart(2, "0");
+                      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                      var yyyy = today.getFullYear();
+                      today = mm + "/" + dd + "/" + yyyy;
 
-                    if (dat.boost !== undefined) {
-                      const date1 = new Date(String(dat.boost[1]));
-                      const date2 = new Date(String(today));
-                      const diffTime = Math.abs(date2 - date1);
-                      const diffDays = Math.ceil(
-                        diffTime / (1000 * 60 * 60 * 24)
-                      );
-                      if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
-                        setBoostRev((prevRows) => [
-                          ...prevRows,
-                          ProdRevComponent(
-                            doc.id,
-                            stid,
-                            website,
-                            img,
-                            title,
-                            cathp,
-                            hashtags,
-                            commentss,
-                            likess,
-                            router
-                          ),
-                        ]);
-                        setLoading(false);
+                      if (dat.boost !== undefined) {
+                        const date1 = new Date(String(dat.boost[1]));
+                        const date2 = new Date(String(today));
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24)
+                        );
+                        if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
+                          setBoostRev((prevRows) => [
+                            ...prevRows,
+                            ProdRevComponent(
+                              doc.id,
+                              stid,
+                              website,
+                              img,
+                              title,
+                              cathp,
+                              hashtags,
+                              commentss,
+                              likess,
+                              router
+                            ),
+                          ]);
+                          setLoading(false);
+                        } else {
+                          setProdRev((prevRows) => [
+                            ...prevRows,
+                            ProdRevComponent(
+                              doc.id,
+                              stid,
+                              website,
+                              img,
+                              title,
+                              cathp,
+                              hashtags,
+                              commentss,
+                              likess,
+                              router
+                            ),
+                          ]);
+                          setLoading(false);
+                        }
                       } else {
                         setProdRev((prevRows) => [
                           ...prevRows,
@@ -113,28 +133,10 @@ const ProductReview = () => {
                         ]);
                         setLoading(false);
                       }
-                    } else {
-                      setProdRev((prevRows) => [
-                        ...prevRows,
-                        ProdRevComponent(
-                          doc.id,
-                          stid,
-                          website,
-                          img,
-                          title,
-                          cathp,
-                          hashtags,
-                          commentss,
-                          likess,
-                          router
-                        ),
-                      ]);
-                      setLoading(false);
-                    }
-                  });
-              });
+                    });
+                });
+            });
           });
-        });
       }
     }
   }, [db, router]);
