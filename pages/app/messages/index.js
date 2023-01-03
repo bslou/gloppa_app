@@ -484,7 +484,7 @@ const Messages = () => {
                   />
                 </Flex> */}
                 <Flex direction={"column"} width={"90%"}>
-                  <Text>People</Text>
+                  <Text>People(s) Usernames (ex: bslou10)</Text>
                   <Input type={"text"} onKeyDown={handleChange} />
                 </Flex>
                 <Flex
