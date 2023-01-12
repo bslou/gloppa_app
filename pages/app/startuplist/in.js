@@ -150,7 +150,8 @@ const StartupList = () => {
             color={"#202020"}
             colorScheme={"transparent"}
           >
-            📦&nbsp;&nbsp;Product Review
+            {/* 📦&nbsp;&nbsp;Product Review */}
+            Startup List
           </Button>
           <Button
             border={"none"}
@@ -161,6 +162,7 @@ const StartupList = () => {
             fontWeight={100}
             color={"#202020"}
             colorScheme={"transparent"}
+            onClick={() => router.push("/app/startupregistration")}
           >
             +
           </Button>
@@ -184,6 +186,7 @@ const StartupList = () => {
             fontWeight={600}
             color={"#202020"}
             colorScheme={"transparent"}
+            onClick={() => router.push("/app/startuplist")}
           >
             Gloppa
           </Button>
@@ -205,6 +208,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/productreview")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 📦&nbsp;&nbsp;Product Review
@@ -227,6 +231,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/funding")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💸&nbsp;&nbsp;Funding
@@ -249,6 +254,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/jobs")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💻&nbsp;&nbsp;Jobs
@@ -273,6 +279,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/messages")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💬&nbsp;&nbsp;Private Messages
@@ -295,6 +302,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/forum")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 📢&nbsp;&nbsp;Public Forum
@@ -319,6 +327,7 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/education")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 🎥&nbsp;&nbsp;Educational Videos
@@ -354,7 +363,7 @@ const StartupList = () => {
           alignItems={"center"}
           paddingTop={5}
           paddingBottom={5}
-          marginLeft={250}
+          marginLeft={{ base: 150, md: 175, lg: 250 }}
           width={"80%"}
           marginTop={50}
           gap={3}
