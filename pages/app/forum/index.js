@@ -569,11 +569,11 @@ const Forum = () => {
         position={"absolute"}
         direction={"column"}
         alignItems={"center"}
-        paddingTop={2}
-        paddingBottom={2}
+        paddingTop={0.5}
+        paddingBottom={0.5}
         marginLeft={{ base: 150, md: 175, lg: 250 }}
         width={"80%"}
-        top={{ base: 52, md: 62, lg: 72 }}
+        top={{ base: 53, md: 63, lg: 73 }}
         overflowY={'scroll'}
         height = {'83vh'}
         gap={3}
