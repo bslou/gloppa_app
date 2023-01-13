@@ -522,13 +522,13 @@ const Funding = () => {
           position={"absolute"}
           direction={"column"}
           alignItems={"center"}
-          paddingTop={5}
-          paddingBottom={5}
+          paddingTop={0.5}
+          paddingBottom={0.5}
           marginLeft={{ base: 150, md: 175, lg: 250 }}
           width={"80%"}
-          top={{ base: 45, md: 53, lg: 61 }}
+          top={{ base: 53, md: 63, lg: 73 }}
           overflowY={'scroll'}
-          maxHeight = {'85vh'}
+          height = {'83vh'}
           gap={3}
         >
           {boost}
