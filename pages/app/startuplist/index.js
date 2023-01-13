@@ -477,7 +477,7 @@ const StartupList = () => {
         >
           {rows.length > 0 ? rows : 
             <Flex direction={'column'} alignItems = {'center'} gap = {5}>
-              <Image src = {'/assets/nodata2.png'} alt = {"No data"} width = {900} height={900} layout={'responsive'}/>
+              <Image src = {'/assets/nodata2.png'} alt = {"No data"} width = {1000} height={1000} layout={'responsive'}/>
               <Text fontSize={'24pt'}>No startups here 😭</Text>
               <Button boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"} borderRadius={0} fontSize={'20pt'} height={65} paddingLeft={5} paddingRight={5} backgroundColor={'white'} onClick={() => router.push("/app/startupregistration")}>Get Started</Button>
            </Flex>
