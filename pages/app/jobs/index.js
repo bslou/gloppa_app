@@ -526,7 +526,7 @@ const Jobs = () => {
           width={"80%"}
           top={{ base: 45, md: 53, lg: 61 }}
           overflowY={'scroll'}
-          maxHeight = {'76vh'}
+          maxHeight = {'85vh'}
           gap={3}
         >
           {boost}
