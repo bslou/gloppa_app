@@ -922,7 +922,8 @@ const Messages = () => {
                   justifyContent={"center"}
                   height={"100%"}
                 >
-                  <Text color={"white"} textAlign={"center"} fontSize={"30pt"}>
+                    <Image src = {"/assets/nodata2.png"} alt = {"No data Gloppa"} width = {500} height = {500} layout = {'responsive'} />
+                  <Text color={"black"} textAlign={"center"} fontSize={"15pt"}>
                     No peoples messages here...
                   </Text>
                   <Button onClick={onOpen}>Create message</Button>
