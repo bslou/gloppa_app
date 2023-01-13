@@ -554,6 +554,8 @@ const ProductReview = () => {
           marginLeft={{ base: 150, md: 175, lg: 250 }}
           width={"80%"}
           top={{ base: 45, md: 53, lg: 61 }}
+          overflowY={'scroll'}
+          maxHeight = {'76vh'}
           gap={3}
         >
           {boostRev}
