@@ -921,7 +921,7 @@ const Messages = () => {
                   alignItems={"center"}
                   justifyContent={"center"}
                   height={"100%"}
-                  gap={4}
+                  gap={2}
                 >
                     <Image src = {"/assets/nodata2.png"} alt = {"No data Gloppa"} width = {500} height = {500} layout = {'responsive'} />
                   <Text color={"black"} textAlign={"center"} fontSize={"15pt"}>
