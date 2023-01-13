@@ -459,7 +459,7 @@ const ProdRevComments = () => {
           >
             <Textarea
               placeholder="Comment..."
-              color="white"
+              color="black"
               border={"none"}
               resize={"none"}
               style={{

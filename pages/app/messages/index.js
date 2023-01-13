@@ -29,7 +29,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
 import NavBar from "../navbar";
-import { serverTimestamp } from "firebase/firestore";
+import { arrayUnion, serverTimestamp } from "firebase/firestore";
 
 const Messages = () => {
   const router = useRouter();
@@ -53,7 +53,11 @@ const Messages = () => {
   const [uname, setUname] = useState("");
   const [oguname, setOgUname] = useState("");
   const [email, setEmail] = useState("");
-  const { isOpen2, onOpen2, onClose2 } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2,
+  } = useDisclosure();
 
   const Logout = () => {
     localStorage.removeItem("id");
@@ -74,6 +78,7 @@ const Messages = () => {
             duration: 9000,
             isClosable: true,
           });
+          onClose2();
         } else {
           console.log("Doesn't exist!");
           let id = localStorage.getItem("id");
@@ -85,6 +90,7 @@ const Messages = () => {
             duration: 9000,
             isClosable: true,
           });
+          onClose2();
         }
       })
       .catch((err) => {
@@ -878,7 +884,7 @@ const Messages = () => {
         paddingBottom={5}
         marginLeft={{ base: 150, md: 175, lg: 250 }}
         width={"80%"}
-        marginTop={50}
+        top={{ base: 45, md: 53, lg: 61 }}
         gap={3}
       >
         <Flex
@@ -887,7 +893,7 @@ const Messages = () => {
           height={"80vh"}
           width={"65vw"}
           backgroundColor={"transparent"}
-          paddingTop={10}
+          //paddingTop={10}
         >
           <Flex
             direction={"row"}

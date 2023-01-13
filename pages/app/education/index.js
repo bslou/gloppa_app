@@ -31,6 +31,7 @@ import { serverTimestamp } from "firebase/firestore";
 
 const Education = () => {
   const router = useRouter();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(true);
   const [prodRev, setProdRev] = useState([]);
@@ -59,6 +60,7 @@ const Education = () => {
             duration: 9000,
             isClosable: true,
           });
+          onClose();
         } else {
           console.log("Doesn't exist!");
           let id = localStorage.getItem("id");
@@ -70,6 +72,7 @@ const Education = () => {
             duration: 9000,
             isClosable: true,
           });
+          onClose();
         }
       })
       .catch((err) => {
@@ -553,7 +556,7 @@ const Education = () => {
         paddingBottom={5}
         marginLeft={{ base: 150, md: 175, lg: 250 }}
         width={"80%"}
-        marginTop={50}
+        top={{ base: 45, md: 53, lg: 61 }}
         gap={3}
       >
         <Flex

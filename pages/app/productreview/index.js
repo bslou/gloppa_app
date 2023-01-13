@@ -32,6 +32,7 @@ import { serverTimestamp } from "firebase/firestore";
 
 const ProductReview = () => {
   const router = useRouter();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(true);
   const [prodRev, setProdRev] = useState([]);
@@ -72,6 +73,10 @@ const ProductReview = () => {
             duration: 9000,
             isClosable: true,
           });
+          // window.location.reload();
+          onClose();
+          setProdRev([]);
+          setBoostRev([]);
         }
       })
       .catch((err) => {
@@ -548,7 +553,7 @@ const ProductReview = () => {
           paddingBottom={5}
           marginLeft={{ base: 150, md: 175, lg: 250 }}
           width={"80%"}
-          marginTop={50}
+          top={{ base: 45, md: 53, lg: 61 }}
           gap={3}
         >
           {boostRev}

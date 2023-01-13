@@ -232,7 +232,11 @@ const ForumReplies = () => {
                         >
                           @{val4.username}
                         </Text>
-                        <Text color={"black"} fontSize={"13pt"}>
+                        <Text
+                          color={"black"}
+                          fontSize={"13pt"}
+                          maxWidth={"40vw"}
+                        >
                           {val4.comment}
                         </Text>
                       </Flex>
