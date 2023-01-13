@@ -573,9 +573,9 @@ const Forum = () => {
         paddingBottom={2}
         marginLeft={{ base: 150, md: 175, lg: 250 }}
         width={"80%"}
-        top={{ base: 48, md: 58, lg: 68 }}
+        top={{ base: 52, md: 62, lg: 72 }}
         overflowY={'scroll'}
-        height = {'82.5vh'}
+        height = {'83vh'}
         gap={3}
       >
         {fors}
