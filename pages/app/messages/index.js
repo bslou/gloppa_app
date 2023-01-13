@@ -29,7 +29,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
 import NavBar from "../navbar";
-import { arrayUnion, serverTimestamp } from "firebase/firestore";
+import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
 
 const Messages = () => {
   const router = useRouter();
