@@ -70,10 +70,12 @@ const JobsComponent = (
       direction={"row"}
       alignItems={"center"}
       justifyContent={"space-between"}
-      width={"90%"}
-      padding={5}
-      backgroundColor={mine ? "#545454" : "#323232"}
-      borderRadius={5}
+      width={"70%"}
+      padding={2}
+      //backgroundColor={mine ? "#dcdcdc" : "#fff"}
+      backgroundColor={"#fff"}
+      boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+      //borderRadius={5}
       // as={"a"}
       // href={"/app/jobs/" + id}
       _hover={{
@@ -86,13 +88,13 @@ const JobsComponent = (
         justifyContent={"center"}
         gap={5}
       >
-        <img src={image} alt={company} width={75} height={75} />
+        <img src={image} alt={company} width={70} height={70} />
         <Flex direction={"column"} justifyContent={"center"}>
-          <Text color={"#ccc"}>{company}</Text>
-          <Text color={"#fff"} fontWeight={800}>
+          <Text color={"#333"}>{company}</Text>
+          <Text color={"#000"} fontWeight={800}>
             {position}
           </Text>
-          <Text color={"#ccc"}>{location}</Text>
+          <Text color={"#333"}>{location}</Text>
         </Flex>
       </Flex>
       <Flex

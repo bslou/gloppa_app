@@ -5,7 +5,7 @@ import { db } from "../../api/firebaseconfig";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
 import { useRouter } from "next/router";
 
-const ProdRevComponent2 = (
+const ProdRevComponent = (
   id,
   idts,
   website,
@@ -18,7 +18,6 @@ const ProdRevComponent2 = (
   liked,
   mine
 ) => {
-  const router = useRouter();
   const deleteIt = () => {
     if (
       window.confirm(
@@ -30,9 +29,11 @@ const ProdRevComponent2 = (
         .update({ productReviewId: arrayRemove(id) });
       db.collection("users")
         .doc(localStorage.getItem("id"))
-        .update({ productReviewStartupId: arrayRemove(idts) });
+        .update({ productReviewStartupId: arrayRemove(id) });
       db.collection("productReview").doc(id).delete();
-      router.push("/app/productreview");
+      setTimeout(() => {
+        window.location.reload();
+      }, 400);
     }
   };
   const addLikes = () => {
@@ -52,14 +53,17 @@ const ProdRevComponent2 = (
       <Flex
         direction={"row"}
         width={"90%"}
-        backgroundColor={mine ? "#545454" : "#323232"}
-        boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+        alignItems={"center"}
+        //backgroundColor={mine ? "#dcdcdc" : "#fff"}
+        backgroundColor={"#fff"}
+        boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         _hover={{
-          boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+          //boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+          opacity: 0.8,
         }}
         justifyContent={"space-between"}
-        padding={5}
-        borderRadius={5}
+        padding={2}
+        //borderRadius={5}
       >
         <Flex
           direction={"row"}
@@ -67,7 +71,7 @@ const ProdRevComponent2 = (
           justifyContent={"center"}
           gap={5}
         >
-          <img src={img} alt={"startup logo"} width={70} height={70} />
+          <img src={img} alt={title} width={70} height={70} />
           <Flex
             direction={"column"}
             alignItems={"left"}
@@ -75,7 +79,7 @@ const ProdRevComponent2 = (
             gap={0.75}
           >
             <Flex alignItems={"center"} direction={"row"}>
-              <Link color={"white"} fontWeight={700} fontSize={"15pt"}>
+              <Link color={"black"} fontWeight={700} fontSize={"15pt"}>
                 <NextLink href={website} passHref target={"_blank"}>
                   {title}
                 </NextLink>
@@ -91,7 +95,7 @@ const ProdRevComponent2 = (
                 </Button>
               ) : null}
             </Flex>
-            <Text color={"#efefef"} fontSize={"13pt"}>
+            <Text color={"black"} fontSize={"13pt"}>
               {phrase}
             </Text>
             <Flex direction={"row"} alignItems={"center"} gap={4}>
@@ -101,19 +105,17 @@ const ProdRevComponent2 = (
                 gap={1}
                 display={"flex"}
                 flexDirection={"row"}
-                color={"white"}
-                onClick={() => {
-                  router.push("/app/prodrevcomments/" + id);
-                }}
+                color={"black"}
               >
-                <Image
+                <img
+                  style={{ filter: "brightness(0)" }}
                   src={"/assets/message.png"}
                   alt="Message"
                   width={25}
                   height={25}
                 />
-                <Text color={"white"} fontWeight={900}>
-                  {comments === null ? 0 : comments.length}
+                <Text color={"black"} fontWeight={900}>
+                  {Object.keys(comments).length === 0 ? 0 : comments.length}
                 </Text>
               </Link>
               <Flex
@@ -144,21 +146,23 @@ const ProdRevComponent2 = (
           flexDirection={"column"}
           alignItems={"center"}
           justifyContent={"center"}
-          border={liked ? "1px solid #1F90FF" : "1px solid white"}
-          borderRadius={3}
+          border={liked ? "1px solid #1F90FF" : "1px solid black"}
+          borderRadius={2}
           colorScheme={"transparent"}
           height={"100%"}
-          backgroundColor={mine ? "#545454" : "#323232"}
+          backgroundColor={"transparent"}
           onClick={addLikes}
+          paddingBottom={3}
+          paddingTop={3}
         >
-          <Image
+          <img
             src={liked ? "/assets/blueup.png" : "/assets/up.png"}
             alt="Gloppa up"
             width={40}
             height={40}
           />
-          <Text color={"#fff"} fontSize={"17pt"}>
-            {likes === null ? 0 : likes.length}
+          <Text color={"#000"} fontSize={"17pt"}>
+            {Object.keys(likes).length === 0 ? 0 : likes.length}
           </Text>
         </Button>
       </Flex>
@@ -166,4 +170,4 @@ const ProdRevComponent2 = (
   }
 };
 
-export default ProdRevComponent2;
+export default ProdRevComponent;

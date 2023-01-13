@@ -20,7 +20,7 @@ const Main = () => {
     }
   });
   return (
-    <Flex width={"100vw"} backgroundColor={"#1c1c1c"} direction={"column"}>
+    <Flex width={"100vw"} backgroundColor={"#fafafa"} direction={"column"}>
       <NavBar />
       <Flex
         direction={"row"}
@@ -50,7 +50,7 @@ const Main = () => {
         >
           <Text
             fontWeight={900}
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
             textAlign={"center"}
           >
@@ -58,7 +58,7 @@ const Main = () => {
           </Text>
           <Text
             fontWeight={300}
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "18pt", lg: "23pt" }}
             textAlign={"center"}
           >
@@ -73,7 +73,9 @@ const Main = () => {
             paddingLeft={8}
             paddingRight={8}
             height={"8vh"}
+            borderRadius={0}
             onClick={() => router.push("/app/register")}
+            boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           >
             Get Started
           </Button>
@@ -101,6 +103,7 @@ const Main = () => {
           width={"60%"}
           alignItems={"center"}
           justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Image
             src={"/assets/one.png"}
@@ -118,7 +121,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -126,7 +129,7 @@ const Main = () => {
             Fun organizing work
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
@@ -151,7 +154,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -159,14 +162,19 @@ const Main = () => {
             Find and post jobs
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
             Create job posts are find startups to work for to earn money.
           </Text>
         </Flex>
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/four.png"}
             alt={"Four"}
@@ -184,7 +192,12 @@ const Main = () => {
         height={{ base: "70vh", md: "80vh", lg: "90vh" }}
         gap={10}
       >
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/two.png"}
             alt={"Two"}
@@ -201,7 +214,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -209,7 +222,7 @@ const Main = () => {
             Get product review
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
@@ -234,7 +247,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -242,14 +255,19 @@ const Main = () => {
             Receive funds
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
             Attract investors and receive funds through Gloppa.
           </Text>
         </Flex>
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/three.png"}
             alt={"Three"}
@@ -267,7 +285,12 @@ const Main = () => {
         height={{ base: "70vh", md: "80vh", lg: "90vh" }}
         gap={10}
       >
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/five.png"}
             alt={"Five"}
@@ -284,7 +307,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -292,7 +315,7 @@ const Main = () => {
             Connect between your cofounders and team
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
@@ -317,7 +340,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -325,7 +348,7 @@ const Main = () => {
             Access a public forum
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
@@ -333,7 +356,12 @@ const Main = () => {
             and the mentality involved to succeed.
           </Text>
         </Flex>
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/six.png"}
             alt={"Six"}
@@ -351,7 +379,12 @@ const Main = () => {
         height={{ base: "70vh", md: "80vh", lg: "90vh" }}
         gap={10}
       >
-        <Flex width={"60%"} alignItems={"center"} justifyContent={"center"}>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
           <Image
             src={"/assets/seven.png"}
             alt={"Seven"}
@@ -368,7 +401,7 @@ const Main = () => {
           gap={5}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontWeight={800}
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
@@ -376,7 +409,7 @@ const Main = () => {
             Learn from professionals
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
@@ -394,7 +427,7 @@ const Main = () => {
       >
         <Text
           fontWeight={900}
-          color={"white"}
+          color={"black"}
           fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
           textAlign={"center"}
           width={"75%"}
@@ -405,6 +438,8 @@ const Main = () => {
           backgroundColor={"white"}
           color={"black"}
           fontWeight={600}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          borderRadius={0}
           fontSize={"25pt"}
           paddingLeft={8}
           paddingRight={8}

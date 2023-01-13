@@ -269,7 +269,7 @@ const ProductReviewReg = () => {
     <Flex
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#f2f2f2"}
       direction={"column"}
       alignItems={"center"}
     >
@@ -289,8 +289,9 @@ const ProductReviewReg = () => {
           gap={"2.5vw"}
         >
           <Button colorScheme={"transparent"} onClick={() => router.back()}>
-            <Link color={"white"}>
-              <Image
+            <Link color={"black"}>
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/back.png"}
                 alt={"Back"}
                 width={60}
@@ -299,7 +300,7 @@ const ProductReviewReg = () => {
             </Link>
           </Button>
         </Flex>
-        <Menu>
+        {/* <Menu>
           <MenuButton colorScheme={"transparent"}>
             <Image
               src={"/assets/profile.png"}
@@ -311,21 +312,28 @@ const ProductReviewReg = () => {
           <MenuList>
             <MenuItem onClick={Logout}>Logout</MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Flex>
       <form onKeyDown={onKeyDown} onSubmit={(e) => submitProdReview(e)}>
         <Flex
           direction={"column"}
           alignItems={"center"}
           gap={4}
-          backgroundColor={"#1C1C1C"}
+          backgroundColor={"#fff"}
           width={"60vw"}
-          maxHeight={"90vh"}
-          minHeight={"90vh"}
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
-          paddingTop={12}
+          borderTopLeftRadius={2}
+          borderTopRightRadius={2}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          paddingTop={1}
+          paddingBottom={3}
         >
+          <Text
+            fontWeight={300}
+            color={"black"}
+            fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+          >
+            Product Review Post
+          </Text>
           {/* <Text
             color={"white"}
             textAlign={"center"}
@@ -335,21 +343,6 @@ const ProductReviewReg = () => {
             ⚠️ Note: You need to have at least a level 2 startup to be able to
             apply for funding.
           </Text> */}
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            position={"absolute"}
-            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
-          >
-            <Text
-              textShadow={"0px 4px 1px rgba(0,0,0,1)"}
-              fontWeight={800}
-              color={"white"}
-              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
-            >
-              Product Review Post
-            </Text>
-          </Flex>
           {/* <Flex>
             <Button
               borderRadius="50%"
@@ -386,7 +379,7 @@ const ProductReviewReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Startup Name:
             </Text>
             <Select
@@ -410,7 +403,7 @@ const ProductReviewReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Catch phrase:
             </Text>
             <Input
@@ -430,7 +423,7 @@ const ProductReviewReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Website:
             </Text>
             <Input
@@ -448,7 +441,7 @@ const ProductReviewReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Hashtags:
             </Text>
 
@@ -487,10 +480,11 @@ const ProductReviewReg = () => {
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={{ base: "8pt", md: "15pt", lg: "20pt" }}
+            fontSize={{ base: "11pt", md: "17pt", lg: "25pt" }}
             type={"submit"}
-            width={"22vw"}
             height={"8vh"}
+            border={"none"}
+            boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           >
             Post Product Review
           </Button>

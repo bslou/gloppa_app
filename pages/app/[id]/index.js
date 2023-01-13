@@ -319,7 +319,7 @@ const Game = () => {
                 <ListItem>
                   <Flex direction={"row"} alignItems={"center"}>
                     <Text
-                      color={"white"}
+                      color={"black"}
                       marginRight={"1vw"}
                       fontSize={{ base: "6pt", md: "9pt", lg: "12pt" }}
                     >
@@ -368,20 +368,16 @@ const Game = () => {
                     justifyContent={"space-between"}
                     width={"90%"}
                     backgroundColor={
-                      router.query.id == ido ? "#1F90FF" : "#dfdfdf"
+                      router.query.id == ido ? "#1F90FF" : "#fff"
                     }
                     paddingTop={3}
                     paddingBottom={3}
                     paddingLeft={5}
                     paddingRight={5}
-                    borderRadius={2}
-                    boxShadow={
-                      router.query.id == ido
-                        ? "0 0 5px 1px #004C97"
-                        : "0 0 5px 1px rgba(255, 255, 255, 0.9)"
-                    }
+                    borderRadius={0}
+                    boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                     _hover={{
-                      boxShadow: "0 0 5px 1px rgba(100, 100, 100, 0.9)",
+                      opacity: 0.8,
                     }}
                   >
                     <Box position="relative" display="flex">
@@ -747,13 +743,13 @@ const Game = () => {
       alignItems={"center"}
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#dfdfdf"}
     >
       <Modal isOpen={isOpen13} onClose={onClose13}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Edit Brainstorm Task</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>Edit Brainstorm Task</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => editBrainstorms(e)}>
               <Flex
@@ -764,9 +760,9 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Message</Text>
+                  <Text color={"black"}>Message</Text>
                   <Input
-                    color={"white"}
+                    color={"black"}
                     value={editData2[0]}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
@@ -781,7 +777,7 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Probability</Text>
+                  <Text color={"black"}>Probability</Text>
                   <Select
                     required
                     onChange={(e) => {
@@ -790,8 +786,8 @@ const Game = () => {
                       setEditData2(tosks);
                     }}
                     value={editData2[1]}
-                    color={"white"}
-                    backgroundColor={"#323232"}
+                    color={"black"}
+                    backgroundColor={"#fff"}
                   >
                     <option value={"High"} name={"High"}>
                       High
@@ -824,9 +820,9 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen12} onClose={onClose12}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Edit To Do List Task</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>Edit To Do List Task</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => editTasks(e)}>
               <Flex
@@ -837,9 +833,9 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Message</Text>
+                  <Text color={"black"}>Message</Text>
                   <Input
-                    color={"white"}
+                    color={"black"}
                     value={editData[0]}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
@@ -854,7 +850,7 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Urgency</Text>
+                  <Text color={"black"}>Urgency</Text>
                   <Select
                     required
                     onChange={(e) => {
@@ -863,8 +859,8 @@ const Game = () => {
                       setEditData(tosks);
                     }}
                     value={editData[1]}
-                    color={"white"}
-                    backgroundColor={"#323232"}
+                    color={"black"}
+                    backgroundColor={"#fff"}
                   >
                     <option value={"Urgent"} name={"Urgent"}>
                       Urgent
@@ -878,7 +874,7 @@ const Game = () => {
                   </Select>
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Due Date</Text>
+                  <Text color={"black"}>Due Date</Text>
                   <Input
                     value={editData[2]}
                     type="date"
@@ -890,7 +886,7 @@ const Game = () => {
                       setEditData(tosks);
                     }}
                     width={"20vw"}
-                    color={"white"}
+                    color={"black"}
                   />
                 </Flex>
                 <Flex
@@ -1056,9 +1052,9 @@ const Game = () => {
       </AlertDialog>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>To Do List</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>To Do List</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => submitIdea(e)}>
               <Flex
@@ -1069,9 +1065,9 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Message</Text>
+                  <Text color={"black"}>Message</Text>
                   <Input
-                    color={"white"}
+                    color={"black"}
                     value={startupText}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
@@ -1082,13 +1078,13 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Urgency</Text>
+                  <Text color={"black"}>Urgency</Text>
                   <Select
                     required
                     onChange={(val) => setUrgency(val.target.value)}
                     value={urgency}
-                    color={"white"}
-                    backgroundColor={"#323232"}
+                    color={"black"}
+                    backgroundColor={"#fff"}
                   >
                     <option value={"Urgent"} name={"Urgent"}>
                       Urgent
@@ -1102,7 +1098,7 @@ const Game = () => {
                   </Select>
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Due Date</Text>
+                  <Text color={"black"}>Due Date</Text>
                   <Input
                     value={date}
                     type="date"
@@ -1110,7 +1106,7 @@ const Game = () => {
                     required
                     onChange={(e) => setDate(e.target.value)}
                     width={"20vw"}
-                    color={"white"}
+                    color={"black"}
                   />
                 </Flex>
                 <Button type={"submit"} colorScheme="blue" mr={3}>
@@ -1124,9 +1120,9 @@ const Game = () => {
 
       <Modal isOpen={isOpen2} onClose={onClose2}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Brainstorm List</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>Brainstorm List</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => submitIdea2(e)}>
               <Flex
@@ -1137,12 +1133,12 @@ const Game = () => {
                 paddingBottom={"1vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Message</Text>
+                  <Text color={"black"}>Message</Text>
                   <Input
                     value={startupText2}
                     placeHolder={"This should be simple..."}
                     width={"20vw"}
-                    color="white"
+                    color="black"
                     minLength={3}
                     maxLength={45}
                     onChange={(e) => setStartupText2(e.target.value)}
@@ -1150,10 +1146,10 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Probability of Reality</Text>
+                  <Text color={"black"}>Probability of Reality</Text>
                   <Select
-                    color={"white"}
-                    backgroundColor={"#323232"}
+                    color={"black"}
+                    backgroundColor={"#fff"}
                     required
                     onChange={(val) => setUrgency2(val.target.value)}
                     value={urgency2}
@@ -1173,9 +1169,9 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen3} onClose={onClose3}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Leaderboards</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#f2f2f2"}>
+          <ModalHeader color={"black"}>Leaderboards</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody maxHeight={"70vh"} overflowY={"scroll"}>
             <Flex direction={"column"} alignItems={"center"} gap={"3vh"}>
               {rowsLeaderboards}
@@ -1191,9 +1187,9 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen4} onClose={onClose4}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Startup Info</ModalHeader>
-          <ModalCloseButton color={"white"} />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>Startup Info</ModalHeader>
+          <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => changeVal(e)}>
               <Flex
@@ -1205,21 +1201,21 @@ const Game = () => {
                 maxHeight={"65vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Startup Name</Text>
+                  <Text color={"black"}>Startup Name</Text>
                   <Input
                     minLength={3}
                     value={startupName2}
                     width={"20vw"}
-                    color={"white"}
+                    color={"black"}
                     required
                     onChange={(e) => setStartupName2(e.target.value)}
                   />
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Startup Location</Text>
+                  <Text color={"black"}>Startup Location</Text>
                   <Input
                     type="text"
-                    color={"white"}
+                    color={"black"}
                     required
                     value={startupLocation}
                     width={"20vw"}
@@ -1228,12 +1224,12 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"white"}>Startup Description</Text>
+                  <Text color={"black"}>Startup Description</Text>
                   <Textarea
                     autoComplete="on"
                     minLength={3}
                     value={startupDes}
-                    color={"white"}
+                    color={"black"}
                     required
                     width={"20vw"}
                     minHeight={"10vh"}
@@ -1250,7 +1246,7 @@ const Game = () => {
                     colorScheme="ghost"
                     onClick={onClose4}
                     mr={3}
-                    color={"white"}
+                    color={"black"}
                   >
                     Cancel
                   </Button>
@@ -1262,8 +1258,8 @@ const Game = () => {
       </Modal>
       <Modal isOpen={isOpen5} onClose={() => {}}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalHeader color={"white"}>Work Alarm</ModalHeader>
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>Work Alarm</ModalHeader>
           <ModalBody>
             <Flex
               direction="column"
@@ -1271,7 +1267,7 @@ const Game = () => {
               justify="center"
               marginTop={5}
               marginBottom={5}
-              backgroundColor={"#cdcdcd"}
+              backgroundColor={"#f2f2f2"}
               padding={5}
               borderRadius={10}
             >
@@ -1280,8 +1276,8 @@ const Game = () => {
                 onChange={(e) => setTime(e.target.value * 60)}
                 marginTop={2}
                 disabled={isRunning}
-                backgroundColor={"#bcbcbc"}
-                borderColor={"#ababab"}
+                backgroundColor={"#fff"}
+                //borderColor={"#ababab"}
               >
                 <option value={15}>15 minutes</option>
                 <option value={30}>30 minutes</option>
@@ -1316,9 +1312,9 @@ const Game = () => {
       </Modal>
       <Modal size={"xl"} isOpen={isOpen6} onClose={onClose6}>
         <ModalOverlay />
-        <ModalContent backgroundColor={"#323232"}>
-          <ModalCloseButton color={"white"} />
-          <ModalHeader color={"white"}>Shop</ModalHeader>
+        <ModalContent backgroundColor={"#f2f2f2"}>
+          <ModalCloseButton color={"black"} />
+          <ModalHeader color={"black"}>Shop</ModalHeader>
           <ModalBody maxH={"60vh"} overflowY="scroll">
             <Flex direction={"column"} alignItems={"center"} gap={5}>
               <Flex
@@ -1333,9 +1329,10 @@ const Game = () => {
                   justifyContent={"center"}
                   width={"47%"}
                   padding={7}
-                  borderRadius={5}
+                  borderRadius={0}
                   gap={5}
                   backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                 >
                   <Image src={accessories[0][0]} width={300} height={300} />
                   <Text fontSize={"12pt"} textAlign={"center"}>
@@ -1359,9 +1356,10 @@ const Game = () => {
                   justifyContent={"center"}
                   width={"47%"}
                   padding={7}
-                  borderRadius={5}
+                  borderRadius={0}
                   gap={5}
                   backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                 >
                   <Image src={accessories[1][0]} width={300} height={300} />
                   <Text fontSize={"12pt"} textAlign={"center"}>
@@ -1392,9 +1390,10 @@ const Game = () => {
                   justifyContent={"center"}
                   width={"47%"}
                   padding={7}
-                  borderRadius={5}
+                  borderRadius={0}
                   gap={5}
                   backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                 >
                   <Image src={accessories[2][0]} width={300} height={300} />
                   <Text fontSize={"12pt"} textAlign={"center"}>
@@ -1418,9 +1417,10 @@ const Game = () => {
                   justifyContent={"center"}
                   width={"47%"}
                   padding={7}
-                  borderRadius={5}
+                  borderRadius={0}
                   gap={5}
                   backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                 >
                   <Image src={accessories[3][0]} width={300} height={300} />
                   <Text fontSize={"12pt"} textAlign={"center"}>
@@ -1452,9 +1452,10 @@ const Game = () => {
                   justifyContent={"center"}
                   width={"47%"}
                   padding={7}
-                  borderRadius={5}
+                  borderRadius={0}
                   gap={5}
                   backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                 >
                   <Image src={accessories[4][0]} width={300} height={300} />
                   <Text fontSize={"12pt"} textAlign={"center"}>
@@ -1482,12 +1483,13 @@ const Game = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
         width={"100vw"}
-        backgroundColor={"#1C1C1C"}
+        backgroundColor={"#fff"}
+        boxShadow={"0px 5px 5px 1px rgba(0, 0, 0, 0.5)"}
         padding={5}
       >
         <Flex alignItems={"center"} justifyContent={"center"}>
           <NextLink href={"/app/startuplist"}>
-            <Link color={"white"} fontSize={"20pt"}>
+            <Link color={"black"} fontSize={"20pt"}>
               Gloppa
             </Link>
           </NextLink>
@@ -1497,7 +1499,8 @@ const Game = () => {
               colorScheme={"transparent"}
               variant={"ghost"}
             >
-              <Image
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/lawyer.png"}
                 alt={"Gloppa lawyer"}
                 width={35}
@@ -1540,7 +1543,7 @@ const Game = () => {
           </Flex>
           <Link
             colorScheme={"transparent"}
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
             fontWeight={700}
             onClick={onOpen4}
@@ -1556,7 +1559,8 @@ const Game = () => {
           >
             <Tooltip label={"Leaderboards"} aria-label="A tooltip">
               <Button variant={"ghost"} colorScheme={"none"} onClick={onOpen3}>
-                <Image
+                <img
+                  style={{ filter: "brightness(0)" }}
                   src={"/assets/leaderboard.png"}
                   alt={"Gloppa Leaderboard"}
                   width={40}
@@ -1572,12 +1576,13 @@ const Game = () => {
                   width={30}
                   height={30}
                 />
-                <Text color={"white"}>{coins}</Text>
+                <Text color={"black"}>{coins}</Text>
               </Flex>
             </Tooltip>
             <Tooltip label={"Shop"} aria-label="A tooltip">
               <Button onClick={onOpen6} variant={"ghost"} colorScheme={"none"}>
-                <Image
+                <img
+                  style={{ filter: "brightness(0)" }}
                   src={"/assets/shop.png"}
                   alt={"Gloppa Shop"}
                   width={40}
@@ -1595,8 +1600,8 @@ const Game = () => {
         justifyContent={"center"}
         gap={"5vw"}
         paddingTop={"2vh"}
-        paddingBottom={"4vh"}
-        borderBottom={"1px solid white"}
+        paddingBottom={"2vh"}
+        //borderBottom={"1px solid white"}
         width={"100vw"}
       >
         <Flex
@@ -1612,7 +1617,7 @@ const Game = () => {
             height={280}
           />
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
           >
             {accessories[selectedAcc][2]}
@@ -1626,24 +1631,24 @@ const Game = () => {
           gap={"1.4vh"}
         >
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "15pt", md: "20pt", lg: "25pt" }}
             marginBottom={"2vh"}
           >
             {quota}
           </Text>
           <Text
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
             fontWeight={900}
           >
             Achievements:
           </Text>
-          <UnorderedList color={"white"}>
+          <UnorderedList listStyleType={"none"} color={"black"}>
             {rowsAchievements.length < 1 ? (
               <ListItem>
                 <Flex direction={"row"} alignItems={"center"}>
-                  <Text color={"white"} marginRight={"1vw"}>
+                  <Text color={"black"} marginRight={"1vw"}>
                     No achievements are here yet... 🙁
                   </Text>
                 </Flex>
@@ -1666,20 +1671,21 @@ const Game = () => {
           alignItems={"center"}
           justifyContent={"center"}
           width={"48vw"}
-          backgroundColor={"#1c1c1c"}
-          boxShadow={"0 0 5px 1px rgba(0, 0, 0, 0.9)"}
+          backgroundColor={"#fff"}
+          boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Flex direction={"row"} alignItems={"center"}>
             <Text
               fontWeight={400}
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "20pt", md: "24pt", lg: "28pt" }}
             >
               To-Do List
             </Text>
             <Tooltip label={"Add to task list"} aria-label="A tooltip">
               <Button colorScheme="transparent" onClick={onOpen}>
-                <Image
+                <img
+                  style={{ filter: "brightness(0)" }}
                   src={"/assets/plus.png"}
                   alt={"Gloppa plus"}
                   width={30}
@@ -1723,7 +1729,7 @@ const Game = () => {
                     flexDirection={"row"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
-                    backgroundColor={"#303030"}
+                    backgroundColor={"#fff"}
                     width={"90%"}
                     marginRight={"2.5%"}
                     paddingTop={0.5}
@@ -1735,7 +1741,7 @@ const Game = () => {
                     // {...provided.dragHandleProps}
                     boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                     _hover={{
-                      boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+                      opacity: 0.8,
                     }}
                   >
                     <Flex
@@ -1751,7 +1757,8 @@ const Game = () => {
                           variant={"ghost"}
                           colorScheme={"transparent"}
                         >
-                          <Image
+                          <img
+                            style={{ filter: "brightness(0)" }}
                             src={"/assets/Braille.png"}
                             alt={"options"}
                             width={28}
@@ -1783,7 +1790,7 @@ const Game = () => {
                         </MenuList>
                       </Menu>
                       <Text
-                        color={"white"}
+                        color={"black"}
                         fontWeight={500}
                         fontSize={{
                           base: "10pt",
@@ -1883,7 +1890,7 @@ const Game = () => {
                   width={170}
                   height={170}
                 />
-                <Text color={"white"} textAlign={"center"} fontSize={"12pt"}>
+                <Text color={"black"} textAlign={"center"} fontSize={"12pt"}>
                   No brainstorms <br />
                   found here... 😔
                 </Text>
@@ -1896,8 +1903,8 @@ const Game = () => {
           alignItems={"center"}
           justifyContent={"center"}
           width={"48vw"}
-          backgroundColor={"#1c1c1c"}
-          boxShadow={"0 0 5px 1px rgba(0, 0, 0, 0.9)"}
+          backgroundColor={"#fff"}
+          boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Flex
             direction={"row"}
@@ -1906,14 +1913,15 @@ const Game = () => {
           >
             <Text
               fontWeight={400}
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "20pt", md: "24pt", lg: "28pt" }}
             >
               Brainstorming
             </Text>
             <Tooltip label={"Add to brainstorm list"} aria-label="A tooltip">
               <Button colorScheme="transparent" onClick={onOpen2}>
-                <Image
+                <img
+                  style={{ filter: "brightness(0)" }}
                   src={"/assets/plus.png"}
                   alt={"Gloppa plus"}
                   width={30}
@@ -1934,6 +1942,7 @@ const Game = () => {
           >
             {Object.keys(todos2).length > 0 ? (
               <UnorderedList
+                listStyleType={"none"}
                 width={"100%"}
                 gap={"1vh"}
                 display={"flex"}
@@ -1947,7 +1956,7 @@ const Game = () => {
                       direction={"row"}
                       alignItems={"center"}
                       justifyContent={"space-between"}
-                      backgroundColor={"#303030"}
+                      backgroundColor={"#fff"}
                       width={"90%"}
                       paddingTop={2}
                       paddingBottom={2}
@@ -1956,7 +1965,7 @@ const Game = () => {
                       gap={5}
                       boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
                       _hover={{
-                        boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+                        opacity: 0.8,
                       }}
                     >
                       <Flex>
@@ -1967,7 +1976,8 @@ const Game = () => {
                             variant={"ghost"}
                             colorScheme={"transparent"}
                           >
-                            <Image
+                            <img
+                              style={{ filter: "brightness(0)" }}
                               src={"/assets/Braille.png"}
                               alt={"options"}
                               width={28}
@@ -1998,7 +2008,7 @@ const Game = () => {
                           </MenuList>
                         </Menu>
                         <Text
-                          color={"white"}
+                          color={"black"}
                           fontWeight={500}
                           fontSize={{ base: "10pt", md: "14pt", lg: "18pt" }}
                           maxWidth={"22vw"}
@@ -2059,7 +2069,7 @@ const Game = () => {
                   width={170}
                   height={170}
                 />
-                <Text color={"white"} textAlign={"center"} fontSize={"12pt"}>
+                <Text color={"black"} textAlign={"center"} fontSize={"12pt"}>
                   No brainstorms <br />
                   found here... 😔
                 </Text>

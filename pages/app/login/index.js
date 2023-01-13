@@ -114,7 +114,7 @@ const Login = () => {
       direction={"column"}
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#f2f2f2"}
       alignItems={"center"}
       justifyContent={"center"}
     >
@@ -123,24 +123,24 @@ const Login = () => {
           direction={"column"}
           width={{ base: "70vw", md: "50vw", lg: "50vw" }}
           height={"95vh"}
-          backgroundColor={"#1C1C1C"}
+          backgroundColor={"#fff"}
           alignItems={"center"}
           justifyContent={"center"}
-          borderRadius={20}
-          boxShadow={"0px 0px 10px 5px rgb(255, 255, 255, 0.75)"}
+          borderRadius={0}
+          boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
         >
           <NextLink href={"/"}>
             <Link
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "15pt", md: "20pt", lg: "25pt" }}
-              fontWeight={400}
+              fontWeight={600}
             >
               Gloppa
             </Link>
           </NextLink>
           <Text
-            color={"white"}
-            fontWeight={600}
+            color={"black"}
+            fontWeight={200}
             fontSize={{ base: "35pt", md: "45pt", lg: "55pt" }}
             textAlign={"center"}
           >
@@ -159,7 +159,7 @@ const Login = () => {
               width={"80%"}
             >
               <Text
-                color={"white"}
+                color={"black"}
                 fontSize={{ base: "10pt", md: "15pt", lg: "20pt" }}
               >
                 Email
@@ -183,7 +183,7 @@ const Login = () => {
               width={"80%"}
             >
               <Text
-                color={"white"}
+                color={"black"}
                 fontSize={{ base: "10pt", md: "15pt", lg: "20pt" }}
               >
                 Password
@@ -206,7 +206,7 @@ const Login = () => {
             type={"submit"}
             color={"white"}
             backgroundColor={"#5686E1"}
-            borderRadius={5}
+            borderRadius={0}
             fontWeight={600}
             fontSize={"20pt"}
             paddingLeft={10}
@@ -224,11 +224,11 @@ const Login = () => {
             gap={1}
             marginTop={4}
           >
-            <Text color={"white"}>Do not have an account? </Text>
+            <Text color={"black"}>Do not have an account? </Text>
             <NextLink href={"/app/register"}>
               <Link color={"#5686E1"}>Register</Link>
             </NextLink>
-            <Text color={"white"}>.</Text>
+            <Text color={"black"}>.</Text>
           </Flex>
           <NextLink href={"/app/forgotpassword"}>
             <Link color={"#5686E1"}>Forgot your password?</Link>

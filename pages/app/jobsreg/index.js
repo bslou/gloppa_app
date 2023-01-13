@@ -196,7 +196,7 @@ const JobsReg = () => {
     <Flex
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#f2f2f2"}
       direction={"column"}
       alignItems={"center"}
     >
@@ -216,8 +216,9 @@ const JobsReg = () => {
           gap={"2.5vw"}
         >
           <Button colorScheme={"transparent"} onClick={() => router.back()}>
-            <Link color={"white"}>
-              <Image
+            <Link color={"black"}>
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/back.png"}
                 alt={"Back"}
                 width={60}
@@ -226,7 +227,7 @@ const JobsReg = () => {
             </Link>
           </Button>
         </Flex>
-        <Menu>
+        {/* <Menu>
           <MenuButton colorScheme={"transparent"}>
             <Image
               src={"/assets/profile.png"}
@@ -238,45 +239,39 @@ const JobsReg = () => {
           <MenuList>
             <MenuItem onClick={Logout}>Logout</MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Flex>
       <form onSubmit={(e) => RegJob(e)}>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          gap={4}
-          backgroundColor={"#1C1C1C"}
+          backgroundColor={"#fff"}
           width={"60vw"}
-          maxHeight={"90vh"}
-          minHeight={"90vh"}
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
-          paddingTop={12}
+          gap={2}
+          borderTopLeftRadius={2}
+          borderTopRightRadius={2}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          paddingTop={1}
+          paddingBottom={3}
         >
           {/* <Text
-            color={"white"}
-            textAlign={"center"}
-            marginLeft={"2vw"}
-            marginRight={"2vw"}
-          >
-            ⚠️ Note: You need to have at least a level 4 startup to be able to
-            apply for funding. 2 job posts max!
-          </Text> */}
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            position={"absolute"}
-            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
-          >
-            <Text
-              textShadow={"0px 4px 1px rgba(0,0,0,1)"}
-              fontWeight={800}
               color={"white"}
-              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+              textAlign={"center"}
+              marginLeft={"2vw"}
+              marginRight={"2vw"}
             >
-              Jobs Post
-            </Text>
-          </Flex>
+              ⚠️ Note: You need to have at least a level 4 startup to be able to
+              apply for funding. 2 job posts max!
+            </Text> */}
+
+          <Text
+            fontWeight={300}
+            color={"black"}
+            fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
+          >
+            Jobs Post
+          </Text>
+
           <Flex
             direction={"row"}
             alignItems={"center"}
@@ -284,7 +279,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Startup Name:
             </Text>
             <Select
@@ -308,7 +303,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Startup Tagline:
             </Text>
             <Input
@@ -328,7 +323,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Job Title:
             </Text>
             <Input
@@ -346,7 +341,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Categories:
             </Text>
 
@@ -373,7 +368,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Location:
             </Text>
             <Input
@@ -397,7 +392,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Link to the job description:
             </Text>
             <Input
@@ -417,7 +412,7 @@ const JobsReg = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Contact email:
             </Text>
             <Input
@@ -433,10 +428,11 @@ const JobsReg = () => {
           <Button
             backgroundColor={"white"}
             fontWeight={300}
-            fontSize={{ base: "8pt", md: "15pt", lg: "20pt" }}
+            fontSize={{ base: "11pt", md: "17pt", lg: "25pt" }}
             type={"submit"}
-            width={"22vw"}
             height={"8vh"}
+            border={"none"}
+            boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           >
             Post Job Position
           </Button>

@@ -25,9 +25,10 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
-import StartupComponent from "./startupcomponent";
+import StartupComponent from "./startcomp2";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
+import StartupComp from "./startcomp2";
 
 const StartupList = () => {
   const router = useRouter();
@@ -46,6 +47,10 @@ const StartupList = () => {
     onClose: onClose2,
   } = useDisclosure();
   const toast = useToast();
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
+  };
 
   const accessories = [
     [
@@ -79,57 +84,50 @@ const StartupList = () => {
       100000,
     ],
   ];
-
-  // const fetchData = () => {
-  //   let id = localStorage.getItem("id");
-  //   db.collection("users")
-  //     .doc(id)
-  //     .get()
-  //     .then((val) => {
-  //       if (!val.exists) return;
-  //       if (rows.length > 0) return;
-  //       let n = val.get("startups");
-  //       //console.log(Object.keys(n).length);
-  //       if (Object.keys(n).length == 0) {
-  //         setLoading(false);
-  //         return;
-  //       }
-  //       n.reverse();
-  //       setUname(val.get("username"));
-  //       setOgUname(val.get("username"));
-  //       setEmail(val.get("email"));
-  //       if (n.length < 1) setLoading(false);
-  //       n.forEach((document) => {
-  //         db.collection("startups")
-  //           .doc(document)
-  //           .get()
-  //           .then((res) => {
-  //             let startupName = String(res.get("startupName"));
-  //             let lvl = String(Math.floor(res.get("level") / 100) + 1);
-  //             let img = "/assets/spacer1.png";
-  //             /*console.log(
-  //               "Name " + startupName + " Level " + lvl + " Image " + img
-  //             );*/
-  //             setRows((prevRows) => [
-  //               ...prevRows,
-  //               StartupComponent(
-  //                 accessories[res.get("selectedAccessory")][1],
-  //                 lvl,
-  //                 startupName,
-  //                 String(document)
-  //               ),
-  //             ]);
-  //             setLoading(false);
-  //           });
-  //       });
-  //     });
-  // };
-
+  const changeData = (e) => {
+    e.preventDefault();
+    let nummers = db.collection("users").where("username", "==", uname);
+    nummers
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty && uname != oguname) {
+          toast({
+            title: "Username exists.",
+            description: "The username already exists in our database.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          console.log("Doesn't exist!");
+          let id = localStorage.getItem("id");
+          db.collection("users").doc(id).update({ username: uname });
+          toast({
+            title: "Username updated.",
+            description: "The username got updated successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error " + err);
+      });
+  };
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
         // if (dataFetchedRef.current) return;
         // dataFetchedRef.current = true;
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .onSnapshot((val) => {
+            let n = val.data();
+            setUname(n.username);
+            setOgUname(n.username);
+            setEmail(n.email);
+          });
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .onSnapshot((snapshot) => {
@@ -150,7 +148,7 @@ const StartupList = () => {
                   let startupName = String(res.get("startupName"));
                   let lvl = String(Math.floor(res.get("level") / 100) + 1);
                   setRows((prevRows) => [
-                    StartupComponent(
+                    StartupComp(
                       accessories[res.get("selectedAccessory")][1],
                       lvl,
                       startupName,
@@ -173,93 +171,311 @@ const StartupList = () => {
   if (!loading) {
     return (
       <Flex
+        direction={"column"}
+        backgroundColor={"#f2f2f2"}
         width={"100vw"}
         height={"100vh"}
-        backgroundColor={"#323232"}
-        direction={"column"}
-        alignItems={"center"}
       >
-        <NavBar />
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#fff"}>
+            <ModalHeader color={"black"}>My info</ModalHeader>
+            <ModalCloseButton color={"black"} />
+            <ModalBody>
+              <form onSubmit={changeData}>
+                <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"black"}>Username: </Text>
+                    <Input
+                      color={"black"}
+                      value={uname}
+                      onChange={(e) => setUname(e.target.value.toLowerCase())}
+                      minLength={4}
+                      maxLength={12}
+                    />
+                  </Flex>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"black"}>Email: </Text>
+                    <Input
+                      color={"black"}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      readOnly
+                    />
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"1vw"}
+                    marginTop={3}
+                    marginBottom={3}
+                  >
+                    <Button type="submit" colorScheme={"blue"}>
+                      Change Information
+                    </Button>
+                    <Button
+                      variant={"ghost"}
+                      color={"black"}
+                      colorScheme={"transparent"}
+                      onClick={onClose}
+                    >
+                      Close
+                    </Button>
+                  </Flex>
+                  <Button onClick={Logout}>Logout</Button>
+                </Flex>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
         <Flex
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          backgroundColor={"#fff"}
+          borderBottom={"1px solid #dfdfdf"}
+          padding={"1vw"}
+          paddingLeft={200}
+        >
+          <Button
+            border={"none"}
+            background={"transparent"}
+            fontSize={"13pt"}
+            fontWeight={600}
+            color={"#202020"}
+            colorScheme={"transparent"}
+          >
+            {/* 📦&nbsp;&nbsp;Product Review */}
+            Startup List
+          </Button>
+          <Button
+            border={"none"}
+            _hover={{
+              backgroundColor: "#efefef",
+            }}
+            fontSize={"25pt"}
+            fontWeight={100}
+            color={"#202020"}
+            colorScheme={"transparent"}
+            onClick={() => router.push("/app/startupregistration")}
+          >
+            +
+          </Button>
+        </Flex>
+        <Flex
+          position={"fixed"}
+          direction={"column"}
+          alignItems={"flex-start"}
+          backgroundColor={"#fff"}
+          borderRight={"1px solid #dfdfdf"}
+          height={"100vh"}
+          width={200}
+          gap={30}
+          paddingTop={"3vh"}
+          paddingBottom={"3vh"}
+        >
+          <Button
+            border={"none"}
+            background={"transparent"}
+            fontSize={"13pt"}
+            fontWeight={600}
+            color={"#202020"}
+            colorScheme={"transparent"}
+            onClick={() => router.push("/app/startuplist")}
+          >
+            Gloppa
+          </Button>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/productreview")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                📦&nbsp;&nbsp;Product Review
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/funding")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💸&nbsp;&nbsp;Funding
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/jobs")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💻&nbsp;&nbsp;Jobs
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/messages")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💬&nbsp;&nbsp;Private Messages
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/forum")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                📢&nbsp;&nbsp;Public Forum
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/education")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                🎥&nbsp;&nbsp;Educational Videos
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={onOpen}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                👤&nbsp;&nbsp;Profile
+              </Text>
+            </Button>
+          </Flex>
+        </Flex>
+        <Flex
+          position={"absolute"}
           direction={"column"}
           alignItems={"center"}
-          gap={0}
-          backgroundColor={"#1C1C1C"}
-          width={"55vw"}
-          maxHeight={"90vh"}
-          minHeight={"90vh"}
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
-          paddingTop={10}
+          paddingTop={5}
+          paddingBottom={5}
+          marginLeft={{ base: 150, md: 175, lg: 250 }}
+          width={"80%"}
+          marginTop={50}
+          gap={3}
         >
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            position={"absolute"}
-            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
-          >
-            <Text
-              textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-              fontWeight={800}
-              color={"white"}
-              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
-            >
-              Startups
-            </Text>
-            <Tooltip label={"Add startup here!"} aria-label="A tooltip">
-              <Button
-                colorScheme="transparent"
-                onClick={() => router.push("/app/startupregistration")}
-              >
-                <Image
-                  src={"/assets/plus.png"}
-                  alt={"Gloppa plus"}
-                  width={30}
-                  height={30}
-                />
-              </Button>
-            </Tooltip>
-          </Flex>
-          <Flex
-            width={"100%"}
-            height={"100%"}
-            overflowY={"scroll"}
-            direction={"column"}
-            alignItems={"center"}
-            gap={"1vw"}
-            paddingTop={"1vw"}
-          >
-            {rows.length > 0 ? (
-              rows
-            ) : (
-              <Flex
-                direction={"column"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                width={"90%"}
-                height={"90%"}
-              >
-                <Image
-                  src={"/assets/nodata2.png"}
-                  alt={"No data"}
-                  width={400}
-                  height={400}
-                />
-                <Text color={"white"} textAlign={"center"} fontSize={"25pt"}>
-                  No startups <br />
-                  found here... 😔
-                </Text>
-                <br />
-                <Button
-                  onClick={() => router.push("/app/startupregistration")}
-                  fontSize={"18pt"}
-                  padding={5}
-                >
-                  Create a Startup
-                </Button>
-              </Flex>
-            )}
-          </Flex>
+          {rows}
         </Flex>
       </Flex>
     );

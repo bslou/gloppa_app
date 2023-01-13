@@ -54,16 +54,16 @@ const FundingComponent = (
         alignItems={"center"}
         boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
         _hover={{
-          boxShadow: "0 5px 5px rgba(100,100,100,0.9)",
+          opacity: 0.8,
         }}
-        backgroundColor={mine ? "#545454" : "#323232"}
-        width={"90%"}
+        //backgroundColor={mine ? "#dcdcdc" : "#fff"}
+        backgroundColor={"#fff"}
+        width={"70%"}
         paddingLeft={5}
         paddingRight={5}
         paddingTop={3}
         paddingBottom={3}
         justifyContent={"space-between"}
-        borderRadius={5}
       >
         <Flex
           direction={"row"}
@@ -81,8 +81,8 @@ const FundingComponent = (
           >
             <Flex direction={"row"} alignItems={"center"}>
               <Text
-                color={"white"}
-                fontWeight={700}
+                color={"black"}
+                fontWeight={500}
                 fontSize={{ base: "15pt", md: "17pt", lg: "20pt" }}
               >
                 {startupName}
@@ -110,14 +110,14 @@ const FundingComponent = (
               width={"35vw"}
             >
               <Text
-                color={"white"}
+                color={"black"}
                 fontWeight={900}
                 fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
               >
                 {String(investment[0])}% equity for ${String(investment[1])}
               </Text>
               <Text
-                color={"white"}
+                color={"black"}
                 fontWeight={900}
                 fontSize={{ base: "7pt", md: "9.5pt", lg: "12pt" }}
               >
@@ -126,7 +126,7 @@ const FundingComponent = (
             </Flex>
             {/* <Collapse startingHeight={22} in={show}> */}
             <Text
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
             >
               {des}
@@ -142,7 +142,7 @@ const FundingComponent = (
         >
           {!mine ? (
             <Text
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
               fontWeight={900}
               textAlign={"center"}
@@ -163,7 +163,8 @@ const FundingComponent = (
             <Tooltip label={"Send email!"} aria-label="A tooltip">
               <NextLink href={"mailto:" + eml} passHref target={"_blank"}>
                 <Link>
-                  <Image
+                  <img
+                    style={{ filter: "brightness(0)" }}
                     src={"/assets/Envelope.png"}
                     alt={"Envelope"}
                     width={30}
@@ -186,7 +187,7 @@ const FundingComponent = (
           )}
           <NextLink href={website} passHref target={"_blank"}>
             <Link
-              color={"white"}
+              color={"black"}
               fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
             >
               Website

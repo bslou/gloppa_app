@@ -30,7 +30,7 @@ const Video = () => {
     <Flex
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#fff"}
       direction={"column"}
       alignItems={"center"}
     >
@@ -52,9 +52,13 @@ const Video = () => {
           <Button
             colorScheme={"transparent"}
             onClick={() => router.push("/app/education")}
+            _hover={{
+              opacity: 0.8,
+            }}
           >
-            <Link color={"white"}>
-              <Image
+            <Link color={"black"}>
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/back.png"}
                 alt={"Back"}
                 width={60}
@@ -63,19 +67,6 @@ const Video = () => {
             </Link>
           </Button>
         </Flex>
-        <Menu>
-          <MenuButton colorScheme={"transparent"}>
-            <Image
-              src={"/assets/profile.png"}
-              alt={"Gloppa profile"}
-              width={50}
-              height={50}
-            />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={Logout}>Logout</MenuItem>
-          </MenuList>
-        </Menu>
       </Flex>
       {/* <Flex
         direction={"column"}

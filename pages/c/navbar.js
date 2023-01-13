@@ -39,10 +39,10 @@ const NavBar = () => {
         justifyContent={"center"}
         gap={8}
       >
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"} fontWeight={600}>
           <NextLink href={"/c/main"}>Gloppa</NextLink>
         </Link>
-        <Menu isOpen={isOpen}>
+        {/* <Menu isOpen={isOpen}>
           <MenuButton
             color={"white"}
             onMouseEnter={onOpen}
@@ -60,7 +60,7 @@ const NavBar = () => {
             </MenuItem>
             <MenuItem onClick={() => router.push("/c/jobs")}>‍💻 Jobs</MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Flex>
       <Flex
         direction={"row"}
@@ -69,16 +69,16 @@ const NavBar = () => {
         gap={8}
         display={["none", "none", "flex", "flex"]}
       >
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"} fontWeight={600}>
           <NextLink href={"/c/partners"}>Partner</NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"} fontWeight={600}>
           <NextLink href={"/c/careers"}>Careers</NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"} fontWeight={600}>
           <NextLink href={"/c/contact"}>Contact</NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"} fontWeight={600}>
           <NextLink href={"/app/register"}>Join</NextLink>
         </Link>
       </Flex>
@@ -123,7 +123,7 @@ const NavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Home"
               my={5}
               w="100%"
@@ -136,7 +136,7 @@ const NavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Contact"
               my={5}
               onClick={() => changeDisplay("flex")}
@@ -151,7 +151,7 @@ const NavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Contact"
               my={5}
               w="100%"
@@ -165,7 +165,7 @@ const NavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Contact"
               my={5}
               w="100%"
@@ -179,7 +179,7 @@ const NavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Contact"
               my={5}
               w="100%"
@@ -195,7 +195,7 @@ const NavBar = () => {
             paddingTop={2}
             paddingBottom={2}
             colorScheme={"transparent"}
-            color={"white"}
+            color={"black"}
             borderRadius={20}
             onClick={() => router.push("/app/register")}
           >

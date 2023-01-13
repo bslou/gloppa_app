@@ -55,7 +55,8 @@ const ProdRevComponent = (
         direction={"row"}
         width={"70%"}
         alignItems={"center"}
-        backgroundColor={mine ? "#dcdcdc" : "#fff"}
+        //backgroundColor={mine ? "#dcdcdc" : "#fff"}
+        backgroundColor={"#fff"}
         boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         _hover={{
           //boxShadow: "0 5px 5px rgba(100,100,100,0.9)",

@@ -9,10 +9,10 @@ const MyLoadingScreen = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#323232",
+        backgroundColor: "#f2f2f2",
       }}
     >
-      <Spinner size="xl" thickness="4px" color="white" />
+      <Spinner size="xl" thickness="4px" color="black" />
     </div>
   );
 };

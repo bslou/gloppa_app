@@ -2,6 +2,11 @@ import {
   Button,
   Flex,
   Input,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -9,6 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Tag,
   TagCloseButton,
   TagLabel,
@@ -17,15 +23,17 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { arrayRemove, arrayUnion, serverTimestamp } from "firebase/firestore";
+import NextLink from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { db } from "../../api/firebaseconfig";
+import React, { useState, useEffect, useRef } from "react";
+import { db, storage } from "../../api/firebaseconfig";
+import Router, { useRouter } from "next/router";
 import NavBar from "../navbar";
+import { serverTimestamp } from "firebase/firestore";
 
 const Messages = () => {
   const router = useRouter();
+
   const [inp, setInp] = useState("");
   const [tags, setTags] = useState([]);
   const [users, setUsers] = useState([]);
@@ -39,6 +47,50 @@ const Messages = () => {
   const toast = useToast();
   const flexRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [loading, setLoading] = useState(true);
+
+  const [uname, setUname] = useState("");
+  const [oguname, setOgUname] = useState("");
+  const [email, setEmail] = useState("");
+  const { isOpen2, onOpen2, onClose2 } = useDisclosure();
+
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
+  };
+
+  const changeData = (e) => {
+    e.preventDefault();
+    let nummers = db.collection("users").where("username", "==", uname);
+    nummers
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty && uname != oguname) {
+          toast({
+            title: "Username exists.",
+            description: "The username already exists in our database.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          console.log("Doesn't exist!");
+          let id = localStorage.getItem("id");
+          db.collection("users").doc(id).update({ username: uname });
+          toast({
+            title: "Username updated.",
+            description: "The username got updated successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error " + err);
+      });
+  };
 
   const scrollToBottom = () => {
     if (flexRef.current !== null)
@@ -260,6 +312,18 @@ const Messages = () => {
   };
 
   useEffect(() => {
+    if (localStorage.getItem == null) {
+      router.push("/");
+      return;
+    }
+    db.collection("users")
+      .doc(localStorage.getItem("id"))
+      .onSnapshot((val) => {
+        let n = val.data();
+        setUname(n.username);
+        setOgUname(n.username);
+        setEmail(n.email);
+      });
     db.collection("users")
       .get()
       .then((val) => {
@@ -303,11 +367,11 @@ const Messages = () => {
               display={"flex"}
               alignItems={"center"}
               justifyContent={"center"}
-              backgroundColor={"#2c2c2c"}
+              backgroundColor={"#efefef"}
               padding={1.5}
               paddingTop={3}
               paddingBottom={3}
-              borderRadius={5}
+              borderRadius={0}
               _hover={{
                 opacity: 0.8,
               }}
@@ -328,7 +392,7 @@ const Messages = () => {
                 gap={1}
               >
                 <Text
-                  color={"white"}
+                  color={"black"}
                   fontSize={"11pt"}
                   fontWeight={900}
                   whiteSpace={"nowrap"}
@@ -353,7 +417,7 @@ const Messages = () => {
                   })}
                 </Text>
                 <Text
-                  color={"white"}
+                  color={"black"}
                   fontSize={"8pt"}
                   whiteSpace={"nowrap"}
                   overflow={"hidden"}
@@ -408,7 +472,7 @@ const Messages = () => {
               >
                 {val2.id == val2.prevId ? null : (
                   <Text
-                    color={"#bcbcbc"}
+                    color={"#202020"}
                     fontSize={"11pt"}
                     marginLeft={1}
                     marginRight={1}
@@ -421,7 +485,7 @@ const Messages = () => {
                   backgroundColor={
                     val2.id == localStorage.getItem("id")
                       ? "#41A3E7"
-                      : "#323232"
+                      : "#848484"
                   }
                   maxWidth={"50%"}
                   borderRadius={20}
@@ -436,34 +500,19 @@ const Messages = () => {
           });
         });
     }
-    // if (id != "") {
-    //   db.collection("messages")
-    //     .doc(id)
-    //     .onSnapshot((val) => {
-    //       let msgs = val.data().messages;
-    //       msgs.forEach((val2) => {
-    //         setComments(
-    //           ...(prevC) => [
-    //             ...prevC,
-    //             Messagee(
-    //               val2.id,
-    //               val2.msg,
-    //               val2.id == localStorage.getItem("id")
-    //             ),
-    //           ]
-    //         );
-    //       });
-    //     });
-    // }
   }, [db, id, myuname]);
 
+  //   if (loading) {
+  //     return <MyLoadingScreen />;
+  //   }
+
+  //   if (!loading) {
   return (
     <Flex
+      direction={"column"}
+      backgroundColor={"#f2f2f2"}
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
-      direction={"column"}
-      alignItems={"center"}
     >
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -532,121 +581,402 @@ const Messages = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <NavBar />
+      <Modal isOpen={isOpen2} onClose={onClose2}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>My info</ModalHeader>
+          <ModalCloseButton color={"black"} />
+          <ModalBody>
+            <form onSubmit={changeData}>
+              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"black"}>Username: </Text>
+                  <Input
+                    color={"black"}
+                    value={uname}
+                    onChange={(e) => setUname(e.target.value.toLowerCase())}
+                    minLength={4}
+                    maxLength={12}
+                  />
+                </Flex>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"black"}>Email: </Text>
+                  <Input
+                    color={"black"}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly
+                  />
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"1vw"}
+                  marginTop={3}
+                  marginBottom={3}
+                >
+                  <Button type="submit" colorScheme={"blue"}>
+                    Change Information
+                  </Button>
+                  <Button
+                    variant={"ghost"}
+                    color={"black"}
+                    colorScheme={"transparent"}
+                    onClick={onClose2}
+                  >
+                    Close
+                  </Button>
+                </Flex>
+                <Button onClick={Logout}>Logout</Button>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        backgroundColor={"#fff"}
+        borderBottom={"1px solid #dfdfdf"}
+        padding={"1vw"}
+        paddingLeft={200}
+      >
+        <Button
+          border={"none"}
+          background={"transparent"}
+          fontSize={"13pt"}
+          fontWeight={600}
+          color={"#202020"}
+          colorScheme={"transparent"}
+        >
+          {/* 📦&nbsp;&nbsp;Product Review */}
+          💬&nbsp;&nbsp;Private Messages
+        </Button>
+        <Button
+          border={"none"}
+          _hover={{
+            backgroundColor: "#efefef",
+          }}
+          fontSize={"25pt"}
+          fontWeight={100}
+          color={"#202020"}
+          colorScheme={"transparent"}
+          onClick={onOpen}
+        >
+          +
+        </Button>
+      </Flex>
+      <Flex
+        position={"fixed"}
+        direction={"column"}
+        alignItems={"flex-start"}
+        backgroundColor={"#fff"}
+        borderRight={"1px solid #dfdfdf"}
+        height={"100vh"}
+        width={200}
+        gap={30}
+        paddingTop={"3vh"}
+        paddingBottom={"3vh"}
+      >
+        <Button
+          border={"none"}
+          background={"transparent"}
+          fontSize={"13pt"}
+          fontWeight={600}
+          color={"#202020"}
+          colorScheme={"transparent"}
+          onClick={() => router.push("/app/startuplist")}
+        >
+          Gloppa
+        </Button>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/productreview")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              📦&nbsp;&nbsp;Product Review
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/funding")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💸&nbsp;&nbsp;Funding
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/jobs")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💻&nbsp;&nbsp;Jobs
+            </Text>
+          </Button>
+        </Flex>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            //background={"transparent"}
+            background={"#efefef"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/messages")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💬&nbsp;&nbsp;Private Messages
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/forum")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              📢&nbsp;&nbsp;Public Forum
+            </Text>
+          </Button>
+        </Flex>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/education")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              🎥&nbsp;&nbsp;Educational Videos
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={onOpen2}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              👤&nbsp;&nbsp;Profile
+            </Text>
+          </Button>
+        </Flex>
+      </Flex>
+      <Flex
+        position={"absolute"}
         direction={"column"}
         alignItems={"center"}
-        height={"90vh"}
-        width={"65vw"}
-        backgroundColor={"#1C1c1c"}
-        borderTopLeftRadius={10}
-        borderTopRightRadius={10}
-        paddingTop={10}
+        paddingTop={5}
+        paddingBottom={5}
+        marginLeft={{ base: 150, md: 175, lg: 250 }}
+        width={"80%"}
+        marginTop={50}
+        gap={3}
       >
         <Flex
-          direction={"row"}
+          direction={"column"}
           alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          top={{ base: "5vh", md: "4.5vh", lg: "4vh" }}
+          height={"80vh"}
+          width={"65vw"}
+          backgroundColor={"transparent"}
+          paddingTop={10}
         >
-          <Text
-            color={"white"}
-            fontWeight={700}
-            fontSize={{ base: "30pt", md: "35pt", lg: "40pt" }}
-            textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-          >
-            Messages
-          </Text>
-          <Tooltip label={"Add new private message!"} aria-label="A tooltip">
-            <Button colorScheme="transparent" onClick={onOpen}>
-              <Image
-                src={"/assets/plus.png"}
-                alt={"Gloppa plus"}
-                width={30}
-                height={30}
-              />
-            </Button>
-          </Tooltip>
-        </Flex>
-        <Flex direction={"row"} height={"100%"} width={"100%"}>
           <Flex
-            direction={"column"}
-            alignItems={"center"}
-            width={"40%"}
+            direction={"row"}
             height={"100%"}
-            gap={2}
-            overflowY={"scroll"}
+            width={"100%"}
+            backgroundColor={"#fff"}
+            boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
           >
-            {/* Under messages */}
-            {messagePost.length > 0 ? (
-              messagePost
-            ) : (
-              <Flex
-                direction={"column"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                height={"100%"}
-              >
-                <Text color={"white"} textAlign={"center"} fontSize={"30pt"}>
-                  No peoples messages here...
-                </Text>
-                <Button onClick={onOpen}>Create message</Button>
-              </Flex>
+            <Flex
+              direction={"column"}
+              alignItems={"center"}
+              width={"40%"}
+              height={"100%"}
+              gap={2}
+              overflowY={"scroll"}
+              border={"0.3px solid #dfdfdf"}
+              paddingTop={3}
+            >
+              {/* Under messages */}
+              {messagePost.length > 0 ? (
+                messagePost
+              ) : (
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  height={"100%"}
+                >
+                  <Text color={"white"} textAlign={"center"} fontSize={"30pt"}>
+                    No peoples messages here...
+                  </Text>
+                  <Button onClick={onOpen}>Create message</Button>
+                </Flex>
+              )}
+            </Flex>
+            {console.log(id)}
+            {id == "" ? null : (
+              <>
+                <Flex
+                  direction={"column"}
+                  alignItems={"center"}
+                  width={"100%"}
+                  border={"0.3px solid #dfdfdf"}
+                >
+                  <Text
+                    color={"black"}
+                    paddingTop={"1vh"}
+                    paddingBottom={"1vh"}
+                    fontSize={"24pt"}
+                    fontWeight={900}
+                  >
+                    {name}
+                  </Text>
+                  <Flex
+                    overflowY={"scroll"}
+                    overflowX={"hidden"}
+                    direction={"column"}
+                    width={"100%"}
+                    height={"100%"}
+                    paddingBottom={100}
+                    paddingLeft={15}
+                    paddingRight={18}
+                    ref={flexRef}
+                  >
+                    {comments}
+                  </Flex>
+                </Flex>
+                <Input
+                  position={"fixed"}
+                  bottom={0}
+                  color={"black"}
+                  placeholder={"Message here..."}
+                  width={"45vw"}
+                  left={"36.85vw"}
+                  marginBottom={"1.5vh"}
+                  value={inp}
+                  onChange={(e) => setInp(e.target.value)}
+                  onKeyDown={handleComment}
+                  backgroundColor={"#fff"}
+                  boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                />
+              </>
             )}
           </Flex>
-          {console.log(id)}
-          {id == "" ? null : (
-            <>
-              <Flex
-                direction={"column"}
-                alignItems={"center"}
-                width={"100%"}
-                borderTop={"1px solid #323232"}
-                borderLeft={"1px solid #323232"}
-              >
-                <Text
-                  color={"white"}
-                  paddingTop={"1vh"}
-                  paddingBottom={"1vh"}
-                  fontSize={"24pt"}
-                  fontWeight={900}
-                >
-                  {name}
-                </Text>
-                <Flex
-                  overflowY={"scroll"}
-                  overflowX={"hidden"}
-                  direction={"column"}
-                  width={"100%"}
-                  height={"100%"}
-                  paddingBottom={100}
-                  paddingLeft={15}
-                  paddingRight={18}
-                  ref={flexRef}
-                >
-                  {comments}
-                </Flex>
-              </Flex>
-              <Input
-                position={"fixed"}
-                bottom={0}
-                color={"white"}
-                placeholder={"Message here..."}
-                width={"45vw"}
-                left={"36.85vw"}
-                marginBottom={"1.5vh"}
-                value={inp}
-                onChange={(e) => setInp(e.target.value)}
-                onKeyDown={handleComment}
-                backgroundColor={"#1c1c1c"}
-              />
-            </>
-          )}
         </Flex>
       </Flex>
     </Flex>
   );
 };
+// };
 
 export default Messages;

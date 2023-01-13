@@ -17,7 +17,7 @@ const Careers = () => {
     <Flex
       direction={"column"}
       alignItems={"center"}
-      backgroundColor={"#1c1c1c"}
+      backgroundColor={"#fafafa"}
       width={"100vw"}
       justifyContent={"center"}
     >
@@ -29,10 +29,10 @@ const Careers = () => {
         width={"60%"}
         gap={5}
       >
-        <Text color={"white"} fontSize={"30pt"} fontWeight={500}>
+        <Text color={"black"} fontSize={"30pt"} fontWeight={500}>
           Join our journey
         </Text>
-        <Text color={"white"} fontSize={"18pt"} fontWeight={300}>
+        <Text color={"black"} fontSize={"18pt"} fontWeight={300}>
           We’re determined to help people enjoy creating startups!
         </Text>
         <Image
@@ -45,14 +45,14 @@ const Careers = () => {
           <Text
             fontWeight={600}
             fontSize={{ base: "20pt", md: "24pt", lg: "28pt" }}
-            color={"#fff"}
+            color={"#000"}
           >
             Open Positions
           </Text>
           <Text
             fontWeight={600}
             fontSize={{ base: "14pt", md: "18pt", lg: "23pt" }}
-            color={"#fff"}
+            color={"#000"}
           >
             Engineering
           </Text>
@@ -67,7 +67,7 @@ const Careers = () => {
               justifyContent={"center"}
               _hover={{
                 textDecoration: "underline",
-                color: "white",
+                color: "black",
               }}
             >
               <Text
@@ -77,7 +77,7 @@ const Careers = () => {
                 Backend Developer
               </Text>
               <Text
-                color={"#dfdfdf"}
+                color={"#202020"}
                 fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
               >
                 Develop Firebase Backend * Contract
@@ -95,7 +95,7 @@ const Careers = () => {
               justifyContent={"center"}
               _hover={{
                 textDecoration: "underline",
-                color: "white",
+                color: "black",
               }}
             >
               <Text
@@ -105,7 +105,7 @@ const Careers = () => {
                 Frontend Developer
               </Text>
               <Text
-                color={"#dfdfdf"}
+                color={"#202020"}
                 fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
               >
                 Develop React Chakra Frontend * Contract
@@ -117,7 +117,7 @@ const Careers = () => {
           <Text
             fontWeight={600}
             fontSize={{ base: "14pt", md: "18pt", lg: "23pt" }}
-            color={"#fff"}
+            color={"#000"}
           >
             Designer
           </Text>
@@ -132,7 +132,7 @@ const Careers = () => {
               justifyContent={"center"}
               _hover={{
                 textDecoration: "underline",
-                color: "white",
+                color: "black",
               }}
             >
               <Text
@@ -142,7 +142,7 @@ const Careers = () => {
                 UI/UX Designer
               </Text>
               <Text
-                color={"#dfdfdf"}
+                color={"#202020"}
                 fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
               >
                 Design future releases using Figma * Part-Time
@@ -154,7 +154,7 @@ const Careers = () => {
           <Text
             fontWeight={600}
             fontSize={{ base: "14pt", md: "18pt", lg: "23pt" }}
-            color={"#fff"}
+            color={"#000000"}
           >
             Marketing
           </Text>
@@ -169,7 +169,7 @@ const Careers = () => {
               justifyContent={"center"}
               _hover={{
                 textDecoration: "underline",
-                color: "white",
+                color: "black",
               }}
             >
               <Text
@@ -179,7 +179,7 @@ const Careers = () => {
                 Marketer and PR
               </Text>
               <Text
-                color={"#dfdfdf"}
+                color={"#202020"}
                 fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
               >
                 Send email and get in touch * Contract
@@ -190,7 +190,7 @@ const Careers = () => {
         <Flex direction={"column"} alignItems={"left"} gap={7} marginTop={5}>
           <Text
             fontWeight={600}
-            color={"white"}
+            color={"black"}
             fontSize={{ base: "14pt", md: "18pt", lg: "23pt" }}
           >
             Social Media
@@ -206,7 +206,7 @@ const Careers = () => {
               justifyContent={"center"}
               _hover={{
                 textDecoration: "underline",
-                color: "white",
+                color: "black",
               }}
             >
               <Text
@@ -216,7 +216,7 @@ const Careers = () => {
                 Social Media Manager
               </Text>
               <Text
-                color={"#dfdfdf"}
+                color={"#202020"}
                 fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
               >
                 Post on Twitter and LinkedIn * Internship

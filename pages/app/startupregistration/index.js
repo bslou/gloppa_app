@@ -146,7 +146,7 @@ const StartupRegistration = () => {
     <Flex
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#f2f2f2"}
       direction={"column"}
       alignItems={"center"}
     >
@@ -166,8 +166,9 @@ const StartupRegistration = () => {
           gap={"2.5vw"}
         >
           <Button colorScheme={"transparent"} onClick={() => router.back()}>
-            <Link color={"white"}>
-              <Image
+            <Link color={"black"}>
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/back.png"}
                 alt={"Back"}
                 width={60}
@@ -176,7 +177,7 @@ const StartupRegistration = () => {
             </Link>
           </Button>
         </Flex>
-        <Menu>
+        {/* <Menu>
           <MenuButton colorScheme={"transparent"}>
             <Image
               src={"/assets/profile.png"}
@@ -188,40 +189,38 @@ const StartupRegistration = () => {
           <MenuList>
             <MenuItem onClick={Logout}>Logout</MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Flex>
       <form onSubmit={(e) => submitStartup(e)}>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          gap={4}
-          backgroundColor={"#1C1C1C"}
+          backgroundColor={"#fff"}
           width={"60vw"}
-          maxHeight={"90vh"}
-          minHeight={"90vh"}
-          borderTopLeftRadius={20}
-          borderTopRightRadius={20}
-          paddingTop={7}
+          gap={2}
+          borderTopLeftRadius={2}
+          borderTopRightRadius={2}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          paddingTop={1}
+          paddingBottom={3}
         >
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            position={"absolute"}
-            top={{ base: "5.5vh", md: "4.5vh", lg: "4vh" }}
+          <Text
+            fontWeight={300}
+            color={"black"}
+            fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
           >
-            <Text
-              textShadow={"0px 4px 1px rgba(0,0,0,1)"}
-              fontWeight={800}
-              color={"white"}
-              fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
-            >
-              Startup
-            </Text>
-          </Flex>
+            Register Startup
+          </Text>
           <Flex>
             <Button
               borderRadius="50%"
-              backgroundColor="#ccc"
+              //   backgroundColor="#ccc"
+              backgroundColor={"#fff"}
+              border={"0.3px solid gray"}
+              _hover={{
+                cursor: "pointer",
+                backgroundColor: "#efefef",
+              }}
               width={75}
               height={75}
               fontSize="8pt"
@@ -254,7 +253,7 @@ const StartupRegistration = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Startup Name:
             </Text>
             <Input
@@ -275,7 +274,7 @@ const StartupRegistration = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Founded Date:
             </Text>
             <Input
@@ -296,7 +295,7 @@ const StartupRegistration = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Startup Location:
             </Text>
             <Input
@@ -316,7 +315,7 @@ const StartupRegistration = () => {
             gap={6}
             width={"50vw"}
           >
-            <Text color={"white"} fontWeight={300} width={"15vw"}>
+            <Text color={"black"} fontWeight={300} width={"15vw"}>
               Description:
             </Text>
             <Textarea
@@ -337,8 +336,9 @@ const StartupRegistration = () => {
             fontWeight={300}
             fontSize={{ base: "11pt", md: "17pt", lg: "25pt" }}
             type={"submit"}
-            width={"22vw"}
             height={"8vh"}
+            border={"none"}
+            boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           >
             Register Startup
           </Button>

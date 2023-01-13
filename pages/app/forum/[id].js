@@ -152,17 +152,19 @@ const ForumReplies = () => {
                 direction={"column"}
                 alignItems={"left"}
                 justifyContent={"center"}
-                backgroundColor={
-                  typeof window !== "undefined"
-                    ? val4.id == localStorage.getItem("id")
-                      ? "#545454"
-                      : "#323232"
-                    : "#323232"
-                }
+                boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                // backgroundColor={
+                //   typeof window !== "undefined"
+                //     ? val4.id == localStorage.getItem("id")
+                //       ? "#545454"
+                //       : "#323232"
+                //     : "#323232"
+                // }
+                backgroundColor={"white"}
                 gap={2}
-                padding={5}
+                padding={3}
                 width={"90%"}
-                borderRadius={5}
+                borderRadius={0}
               >
                 <Flex
                   direction={"row"}
@@ -180,8 +182,8 @@ const ForumReplies = () => {
                       val4.upvotes !== undefined
                         ? val4.upvotes.includes(localStorage.getItem("id"))
                           ? "1px solid #1F90FF"
-                          : "1px solid white"
-                        : "1px solid white"
+                          : "1px solid black"
+                        : "1px solid black"
                     }
                     borderRadius={3}
                     colorScheme={"transparent"}
@@ -202,7 +204,7 @@ const ForumReplies = () => {
                       width={40}
                       height={40}
                     />
-                    <Text color={"#fff"} fontSize={"17pt"}>
+                    <Text color={"#000"} fontSize={"17pt"}>
                       {val4.upvotes !== undefined
                         ? Object.keys(val4.upvotes).length === 0
                           ? 0
@@ -225,12 +227,12 @@ const ForumReplies = () => {
                       >
                         <Text
                           fontSize={"12pt"}
-                          color={"white"}
+                          color={"black"}
                           fontWeight={800}
                         >
                           @{val4.username}
                         </Text>
-                        <Text color={"white"} fontSize={"13pt"}>
+                        <Text color={"black"} fontSize={"13pt"}>
                           {val4.comment}
                         </Text>
                       </Flex>
@@ -252,7 +254,7 @@ const ForumReplies = () => {
                       ) : null}
                     </Flex>
                   </Flex>
-                  <Text fontSize={"10pt"} color={"#dfdfdf"}>
+                  <Text fontSize={"10pt"} color={"#404040"}>
                     {String(val4.time)}
                   </Text>
                   {/* <Flex
@@ -396,11 +398,11 @@ const ForumReplies = () => {
     <Flex
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
+      backgroundColor={"#f2f2f2"}
       direction={"column"}
       alignItems={"center"}
     >
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent backgroundColor={"#323232"}>
           <ModalHeader color={"white"}>My info</ModalHeader>
@@ -461,8 +463,8 @@ const ForumReplies = () => {
             </form>
           </ModalBody>
         </ModalContent>
-      </Modal>
-      <Modal isOpen={isOpen2} onClose={onClose2}>
+      </Modal> */}
+      {/* <Modal isOpen={isOpen2} onClose={onClose2}>
         <ModalOverlay />
         <ModalContent backgroundColor={"#323232"}>
           <ModalHeader color={"white"}>Future Updates</ModalHeader>
@@ -488,7 +490,7 @@ const ForumReplies = () => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
       <Flex
         direction={"row"}
         alignItems={"center"}
@@ -500,8 +502,9 @@ const ForumReplies = () => {
         width={"100vw"}
       >
         <NextLink href={"/app/forum"}>
-          <Link color={"white"}>
-            <Image
+          <Link color={"black"}>
+            <img
+              style={{ filter: "brightness(0)" }}
               src={"/assets/back.png"}
               alt={"Back"}
               width={60}
@@ -509,7 +512,7 @@ const ForumReplies = () => {
             />
           </Link>
         </NextLink>
-        <Menu>
+        {/* <Menu>
           <MenuButton colorScheme={"transparent"}>
             <Image
               src={"/assets/profile.png"}
@@ -523,12 +526,12 @@ const ForumReplies = () => {
             <MenuItem onClick={onOpen}>Update Info</MenuItem>
             <MenuItem onClick={Logout}>Logout</MenuItem>
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Flex>
       <Flex
         direction={"column"}
         alignItems={"center"}
-        backgroundColor={"#1c1c1c"}
+        backgroundColor={"#fff"}
         height={"89%"}
         width={"65vw"}
         borderTopLeftRadius={10}
@@ -540,15 +543,17 @@ const ForumReplies = () => {
           alignItems={"center"}
           justifyContent={"space-between"}
           width={"90%"}
-          padding={5}
-          borderRadius={5}
-          backgroundColor={
-            typeof window !== "undefined"
-              ? localStorage.getItem("id") == ownerId
-                ? "#545454"
-                : "#323232"
-              : "#323232"
-          }
+          padding={3}
+          borderRadius={0}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          // backgroundColor={
+          //   typeof window !== "undefined"
+          //     ? localStorage.getItem("id") == ownerId
+          //       ? "#545454"
+          //       : "#323232"
+          //     : "#323232"
+          // }
+          backgroundColor={"white"}
           _hover={{
             opacity: 0.8,
           }}
@@ -561,27 +566,27 @@ const ForumReplies = () => {
             gap={0.5}
           >
             <Flex direction={"row"} alignItems={"center"}>
-              <Text color={"white"} fontWeight={900} fontSize={"10pt"}>
+              <Text color={"black"} fontWeight={900} fontSize={"10pt"}>
                 @{usname}
               </Text>
               {typeof window !== "undefined" ? (
-                localStorage.getItem("id") == ownerId
-              ) : false ? (
-                <Button
-                  objectFit={"cover"}
-                  height={"2vw"}
-                  colorScheme={"transparent"}
-                  onClick={() => deleteIt2(id, msg)}
-                >
-                  <Image
-                    src={"/assets/trash.png"}
-                    alt={"trash"}
-                    layout={"fill"}
-                  />
-                </Button>
+                localStorage.getItem("id") == ownerId ? (
+                  <Button
+                    objectFit={"cover"}
+                    height={"2vw"}
+                    colorScheme={"transparent"}
+                    onClick={() => deleteIt2(id, msg)}
+                  >
+                    <Image
+                      src={"/assets/trash.png"}
+                      alt={"trash"}
+                      layout={"fill"}
+                    />
+                  </Button>
+                ) : null
               ) : null}
             </Flex>
-            <Text color={"white"} fontSize={"15pt"}>
+            <Text color={"black"} fontSize={"15pt"}>
               {msg}
             </Text>
             <Flex
@@ -595,7 +600,7 @@ const ForumReplies = () => {
                   {val}
                 </Tag>
               ))}
-              <Link color={"white"} fontWeight={900} href={"/app/forum/" + id}>
+              <Link color={"black"} fontWeight={900} href={"/app/forum/" + id}>
                 {comments !== undefined ? comments.length : 0} replies
               </Link>
             </Flex>
@@ -609,19 +614,20 @@ const ForumReplies = () => {
               typeof window !== "undefined"
                 ? likes.includes(localStorage.getItem("id"))
                   ? "1px solid #1F90FF"
-                  : "1px solid white"
-                : "1px solid white"
+                  : "1px solid black"
+                : "1px solid black"
             }
             borderRadius={3}
             colorScheme={"transparent"}
             height={"100%"}
-            backgroundColor={
-              typeof window !== "undefined"
-                ? localStorage.getItem("id") == ownerId
-                  ? "#545454"
-                  : "#323232"
-                : "#323232"
-            }
+            // backgroundColor={
+            //   typeof window !== "undefined"
+            //     ? localStorage.getItem("id") == ownerId
+            //       ? "#545454"
+            //       : "#323232"
+            //     : "#323232"
+            // }
+            background={"transparent"}
             onClick={() => addLikes2(id, likes)}
             // onClick={addLikes}
           >
@@ -637,7 +643,7 @@ const ForumReplies = () => {
               width={40}
               height={40}
             />
-            <Text color={"#fff"} fontSize={"17pt"}>
+            <Text color={"#000"} fontSize={"17pt"}>
               {Object.keys(likes).length === 0 ? 0 : likes.length}
             </Text>
           </Button>
@@ -662,12 +668,12 @@ const ForumReplies = () => {
           marginTop={5}
           alignItems={"center"}
           justifyContent={"center"}
-          borderTop={"1px solid white"}
-          borderBottom={"1px solid white"}
+          borderTop={"1px solid black"}
+          borderBottom={"1px solid black"}
         >
           <Textarea
             placeholder="Comment..."
-            color="white"
+            color="black"
             border={"none"}
             resize={"none"}
             style={{
@@ -683,7 +689,7 @@ const ForumReplies = () => {
             }}
           />
           {/*onClick={submitComment}*/}
-          <Button type="submit" borderRadius={5} onClick={submitComment}>
+          <Button type="submit" onClick={submitComment}>
             Submit Comment
           </Button>
         </Flex>

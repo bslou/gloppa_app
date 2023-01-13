@@ -74,110 +74,120 @@ const Contact = () => {
     <Flex
       direction={"column"}
       alignItems={"center"}
-      backgroundColor={"#1c1c1c"}
+      backgroundColor={"#fafafa"}
       width={"100vw"}
       justifyContent={"center"}
     >
       <NavBar />
       <form onSubmit={(e) => sendEmail(e)}>
         <Flex
+          backgroundColor={"#fff"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           direction={"column"}
-          alignItems={"left"}
-          width={"70vw"}
-          gap={8}
+          alignItems={"center"}
+          padding={5}
           marginTop={5}
         >
-          <Flex direction={"column"}>
-            <Text color={"white"} fontSize={"28pt"} fontWeight={600}>
-              Let’s make something great together
-            </Text>
-            <Text color={"white"} fontSize={"20pt"} fontWeight={200}>
-              We are looking forward to hearing from you! (📧&nbsp;
-              gloppaofficial@gmail.com)
-            </Text>
-          </Flex>
           <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={20}
+            direction={"column"}
+            alignItems={"left"}
+            width={"70vw"}
+            gap={8}
+            marginTop={5}
           >
+            <Flex direction={"column"}>
+              <Text color={"black"} fontSize={"28pt"} fontWeight={600}>
+                Let’s make something great together
+              </Text>
+              <Text color={"black"} fontSize={"20pt"} fontWeight={200}>
+                We are looking forward to hearing from you! (📧&nbsp;
+                gloppaofficial@gmail.com)
+              </Text>
+            </Flex>
+            <Flex
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              gap={20}
+            >
+              <FormControl isRequired>
+                <FormLabel color={"black"}>First Name</FormLabel>
+                <Input
+                  required
+                  height={50}
+                  placeholder="First Name"
+                  color={"white"}
+                  value={firstName}
+                  name={"first_name"}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel color={"black"}>Last Name</FormLabel>
+                <Input
+                  required
+                  height={50}
+                  placeholder="Last Name"
+                  color={"white"}
+                  value={lastName}
+                  name={"last_name"}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </FormControl>
+            </Flex>
+            <Flex
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              gap={20}
+            >
+              <FormControl>
+                <FormLabel color={"black"}>Email</FormLabel>
+                <Input
+                  height={50}
+                  type={"email"}
+                  placeholder="Email"
+                  color={"white"}
+                  value={email}
+                  name={"email"}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel color={"black"}>Phone Number</FormLabel>
+                <Input
+                  height={50}
+                  placeholder="Phone Number"
+                  color={"white"}
+                  name={"phone"}
+                />
+              </FormControl>
+            </Flex>
             <FormControl isRequired>
-              <FormLabel color={"white"}>First Name</FormLabel>
-              <Input
+              <FormLabel color={"black"}>Message</FormLabel>
+              <Textarea
                 required
-                height={50}
-                placeholder="First Name"
+                resize={"none"}
+                height={150}
+                placeholder="Message"
                 color={"white"}
-                value={firstName}
-                name={"first_name"}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel color={"white"}>Last Name</FormLabel>
-              <Input
-                required
-                height={50}
-                placeholder="Last Name"
-                color={"white"}
-                value={lastName}
-                name={"last_name"}
-                onChange={(e) => setLastName(e.target.value)}
+                name={"message"}
+                value={msg}
+                onChange={(e) => setMsg(e.target.value)}
               />
             </FormControl>
           </Flex>
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={20}
+          <Button
+            marginLeft={"32vw"}
+            type={"submit"}
+            mt={4}
+            colorScheme="teal"
+            padding={5}
+            marginRight={"32.5vw"}
           >
-            <FormControl>
-              <FormLabel color={"white"}>Email</FormLabel>
-              <Input
-                height={50}
-                type={"email"}
-                placeholder="Email"
-                color={"white"}
-                value={email}
-                name={"email"}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel color={"white"}>Phone Number</FormLabel>
-              <Input
-                height={50}
-                placeholder="Phone Number"
-                color={"white"}
-                name={"phone"}
-              />
-            </FormControl>
-          </Flex>
-          <FormControl isRequired>
-            <FormLabel color={"white"}>Message</FormLabel>
-            <Textarea
-              required
-              resize={"none"}
-              height={150}
-              placeholder="Message"
-              color={"white"}
-              name={"message"}
-              value={msg}
-              onChange={(e) => setMsg(e.target.value)}
-            />
-          </FormControl>
+            Submit
+          </Button>
         </Flex>
-        <Button
-          marginLeft={"32vw"}
-          type={"submit"}
-          mt={4}
-          colorScheme="teal"
-          padding={5}
-        >
-          Submit
-        </Button>
       </form>
 
       <BottomNavBar />

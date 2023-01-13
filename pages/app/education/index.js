@@ -1,8 +1,95 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Input,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
+  Tooltip,
+  useDisclosure,
+  useToast,
+  Box,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import Image from "next/image";
+import React, { useState, useEffect, useRef } from "react";
+import { db, storage } from "../../api/firebaseconfig";
+import Router, { useRouter } from "next/router";
 import NavBar from "../navbar";
+import { serverTimestamp } from "firebase/firestore";
 
 const Education = () => {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [prodRev, setProdRev] = useState([]);
+  const [boostRev, setBoostRev] = useState([]);
+
+  const [uname, setUname] = useState("");
+  const [oguname, setOgUname] = useState("");
+  const [email, setEmail] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const Logout = () => {
+    localStorage.removeItem("id");
+    router.push("/");
+  };
+  const changeData = (e) => {
+    e.preventDefault();
+    let nummers = db.collection("users").where("username", "==", uname);
+    nummers
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty && uname != oguname) {
+          toast({
+            title: "Username exists.",
+            description: "The username already exists in our database.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          console.log("Doesn't exist!");
+          let id = localStorage.getItem("id");
+          db.collection("users").doc(id).update({ username: uname });
+          toast({
+            title: "Username updated.",
+            description: "The username got updated successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("Error " + err);
+      });
+  };
+  useEffect(() => {
+    if (localStorage.getItem("id") !== null) {
+      db.collection("users")
+        .doc(localStorage.getItem("id"))
+        .onSnapshot((val) => {
+          let n = val.data();
+          setUname(n.username);
+          setOgUname(n.username);
+          setEmail(n.email);
+        });
+    } else {
+      router.push("/");
+    }
+  }, []);
   const title1 = "How to gain users?";
   let info1 = [
     [
@@ -164,177 +251,466 @@ const Education = () => {
   ];
   return (
     <Flex
+      direction={"column"}
+      backgroundColor={"#f2f2f2"}
       width={"100vw"}
       height={"100vh"}
-      backgroundColor={"#323232"}
-      direction={"column"}
-      alignItems={"center"}
     >
-      <NavBar />
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent backgroundColor={"#fff"}>
+          <ModalHeader color={"black"}>My info</ModalHeader>
+          <ModalCloseButton color={"black"} />
+          <ModalBody>
+            <form onSubmit={changeData}>
+              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"black"}>Username: </Text>
+                  <Input
+                    color={"black"}
+                    value={uname}
+                    onChange={(e) => setUname(e.target.value.toLowerCase())}
+                    minLength={4}
+                    maxLength={12}
+                  />
+                </Flex>
+                <Flex
+                  width={"95%"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"0.3vw"}
+                >
+                  <Text color={"black"}>Email: </Text>
+                  <Input
+                    color={"black"}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly
+                  />
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"1vw"}
+                  marginTop={3}
+                  marginBottom={3}
+                >
+                  <Button type="submit" colorScheme={"blue"}>
+                    Change Information
+                  </Button>
+                  <Button
+                    variant={"ghost"}
+                    color={"black"}
+                    colorScheme={"transparent"}
+                    onClick={onClose}
+                  >
+                    Close
+                  </Button>
+                </Flex>
+                <Button onClick={Logout}>Logout</Button>
+              </Flex>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        backgroundColor={"#fff"}
+        borderBottom={"1px solid #dfdfdf"}
+        padding={"1vw"}
+        paddingLeft={200}
+      >
+        <Button
+          border={"none"}
+          background={"transparent"}
+          fontSize={"13pt"}
+          fontWeight={600}
+          color={"#202020"}
+          colorScheme={"transparent"}
+        >
+          {/* 📦&nbsp;&nbsp;Product Review */}
+          🎥&nbsp;&nbsp;Educational Videos
+        </Button>
+        {/* <Button
+          border={"none"}
+          _hover={{
+            backgroundColor: "#efefef",
+          }}
+          fontSize={"25pt"}
+          fontWeight={100}
+          color={"#202020"}
+          colorScheme={"transparent"}
+          onClick={() => router.push("/app/productreviewreg")}
+        >
+          +
+        </Button> */}
+      </Flex>
+      <Flex
+        position={"fixed"}
+        direction={"column"}
+        alignItems={"flex-start"}
+        backgroundColor={"#fff"}
+        borderRight={"1px solid #dfdfdf"}
+        height={"100vh"}
+        width={200}
+        gap={30}
+        paddingTop={"3vh"}
+        paddingBottom={"3vh"}
+      >
+        <Button
+          border={"none"}
+          background={"transparent"}
+          fontSize={"13pt"}
+          fontWeight={600}
+          color={"#202020"}
+          colorScheme={"transparent"}
+          onClick={() => router.push("/app/startuplist")}
+        >
+          Gloppa
+        </Button>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/productreview")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              📦&nbsp;&nbsp;Product Review
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/funding")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💸&nbsp;&nbsp;Funding
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/jobs")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💻&nbsp;&nbsp;Jobs
+            </Text>
+          </Button>
+        </Flex>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/messages")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💬&nbsp;&nbsp;Private Messages
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/forum")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              📢&nbsp;&nbsp;Public Forum
+            </Text>
+          </Button>
+        </Flex>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            //background={"transparent"}
+            background={"#efefef"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/education")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              🎥&nbsp;&nbsp;Educational Videos
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={onOpen}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              👤&nbsp;&nbsp;Profile
+            </Text>
+          </Button>
+        </Flex>
+      </Flex>
+      <Flex
+        position={"absolute"}
         direction={"column"}
         alignItems={"center"}
-        height={"90vh"}
-        width={"90vw"}
-        overflowY={"scroll"}
-        mask={"rounded"}
-        backgroundColor={"#1C1c1c"}
-        borderTopLeftRadius={10}
-        borderTopRightRadius={10}
-        paddingTop={10}
+        paddingTop={5}
+        paddingBottom={5}
+        marginLeft={{ base: 150, md: 175, lg: 250 }}
+        width={"80%"}
+        marginTop={50}
+        gap={3}
       >
         <Flex
-          direction={"row"}
+          direction={"column"}
           alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          top={{ base: "5vh", md: "4.5vh", lg: "4vh" }}
+          height={"80vh"}
+          width={"80%"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+          overflowY={"scroll"}
+          mask={"rounded"}
+          backgroundColor={"#fff"}
+          paddingTop={3}
         >
-          <Text
-            color={"white"}
-            fontWeight={700}
-            fontSize={{ base: "30pt", md: "35pt", lg: "40pt" }}
-            textShadow={"0px 4px 1px rgba(0,0,0,0.6)"}
-          >
-            Videos
-          </Text>
-        </Flex>
-        <Flex direction={"column"} alignItems={"left"} width={"95%"}>
-          <>
-            <Text color={"white"} fontWeight={400} fontSize={"23pt"}>
-              {title1}
-            </Text>
-            <Flex
-              direction={"column"}
-              width={"100%"}
-              mask="rounded"
-              overflowX={"scroll"}
-              overflowY={"scroll"}
-              alignItems={"flex-start"}
-              gap={2}
-            >
-              <Box
-                direction={"row"}
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"flex-start"}
-                gap={5}
+          <Flex
+            direction={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            position={"absolute"}
+            top={{ base: "5vh", md: "4.5vh", lg: "4vh" }}
+          ></Flex>
+          <Flex direction={"column"} alignItems={"left"} width={"95%"}>
+            <>
+              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
+                {title1}
+              </Text>
+              <Flex
+                direction={"column"}
+                width={"100%"}
+                mask="rounded"
+                overflowX={"scroll"}
+                overflowY={"scroll"}
+                alignItems={"flex-start"}
+                gap={2}
               >
-                {info1.map((val) => (
-                  <Flex
-                    direction={"column"}
-                    as={"a"}
-                    href={"/app/education/" + val[2]}
-                    width={200}
-                    height={220}
-                  >
-                    <img height={180} src={val[0]} alt={"video"} />
-                    <Text
-                      height={40}
-                      color={"white"}
-                      fontSize={"10pt"}
-                      textAlign={"center"}
-                      _hover={{
-                        textDecoration: "underline",
-                      }}
+                <Box
+                  direction={"row"}
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"flex-start"}
+                  gap={5}
+                >
+                  {info1.map((val) => (
+                    <Flex
+                      direction={"column"}
+                      as={"a"}
+                      href={"/app/education/" + val[2]}
+                      width={200}
+                      height={220}
                     >
-                      {val[1]}
-                    </Text>
-                  </Flex>
-                ))}
-              </Box>
-            </Flex>
-          </>
-          <>
-            <Text color={"white"} fontWeight={400} fontSize={"23pt"}>
-              {title2}
-            </Text>
-            <Flex
-              direction={"column"}
-              width={"100%"}
-              mask="rounded"
-              overflowX={"scroll"}
-              overflowY={"scroll"}
-              alignItems={"flex-start"}
-              gap={2}
-            >
-              <Box
-                direction={"row"}
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"flex-start"}
-                gap={5}
+                      <img height={180} src={val[0]} alt={"video"} />
+                      <Text
+                        height={40}
+                        color={"black"}
+                        fontSize={"10pt"}
+                        textAlign={"center"}
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {val[1]}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Box>
+              </Flex>
+            </>
+            <>
+              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
+                {title2}
+              </Text>
+              <Flex
+                direction={"column"}
+                width={"100%"}
+                mask="rounded"
+                overflowX={"scroll"}
+                overflowY={"scroll"}
+                alignItems={"flex-start"}
+                gap={2}
               >
-                {info2.map((val) => (
-                  <Flex
-                    direction={"column"}
-                    as={"a"}
-                    href={"/app/education/" + val[2]}
-                    width={200}
-                    height={220}
-                  >
-                    <img height={180} src={val[0]} alt={"video"} />
-                    <Text
-                      height={40}
-                      color={"white"}
-                      fontSize={"10pt"}
-                      textAlign={"center"}
-                      _hover={{
-                        textDecoration: "underline",
-                      }}
+                <Box
+                  direction={"row"}
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"flex-start"}
+                  gap={5}
+                >
+                  {info2.map((val) => (
+                    <Flex
+                      direction={"column"}
+                      as={"a"}
+                      href={"/app/education/" + val[2]}
+                      width={200}
+                      height={220}
                     >
-                      {val[1]}
-                    </Text>
-                  </Flex>
-                ))}
-              </Box>
-            </Flex>
-          </>
-          <>
-            <Text color={"white"} fontWeight={400} fontSize={"23pt"}>
-              {title3}
-            </Text>
-            <Flex
-              direction={"column"}
-              width={"100%"}
-              mask="rounded"
-              overflowX={"scroll"}
-              overflowY={"scroll"}
-              alignItems={"flex-start"}
-              gap={2}
-            >
-              <Box
-                direction={"row"}
-                display={"flex"}
-                alignItems={"center"}
-                justifyContent={"flex-start"}
-                gap={5}
+                      <img height={180} src={val[0]} alt={"video"} />
+                      <Text
+                        height={40}
+                        color={"black"}
+                        fontSize={"10pt"}
+                        textAlign={"center"}
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {val[1]}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Box>
+              </Flex>
+            </>
+            <>
+              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
+                {title3}
+              </Text>
+              <Flex
+                direction={"column"}
+                width={"100%"}
+                mask="rounded"
+                overflowX={"scroll"}
+                overflowY={"scroll"}
+                alignItems={"flex-start"}
+                gap={2}
               >
-                {info3.map((val) => (
-                  <Flex
-                    direction={"column"}
-                    as={"a"}
-                    href={"/app/education/" + val[2]}
-                    width={200}
-                    height={220}
-                  >
-                    <img height={180} src={val[0]} alt={"video"} />
-                    <Text
-                      height={40}
-                      color={"white"}
-                      fontSize={"10pt"}
-                      textAlign={"center"}
-                      _hover={{
-                        textDecoration: "underline",
-                      }}
+                <Box
+                  direction={"row"}
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"flex-start"}
+                  gap={5}
+                >
+                  {info3.map((val) => (
+                    <Flex
+                      direction={"column"}
+                      as={"a"}
+                      href={"/app/education/" + val[2]}
+                      width={200}
+                      height={220}
                     >
-                      {val[1]}
-                    </Text>
-                  </Flex>
-                ))}
-              </Box>
-            </Flex>
-          </>
+                      <img height={180} src={val[0]} alt={"video"} />
+                      <Text
+                        height={40}
+                        color={"black"}
+                        fontSize={"10pt"}
+                        textAlign={"center"}
+                        _hover={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {val[1]}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Box>
+              </Flex>
+            </>
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

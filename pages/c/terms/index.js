@@ -8,7 +8,7 @@ const Terms = () => {
   return (
     <Flex
       width={"100vw"}
-      backgroundColor={"#1c1c1c"}
+      backgroundColor={"#fafafa"}
       direction={"column"}
       alignItems={"center"}
     >
@@ -23,13 +23,13 @@ const Terms = () => {
         <Text
           fontWeight={600}
           fontSize={{ base: "24pt", md: "29pt", lg: "35pt" }}
-          color={"white"}
+          color={"black"}
           textAlign={"center"}
         >
           Terms and Conditions
         </Text>
         <Text
-          color={"white"}
+          color={"black"}
           fontSize={{ base: "10pt", md: "12pt", lg: "14pt" }}
         >
           Welcome to Gloppa!

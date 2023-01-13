@@ -18,7 +18,7 @@ const BottomNavBar = () => {
       paddingTop={8}
       paddingBottom={8}
     >
-      <Link color={"white"} fontSize={"16pt"}>
+      <Link color={"black"} fontSize={"16pt"}>
         <NextLink href={"/"}>Gloppa</NextLink>
       </Link>
       <Flex
@@ -28,7 +28,7 @@ const BottomNavBar = () => {
         gap={8}
         display={["none", "none", "flex", "flex"]}
       >
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"}>
           <NextLink
             passHref
             target={"_blank"}
@@ -37,7 +37,7 @@ const BottomNavBar = () => {
             Twitter
           </NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"}>
           <NextLink
             passHref
             target={"_blank"}
@@ -46,10 +46,10 @@ const BottomNavBar = () => {
             Facebook
           </NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"}>
           <NextLink href={"/c/terms"}>Terms</NextLink>
         </Link>
-        <Link color={"white"} fontSize={"16pt"}>
+        <Link color={"black"} fontSize={"16pt"}>
           <NextLink href={"/c/privacy"}>Privacy</NextLink>
         </Link>
       </Flex>
@@ -92,7 +92,7 @@ const BottomNavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Home"
               my={5}
               w="100%"
@@ -110,7 +110,7 @@ const BottomNavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Twitter"
               my={5}
               w="100%"
@@ -128,7 +128,7 @@ const BottomNavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Facebook"
               my={5}
               w="100%"
@@ -142,7 +142,7 @@ const BottomNavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Terms"
               my={5}
               w="100%"
@@ -155,7 +155,7 @@ const BottomNavBar = () => {
               as="a"
               variant="ghost"
               colorScheme={"transparent"}
-              color={"white"}
+              color={"black"}
               aria-label="Privacy"
               my={5}
               w="100%"
@@ -171,7 +171,7 @@ const BottomNavBar = () => {
             paddingTop={2}
             paddingBottom={2}
             colorScheme={"transparent"}
-            color={"white"}
+            color={"black"}
             borderRadius={20}
             onClick={() => router.push("/app/register")}
           >

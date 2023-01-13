@@ -73,7 +73,7 @@ const Partners = () => {
     <Flex
       direction={"column"}
       alignItems={"center"}
-      backgroundColor={"#1c1c1c"}
+      backgroundColor={"#fafafa"}
       width={"100vw"}
       minHeight={"100vh"}
     >
@@ -122,7 +122,7 @@ const Partners = () => {
       >
         <Text
           textAlign={"center"}
-          color={"white"}
+          color={"black"}
           fontWeight={900}
           fontSize={{ base: "34pt", md: "37pt", lg: "40pt" }}
         >
@@ -130,7 +130,7 @@ const Partners = () => {
         </Text>
         <Text
           textAlign={"center"}
-          color={"white"}
+          color={"black"}
           fontSize={{ base: "14pt", md: "17pt", lg: "20pt" }}
         >
           Companies should partner with Gloppa because our unique approach to
@@ -152,9 +152,13 @@ const Partners = () => {
         <Button
           width={{ base: 90, md: 120, lg: 150 }}
           height={{ base: 90, md: 120, lg: 150 }}
-          backgroundColor={"#fff"}
+          backgroundColor={"#202020"}
           borderRadius={"50%"}
-          color={"#000"}
+          color={"#fff"}
+          colorScheme={"transparent"}
+          _hover={{
+            opacity: 0.8,
+          }}
           fontSize={{ base: "16pt", md: "19pt", lg: "22pt" }}
           onClick={onOpen2}
         >

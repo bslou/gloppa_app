@@ -88,11 +88,12 @@ const ProdRevComments = () => {
                       direction={"column"}
                       alignItems={"left"}
                       justifyContent={"center"}
-                      backgroundColor={"#323232"}
+                      backgroundColor={"#fff"}
                       gap={2}
-                      padding={5}
+                      padding={3}
                       width={"90%"}
-                      borderRadius={5}
+                      borderRadius={0}
+                      boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
                     >
                       <Flex
                         direction={"row"}
@@ -101,7 +102,7 @@ const ProdRevComments = () => {
                       >
                         <Text
                           fontSize={"17pt"}
-                          color={"white"}
+                          color={"black"}
                           fontWeight={700}
                         >
                           @{doto.username}
@@ -110,7 +111,7 @@ const ProdRevComments = () => {
                           {String(comment.time)}
                         </Text>
                       </Flex>
-                      <Text color={"white"} fontSize={"13pt"}>
+                      <Text color={"black"} fontSize={"13pt"}>
                         {comment.comment}
                       </Text>
                     </Flex>,
@@ -278,11 +279,11 @@ const ProdRevComments = () => {
       <Flex
         width={"100vw"}
         height={"100vh"}
-        backgroundColor={"#323232"}
+        backgroundColor={"#f2f2f2"}
         direction={"column"}
         alignItems={"center"}
       >
-        <Modal isOpen={isOpen} onClose={onClose}>
+        {/* <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent backgroundColor={"#323232"}>
             <ModalHeader color={"white"}>My info</ModalHeader>
@@ -370,7 +371,7 @@ const ProdRevComments = () => {
               </Button>
             </ModalFooter>
           </ModalContent>
-        </Modal>
+        </Modal> */}
         <Flex
           direction={"row"}
           alignItems={"center"}
@@ -382,8 +383,9 @@ const ProdRevComments = () => {
           width={"100vw"}
         >
           <NextLink href={"/app/productreview"}>
-            <Link color={"white"}>
-              <Image
+            <Link color={"black"}>
+              <img
+                style={{ filter: "brightness(0)" }}
                 src={"/assets/back.png"}
                 alt={"Back"}
                 width={60}
@@ -391,7 +393,7 @@ const ProdRevComments = () => {
               />
             </Link>
           </NextLink>
-          <Menu>
+          {/* <Menu>
             <MenuButton colorScheme={"transparent"}>
               <Image
                 src={"/assets/profile.png"}
@@ -405,19 +407,19 @@ const ProdRevComments = () => {
               <MenuItem onClick={onOpen}>Update Info</MenuItem>
               <MenuItem onClick={Logout}>Logout</MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
         </Flex>
         <Flex
           direction={"column"}
           alignItems={"center"}
-          backgroundColor={"#1c1c1c"}
+          backgroundColor={"#fff"}
           height={"89%"}
           width={"65vw"}
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           paddingTop={8}
         >
-          <Flex
+          {/* <Flex
             direction={"row"}
             alignItems={"center"}
             position={"absolute"}
@@ -431,7 +433,7 @@ const ProdRevComments = () => {
             >
               {title} Comments
             </Text>
-          </Flex>
+          </Flex> */}
           {/* {ProdRevComponent()} */}
           {ProdRevComponent2(
             id,
@@ -452,8 +454,8 @@ const ProdRevComments = () => {
             marginTop={5}
             alignItems={"center"}
             justifyContent={"center"}
-            borderTop={"1px solid white"}
-            borderBottom={"1px solid white"}
+            borderTop={"1px solid black"}
+            borderBottom={"1px solid black"}
           >
             <Textarea
               placeholder="Comment..."
@@ -483,6 +485,7 @@ const ProdRevComments = () => {
             width={"100%"}
             overflowY={"scroll"}
             paddingTop={3}
+            paddingBottom={3}
           >
             {commento}
           </Flex>
