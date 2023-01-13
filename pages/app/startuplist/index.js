@@ -479,7 +479,7 @@ const StartupList = () => {
             <Flex direction={'column'} alignItems = {'center'} gap = {10}>
               <Image src = {'/assets/nodata2.png'} alt = {"No data"} width = {500} height={500} layout={'responsive'}/>
               <Text>No startups here :(</Text>
-              <Button borderRadius={0} fontSize={'18pt'} paddingLeft={5} paddingRight={5} backgroundColor={'white'} onClick={() => router.push("/app/startupregistration")}>Get Started</Button>
+              <Button boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"} borderRadius={0} fontSize={'18pt'} paddingLeft={5} paddingRight={5} backgroundColor={'white'} onClick={() => router.push("/app/startupregistration")}>Get Started</Button>
            </Flex>
           }
         </Flex>
