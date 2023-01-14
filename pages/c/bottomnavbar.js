@@ -64,7 +64,7 @@ const BottomNavBar = () => {
       <Flex
         w="100vw"
         display={display}
-        bgColor="#1c1c1c"
+        bgColor="#f2f2f2"
         zIndex={20}
         h="100vh"
         pos="fixed"
