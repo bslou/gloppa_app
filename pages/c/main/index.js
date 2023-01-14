@@ -176,7 +176,7 @@ const Main = () => {
           boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Image
-            src={"/assets/four.png"}
+            src={"/assets/two.png"}
             alt={"Gloppa companies"}
             width={900}
             height={500}
@@ -199,7 +199,7 @@ const Main = () => {
           boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Image
-            src={"/assets/two.png"}
+            src={"/assets/three.png"}
             alt={"Gloppa Companies"}
             width={900}
             height={500}
@@ -363,7 +363,7 @@ const Main = () => {
           boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
         >
           <Image
-            src={"/assets/three.png"}
+            src={"/assets/four.png"}
             alt={"Gloppa Companies"}
             width={900}
             height={500}
