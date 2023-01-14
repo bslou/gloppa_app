@@ -257,7 +257,7 @@ const StartupList = () => {
             colorScheme={"transparent"}
           >
             {/* 📦&nbsp;&nbsp;Product Review */}
-            Startup List
+            Company List
           </Button>
           <Button
             border={"none"}
@@ -534,7 +534,7 @@ const StartupList = () => {
                 height={1000}
                 layout={"responsive"}
               />
-              <Text fontSize={"24pt"}>No startups here 😭</Text>
+              <Text fontSize={"24pt"}>No companies here 😭</Text>
               <Button
                 boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
                 borderRadius={0}

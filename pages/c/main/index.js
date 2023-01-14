@@ -54,7 +54,7 @@ const Main = () => {
             fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
             textAlign={"center"}
           >
-            The secret ingredient for startup success
+            The secret ingredient for company success
           </Text>
           <Text
             fontWeight={300}
@@ -62,8 +62,8 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "18pt", lg: "23pt" }}
             textAlign={"center"}
           >
-            Gloppa provides all the necessary resources and support for other
-            startups to achieve success.
+            Gloppa provides all the necessary resources and support for
+            companies to achieve success.
           </Text>
           <Button
             backgroundColor={"white"}
@@ -107,7 +107,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/one.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -134,7 +134,7 @@ const Main = () => {
             textAlign={"center"}
           >
             Compete with others and develop your factory while completing
-            startup tasks.
+            company tasks.
           </Text>
         </Flex>
       </Flex>
@@ -166,7 +166,7 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
-            Create job posts are find startups to work for to earn money.
+            Create job posts and find companies to work for and earn money.
           </Text>
         </Flex>
         <Flex
@@ -177,7 +177,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/four.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -200,7 +200,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/two.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -270,7 +270,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/three.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -293,7 +293,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/five.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -352,7 +352,7 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
-            With the public forum users can discuss various aspects of startups
+            With the public forum users can discuss various aspects of companies
             and the mentality involved to succeed.
           </Text>
         </Flex>
@@ -364,7 +364,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/six.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -387,7 +387,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/seven.png"}
-            alt={"Gloppa Startups"}
+            alt={"Gloppa Companies"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -413,8 +413,8 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
             textAlign={"center"}
           >
-            Using our videos for creating startups, you can educate yourself on
-            how to best succeed from professionals.
+            Using our videos for creating startups/developing companies, you can
+            educate yourself on how to best succeed from professionals.
           </Text>
         </Flex>
       </Flex>
@@ -432,7 +432,7 @@ const Main = () => {
           textAlign={"center"}
           width={"75%"}
         >
-          Are you ready to take the next step in your startup journey?
+          Are you ready to take the next step in your startup/company journey?
         </Text>
         <Button
           backgroundColor={"white"}

@@ -114,8 +114,8 @@ const JobsReg = () => {
     e.preventDefault();
     if (startupName == null) {
       toast({
-        title: "No startup selected",
-        description: "There is no startup selected.",
+        title: "No company selected",
+        description: "There is no company selected.",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -280,7 +280,7 @@ const JobsReg = () => {
             width={"50vw"}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Name:
+              Company Name:
             </Text>
             <Select
               backgroundColor={"white"}
@@ -304,7 +304,7 @@ const JobsReg = () => {
             width={"50vw"}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Tagline:
+              Company Tagline:
             </Text>
             <Input
               backgroundColor={"white"}

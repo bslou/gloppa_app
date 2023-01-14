@@ -209,7 +209,7 @@ const StartupRegistration = () => {
             color={"black"}
             fontSize={{ base: "26pt", md: "33pt", lg: "40pt" }}
           >
-            Register Startup
+            Register Company
           </Text>
           <Flex>
             <Button
@@ -254,7 +254,7 @@ const StartupRegistration = () => {
             width={"50vw"}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Name:
+              Company Name:
             </Text>
             <Input
               backgroundColor={"white"}
@@ -296,7 +296,7 @@ const StartupRegistration = () => {
             width={"50vw"}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Location:
+              Company Location:
             </Text>
             <Input
               backgroundColor={"white"}
@@ -340,7 +340,7 @@ const StartupRegistration = () => {
             border={"none"}
             boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
           >
-            Register Startup
+            Register Company
           </Button>
         </Flex>
       </form>

@@ -134,18 +134,18 @@ const Partners = () => {
           fontSize={{ base: "14pt", md: "17pt", lg: "20pt" }}
         >
           Companies should partner with Gloppa because our unique approach to
-          startup acceleration combines the excitement and engagement of video
+          company acceleration combines the excitement and engagement of video
           games with the practical strategies and support needed for business
-          success. By gamifying the startup process, we provide a fun and
+          success. By gamifying the company process, we provide a fun and
           interactive way for entrepreneurs to learn and grow their businesses,
           while also fostering a sense of community and collaboration among our
           clients. Our team of experts has a wealth of experience in both the
-          startup world and the gaming industry, making us uniquely qualified to
+          company world and the gaming industry, making us uniquely qualified to
           help companies achieve their goals in a way that is both enjoyable and
           effective. Plus, our comprehensive services and resources ensure that
           our clients have access to the tools and support they need to succeed.
           Partnering with Gloppa is a win-win for any company looking to take
-          their startup to the next level. If you'd rather prefer emailing, then
+          their company to the next level. If you'd rather prefer emailing, then
           our email is gloppaofficial@gmail.com. We look forward to connecting
           soon :)
         </Text>

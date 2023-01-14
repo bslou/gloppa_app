@@ -117,8 +117,8 @@ const FundingRegistration = () => {
     e.preventDefault();
     if (startupName == null) {
       toast({
-        title: "No startup selected",
-        description: "There is no startup selected.",
+        title: "No company selected",
+        description: "There is no company selected.",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -215,8 +215,8 @@ const FundingRegistration = () => {
           // });
         } else {
           toast({
-            title: "Startup already exists",
-            description: "Startup already exists for funding.",
+            title: "Company already exists",
+            description: "Company already exists for funding.",
             status: "error",
             duration: 9000,
             isClosable: true,
@@ -359,7 +359,7 @@ const FundingRegistration = () => {
             gap={6}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Name:
+              Company Name:
             </Text>
             <Select
               backgroundColor={"white"}

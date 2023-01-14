@@ -383,7 +383,7 @@ const UpdateReviewReg = () => {
             width={"50vw"}
           >
             <Text color={"black"} fontWeight={300} width={"15vw"}>
-              Startup Name:
+              Company Name:
             </Text>
             <Select
               backgroundColor={"white"}

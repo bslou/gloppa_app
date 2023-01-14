@@ -33,7 +33,7 @@ const Careers = () => {
           Join our journey
         </Text>
         <Text color={"black"} fontSize={"18pt"} fontWeight={300}>
-          We’re determined to help people enjoy creating startups!
+          We’re determined to help people with their companies!
         </Text>
         <Image
           src={"/assets/teamcollab.png"}

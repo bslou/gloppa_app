@@ -590,7 +590,7 @@ const Game = () => {
       } else {
         toast3({
           title: "Not enough coins",
-          description: "You need to work more on the startup to afford this.",
+          description: "You need to work more on the company to afford this.",
           status: "error",
           duration: 4000,
           isClosable: true,
@@ -1188,7 +1188,7 @@ const Game = () => {
       <Modal isOpen={isOpen4} onClose={onClose4}>
         <ModalOverlay />
         <ModalContent backgroundColor={"#fff"}>
-          <ModalHeader color={"black"}>Startup Info</ModalHeader>
+          <ModalHeader color={"black"}>Company Info</ModalHeader>
           <ModalCloseButton color={"black"} />
           <ModalBody>
             <form onSubmit={(e) => changeVal(e)}>
@@ -1201,7 +1201,7 @@ const Game = () => {
                 maxHeight={"65vh"}
               >
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"black"}>Startup Name</Text>
+                  <Text color={"black"}>Company Name</Text>
                   <Input
                     minLength={3}
                     value={startupName2}
@@ -1212,7 +1212,7 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex gap={"0.5vh"} direction={"column"}>
-                  <Text color={"black"}>Startup Location</Text>
+                  <Text color={"black"}>Company Location</Text>
                   <Input
                     type="text"
                     color={"black"}
@@ -1224,7 +1224,7 @@ const Game = () => {
                   />
                 </Flex>
                 <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
-                  <Text color={"black"}>Startup Description</Text>
+                  <Text color={"black"}>Company Description</Text>
                   <Textarea
                     autoComplete="on"
                     minLength={3}
