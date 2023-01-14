@@ -337,6 +337,29 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
+              onClick={() => router.push("/app/updatereview")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                🆕&nbsp;&nbsp;Update Review
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
               onClick={() => router.push("/app/funding")}
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
@@ -364,6 +387,31 @@ const StartupList = () => {
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💻&nbsp;&nbsp;Jobs
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/fundingcam")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                ⏺️&nbsp;&nbsp;Record Funding Pitch
               </Text>
             </Button>
           </Flex>
@@ -475,13 +523,32 @@ const StartupList = () => {
           top={{ base: 45, md: 53, lg: 61 }}
           gap={3}
         >
-          {rows.length > 0 ? rows : 
-            <Flex direction={'column'} alignItems = {'center'} gap = {5}>
-              <Image src = {'/assets/nodata2.png'} alt = {"No data"} width = {1000} height={1000} layout={'responsive'}/>
-              <Text fontSize={'24pt'}>No startups here 😭</Text>
-              <Button boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"} borderRadius={0} fontSize={'20pt'} height={65} paddingLeft={5} paddingRight={5} backgroundColor={'white'} onClick={() => router.push("/app/startupregistration")}>Get Started</Button>
-           </Flex>
-          }
+          {rows.length > 0 ? (
+            rows
+          ) : (
+            <Flex direction={"column"} alignItems={"center"} gap={5}>
+              <Image
+                src={"/assets/nodata2.png"}
+                alt={"No data"}
+                width={1000}
+                height={1000}
+                layout={"responsive"}
+              />
+              <Text fontSize={"24pt"}>No startups here 😭</Text>
+              <Button
+                boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                borderRadius={0}
+                fontSize={"20pt"}
+                height={65}
+                paddingLeft={5}
+                paddingRight={5}
+                backgroundColor={"white"}
+                onClick={() => router.push("/app/startupregistration")}
+              >
+                Get Started
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     );

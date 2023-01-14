@@ -19,29 +19,30 @@ import {
   Tooltip,
   useDisclosure,
   useToast,
-  Box,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
-import { db, storage } from "../../api/firebaseconfig";
-import Router, { useRouter } from "next/router";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { auth, db } from "../../api/firebaseconfig";
+import { saveAs } from "file-saver";
 import NavBar from "../navbar";
-import { serverTimestamp } from "firebase/firestore";
 
-const Education = () => {
+const RecordPitch = () => {
   const router = useRouter();
-  const toast = useToast();
 
-  const [loading, setLoading] = useState(true);
-  const [prodRev, setProdRev] = useState([]);
-  const [boostRev, setBoostRev] = useState([]);
-
-  const [uname, setUname] = useState("");
   const [oguname, setOgUname] = useState("");
+  const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(true);
 
+  const [recorder, setRecorder] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [downloadURL, setDownloadURL] = useState(null);
+  const videoRef = useRef(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const Logout = () => {
     localStorage.removeItem("id");
     router.push("/");
@@ -60,7 +61,6 @@ const Education = () => {
             duration: 9000,
             isClosable: true,
           });
-          onClose();
         } else {
           console.log("Doesn't exist!");
           let id = localStorage.getItem("id");
@@ -72,7 +72,6 @@ const Education = () => {
             duration: 9000,
             isClosable: true,
           });
-          onClose();
         }
       })
       .catch((err) => {
@@ -80,178 +79,83 @@ const Education = () => {
       });
   };
   useEffect(() => {
-    if (localStorage.getItem("id") !== null) {
-      db.collection("users")
-        .doc(localStorage.getItem("id"))
-        .onSnapshot((val) => {
-          let n = val.data();
-          setUname(n.username);
-          setOgUname(n.username);
-          setEmail(n.email);
-        });
-    } else {
-      router.push("/");
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        setRecorder(new MediaRecorder(stream));
+        videoRef.current.srcObject = stream;
+      });
+    if (typeof window !== "undefined") {
+      return () => {
+        window.location.reload();
+      };
+      if (localStorage.getItem("id") === null) {
+        router.push("/");
+        return;
+      } else {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .onSnapshot((val) => {
+            let n = val.data();
+            setUname(n.username);
+            setOgUname(n.username);
+            setEmail(n.email);
+          });
+      }
     }
   }, []);
-  const title1 = "How to gain users?";
-  let info1 = [
-    [
-      "http://i3.ytimg.com/vi/w2nrXTy47Gc/hqdefault.jpg",
-      "Reid Hoffman On How To Hack Your First 100 Users",
-      "w2nrXTy47Gc",
-    ],
-    [
-      "http://i3.ytimg.com/vi/1eZpasYkrSE/hqdefault.jpg",
-      "Need More Customers? Let Me Show You How",
-      "1eZpasYkrSE",
-    ],
-    [
-      "http://i3.ytimg.com/vi/LGJExxDRXPs/hqdefault.jpg",
-      "20 Ways to Get Customers for Your Small Business",
-      "LGJExxDRXPs",
-    ],
-    [
-      "http://i3.ytimg.com/vi/6H4nRk581is/hqdefault.jpg",
-      "Get Your First Users: Advice | Launch | App Marketing | Udacity",
-      "6H4nRk581is",
-    ],
-    [
-      "http://i3.ytimg.com/vi/19xt51mn9VY/hqdefault.jpg",
-      "How to get the first 100 customers | Alvin Cheung | TEDxCUHK",
-      "19xt51mn9VY",
-    ],
-    [
-      "http://i3.ytimg.com/vi/KYtkyOpjXFw/hqdefault.jpg",
-      "How to get the First Users/Buyers",
-      "KYtkyOpjXFw",
-    ],
-    [
-      "http://i3.ytimg.com/vi/HctZg2aOPMw/hqdefault.jpg",
-      "The psychological trick behind getting people to say yes",
-      "HctZg2aOPMw",
-    ],
-    [
-      "http://i3.ytimg.com/vi/F71w24KS7mo/hqdefault.jpg",
-      "How To Promote Your Facebook Page in 5 EASY Steps",
-      "F71w24KS7mo",
-    ],
-    [
-      "http://i3.ytimg.com/vi/KER_ToELCM4/hqdefault.jpg",
-      "Growth Hacking: How to Acquire 100K Users",
-      "KER_ToELCM4",
-    ],
-    [
-      "http://i3.ytimg.com/vi/qTV6y9RcOyQ/hqdefault.jpg",
-      "6 Extremely Simple PRODUCT GROWTH HACKS To Gain Millions of Users!",
-      "qTV6y9RcOyQ",
-    ],
-  ];
-  const title2 = "How to find a product idea?";
-  const info2 = [
-    [
-      "http://i3.ytimg.com/vi/mtn31hh6kU4/hqdefault.jpg",
-      "4 simple ways to have a great idea | Richard St. John",
-      "mtn31hh6kU4",
-    ],
-    [
-      "http://i3.ytimg.com/vi/B216ETbvJxc/hqdefault.jpg",
-      "6 Business Ideas That Will Change Your Life in 2023",
-      "B216ETbvJxc",
-    ],
-    [
-      "http://i3.ytimg.com/vi/mN21YwEZHCo/hqdefault.jpg",
-      "How to Generate NEW Business Ideas | Simon Sinek",
-      "mN21YwEZHCo",
-    ],
-    [
-      "http://i3.ytimg.com/vi/L1kbrlZRDvU/hqdefault.jpg",
-      "How To Come Up With Good Ideas | Mark Rober | TEDxYouth@ColumbiaSC",
-      "L1kbrlZRDvU",
-    ],
-    [
-      "http://i3.ytimg.com/vi/pK887oMqxRY/hqdefault.jpg",
-      "How to get a game-changing startup idea? | The Art of Innovation",
-      "pK887oMqxRY",
-    ],
-    [
-      "http://i3.ytimg.com/vi/NwyW46josFM/hqdefault.jpg",
-      "Evaluate Startup Ideas in 5 Minutes",
-      "NwyW46josFM",
-    ],
-    [
-      "http://i3.ytimg.com/vi/2nlybhGJqy0/hqdefault.jpg",
-      "7 Ways to Find Startup Business Ideas",
-      "2nlybhGJqy0",
-    ],
-    [
-      "http://i3.ytimg.com/vi/3YKNr-LiblI/hqdefault.jpg",
-      "Billion dollar startup ideas",
-      "3YKNr-LiblI",
-    ],
-    [
-      "http://i3.ytimg.com/vi/4l_lLJK6glI/hqdefault.jpg",
-      "Solving Simple Problems can Create Billion Dollar Ideas | Jamie Siminoff | TEDxCrossroadsSchool",
-      "4l_lLJK6glI",
-    ],
-    [
-      "http://i3.ytimg.com/vi/2gccAOuGRdU/hqdefault.jpg",
-      "Should you work on that startup idea?",
-      "2gccAOuGRdU",
-    ],
-  ];
-  const title3 = "How to get funding?";
-  const info3 = [
-    [
-      "http://i3.ytimg.com/vi/NNtMCbs47N8/hqdefault.jpg",
-      "How To Get Startup Funding For A Small Business",
-      "NNtMCbs47N8",
-    ],
-    [
-      "http://i3.ytimg.com/vi/4RAs9Y5wwDo/hqdefault.jpg",
-      "Seed Funding for Startups: How to raise venture capital as an entrepreneur",
-      "4RAs9Y5wwDo",
-    ],
-    [
-      "http://i3.ytimg.com/vi/t1fCAuNJH7Q/hqdefault.jpg",
-      "How to get funding for your startup",
-      "t1fCAuNJH7Q",
-    ],
-    [
-      "http://i3.ytimg.com/vi/1oiuy7dhBEo/hqdefault.jpg",
-      "How To Get Business funding In 3 Days! | Small Business & Self Employed",
-      "1oiuy7dhBEo",
-    ],
-    [
-      "http://i3.ytimg.com/vi/8-9176AxXVo/hqdefault.jpg",
-      "How To Fund Your Startup | Funding A Startup",
-      "8-9176AxXVo",
-    ],
-    [
-      "http://i3.ytimg.com/vi/kAh7hlFkVq0/hqdefault.jpg",
-      "Seed Funding For Startups: Raising 1M and Beyond (How to get Funding in 2022)",
-      "kAh7hlFkVq0",
-    ],
-    [
-      "http://i3.ytimg.com/vi/677ZtSMr4-4/hqdefault.jpg",
-      "Startup Funding Explained: Everything You Need to Know",
-      "677ZtSMr4-4",
-    ],
-    [
-      "http://i3.ytimg.com/vi/zDUBPWn7WqQ/hqdefault.jpg",
-      "How to Get Funding for a NEW Small Business",
-      "zDUBPWn7WqQ",
-    ],
-    [
-      "http://i3.ytimg.com/vi/175E2zqSr0A/hqdefault.jpg",
-      "How To Get Startup Funding",
-      "175E2zqSr0A",
-    ],
-    [
-      "http://i3.ytimg.com/vi/fwiUM7cseXQ/hqdefault.jpg",
-      "How To Get Bank Funding For Your Startup In 2022",
-      "fwiUM7cseXQ",
-    ],
-  ];
+
+  const startRecording = () => {
+    setIsRecording(true);
+    recorder.start();
+    // recorder.ondataavailable = (e) => {
+    //   if (e.data.size > 0) {
+    //     setDownloadURL(URL.createObjectURL(e.data));
+    //   }
+    // };
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    if (recorder.state === "recording") {
+      recorder.stop();
+      //   const videoBlob = recorder.getBlob();
+      //   setDownloadURL(URL.createObjectURL(videoBlob));
+
+      const videoBlob = await new Promise((resolve) => {
+        recorder.ondataavailable = (e) => {
+          resolve(e.data);
+        };
+      });
+      const file = new File([videoBlob], "fundingpitch.webm", {
+        type: "video/webm",
+      });
+      saveAs(file);
+
+      //   const formData = new FormData();
+      //   formData.append("video", videoBlob);
+
+      //   try {
+      //     const res = await fetch("/api/upload-video", {
+      //       method: "POST",
+      //       body: formData,
+      //     });
+
+      //     // handle the server-side response
+      //   } catch (err) {
+      //     // handle the error
+      //   }
+    }
+  };
+
+  // if (loading) {
+  //   return <MyLoadingScreen />;
+  // }
+
+  // if (!loading) {
   return (
     <Flex
       direction={"column"}
@@ -340,7 +244,7 @@ const Education = () => {
           colorScheme={"transparent"}
         >
           {/* 📦&nbsp;&nbsp;Product Review */}
-          🎥&nbsp;&nbsp;Educational Videos
+          ⏺️&nbsp;&nbsp;Record Funding Pitch
         </Button>
         {/* <Button
           border={"none"}
@@ -351,7 +255,7 @@ const Education = () => {
           fontWeight={100}
           color={"#202020"}
           colorScheme={"transparent"}
-          onClick={() => router.push("/app/productreviewreg")}
+          onClick={() => router.push("/app/startupregistration")}
         >
           +
         </Button> */}
@@ -475,7 +379,7 @@ const Education = () => {
         </Flex>
         <Flex direction={"column"} width={"100%"} gap={2}>
           <Button
-            background={"transparent"}
+            backgroundColor="#efefef"
             border={"none"}
             colorScheme={"transparent"}
             width={"100%"}
@@ -548,8 +452,7 @@ const Education = () => {
         </Flex>
         <Flex direction={"column"} width={"100%"} gap={2}>
           <Button
-            //background={"transparent"}
-            background={"#efefef"}
+            background={"transparent"}
             border={"none"}
             colorScheme={"transparent"}
             width={"100%"}
@@ -607,165 +510,54 @@ const Education = () => {
         top={{ base: 45, md: 53, lg: 61 }}
         gap={3}
       >
-        <Flex
-          direction={"column"}
-          alignItems={"center"}
-          height={"80vh"}
-          width={"80%"}
-          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
-          overflowY={"scroll"}
-          mask={"rounded"}
-          backgroundColor={"#fff"}
-          paddingTop={3}
-        >
-          <Flex
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            position={"absolute"}
-            top={{ base: "5vh", md: "4.5vh", lg: "4vh" }}
-          ></Flex>
-          <Flex direction={"column"} alignItems={"left"} width={"95%"}>
-            <>
-              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
-                {title1}
-              </Text>
-              <Flex
-                direction={"column"}
-                width={"100%"}
-                mask="rounded"
-                overflowX={"scroll"}
-                overflowY={"scroll"}
-                alignItems={"flex-start"}
-                gap={2}
+        {/**Put code here */}
+        <>
+          <video ref={videoRef} autoPlay /*playsInline*/ controls={false} />
+          {isRecording ? (
+            <Tooltip label="Stop Recording">
+              <Button
+                colorScheme={"transparent"}
+                onClick={stopRecording}
+                color={"black"}
+                position={"absolute"}
+                top={420}
               >
-                <Box
-                  direction={"row"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"flex-start"}
-                  gap={5}
-                >
-                  {info1.map((val) => (
-                    <Flex
-                      direction={"column"}
-                      as={"a"}
-                      href={"/app/education/" + val[2]}
-                      width={200}
-                      height={220}
-                    >
-                      <img height={180} src={val[0]} alt={"video"} />
-                      <Text
-                        height={40}
-                        color={"black"}
-                        fontSize={"10pt"}
-                        textAlign={"center"}
-                        _hover={{
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {val[1]}
-                      </Text>
-                    </Flex>
-                  ))}
-                </Box>
-              </Flex>
-            </>
-            <>
-              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
-                {title2}
-              </Text>
-              <Flex
-                direction={"column"}
-                width={"100%"}
-                mask="rounded"
-                overflowX={"scroll"}
-                overflowY={"scroll"}
-                alignItems={"flex-start"}
-                gap={2}
+                <img
+                  src="/assets/stoprec.png"
+                  width={70}
+                  height={70}
+                  alt={"Recording"}
+                />
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip label="Start Recording">
+              <Button
+                colorScheme={"transparent"}
+                onClick={startRecording}
+                color={"black"}
+                position={"absolute"}
+                top={420}
               >
-                <Box
-                  direction={"row"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"flex-start"}
-                  gap={5}
-                >
-                  {info2.map((val) => (
-                    <Flex
-                      direction={"column"}
-                      as={"a"}
-                      href={"/app/education/" + val[2]}
-                      width={200}
-                      height={220}
-                    >
-                      <img height={180} src={val[0]} alt={"video"} />
-                      <Text
-                        height={40}
-                        color={"black"}
-                        fontSize={"10pt"}
-                        textAlign={"center"}
-                        _hover={{
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {val[1]}
-                      </Text>
-                    </Flex>
-                  ))}
-                </Box>
-              </Flex>
-            </>
-            <>
-              <Text color={"black"} fontWeight={400} fontSize={"23pt"}>
-                {title3}
-              </Text>
-              <Flex
-                direction={"column"}
-                width={"100%"}
-                mask="rounded"
-                overflowX={"scroll"}
-                overflowY={"scroll"}
-                alignItems={"flex-start"}
-                gap={2}
-              >
-                <Box
-                  direction={"row"}
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"flex-start"}
-                  gap={5}
-                >
-                  {info3.map((val) => (
-                    <Flex
-                      direction={"column"}
-                      as={"a"}
-                      href={"/app/education/" + val[2]}
-                      width={200}
-                      height={220}
-                    >
-                      <img height={180} src={val[0]} alt={"video"} />
-                      <Text
-                        height={40}
-                        color={"black"}
-                        fontSize={"10pt"}
-                        textAlign={"center"}
-                        _hover={{
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {val[1]}
-                      </Text>
-                    </Flex>
-                  ))}
-                </Box>
-              </Flex>
-            </>
-          </Flex>
-        </Flex>
+                <img
+                  src="/assets/startrec.png"
+                  width={95}
+                  height={95}
+                  alt={"Recording"}
+                />
+              </Button>
+            </Tooltip>
+          )}
+          {isRecording ? (
+            <Text fontSize={"18pt"}>😊 Recording in progress...</Text>
+          ) : (
+            <Text fontSize={"18pt"}>🤨 Not recording...</Text>
+          )}
+        </>
       </Flex>
     </Flex>
   );
 };
+//   };
 
-export default Education;
+export default RecordPitch;

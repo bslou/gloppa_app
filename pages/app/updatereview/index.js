@@ -25,18 +25,18 @@ import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
-import JobsComponent from "./jobscomp2";
+import ProdRevComponent from "./updrevcomponent2";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
 import { serverTimestamp } from "firebase/firestore";
 
-const Jobs = () => {
-  const [loading, setLoading] = useState(true);
+const UpdateReview = () => {
+  const router = useRouter();
   const toast = useToast();
 
-  const [jobs, setJobs] = useState([]);
-  const [boost, setBoost] = useState([]);
-  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [prodRev, setProdRev] = useState([]);
+  // const [boostRev, setBoostRev] = useState([]);
 
   const [uname, setUname] = useState("");
   const [oguname, setOgUname] = useState("");
@@ -73,9 +73,10 @@ const Jobs = () => {
             duration: 9000,
             isClosable: true,
           });
-          setBoost([]);
-          setJobs([]);
+          // window.location.reload();
           onClose();
+          setProdRev([]);
+          // setBoostRev([]);
         }
       })
       .catch((err) => {
@@ -84,136 +85,93 @@ const Jobs = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("id") === null) {
-      router.push("/");
-      return;
-    } else {
-      db.collection("users")
-        .doc(localStorage.getItem("id"))
-        .onSnapshot((val) => {
-          let n = val.data();
-          setUname(n.username);
-          setOgUname(n.username);
-          setEmail(n.email);
-        });
-      db.collection("users")
-        .doc(localStorage.getItem("id"))
-        .get()
-        .then((val) => {
-          let n = val.get("startups");
-          n.reverse();
-          if (n.length < 1) setLoading(false);
-          db.collection("jobs")
-            .orderBy("timestamp", "desc")
-            .get()
-            .then((val2) => {
-              setJobs([]);
-              setBoost([]);
-              if (Object.keys(val2).length < 1) {
-                setLoading(false);
-              }
-              val2.forEach(function (doc) {
-                let category = doc.data().category;
-                let contactemail = doc.data().contactemail;
-                let jobtitle = doc.data().jobtitle;
-                let linkjob = doc.data().linkjob;
-                let location = doc.data().location;
-                let name = doc.data().startupName;
-                let tagline = doc.data().tagline;
-                let img = doc.data().img;
-                let mine = false;
-                if (val.get("startups").includes(doc.data().startupId)) {
-                  mine = true;
-                } else {
-                  mine = false;
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null && db && router) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .onSnapshot((val) => {
+            let n = val.data();
+            setUname(n.username);
+            setOgUname(n.username);
+            setEmail(n.email);
+          });
+        console.log(serverTimestamp());
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            //setLoading(false);
+            if (!val.exists) return;
+            let n = val.get("startups");
+            n.reverse();
+            //if (n.length < 1) setLoading(false);
+            db.collection("updateReview")
+              .orderBy("timestamp", "desc")
+              .onSnapshot((yal) => {
+                console.log("Length + " + Object.keys(yal).length);
+                if (Object.keys(yal).length < 3) {
+                  setLoading(false);
                 }
-                db.collection("startups")
-                  .doc(doc.data().startupId)
-                  .onSnapshot((val2) => {
-                    let dot = val2.data();
-                    db.collection("users")
-                      .doc(dot.owner)
-                      .onSnapshot((val3) => {
-                        let dat = val3.data();
-                        var today = new Date();
-                        var dd = String(today.getDate()).padStart(2, "0");
-                        var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                        var yyyy = today.getFullYear();
-                        today = mm + "/" + dd + "/" + yyyy;
+                console.log("like");
 
-                        if (dat.boost !== undefined) {
-                          const date1 = new Date(String(dat.boost[1]));
-                          const date2 = new Date(String(today));
-                          const diffTime = Math.abs(date2 - date1);
-                          const diffDays = Math.ceil(
-                            diffTime / (1000 * 60 * 60 * 24)
-                          );
-                          if (
-                            dat.boost[0] == "yes" &&
-                            diffDays <= dat.boost[2]
-                          ) {
-                            const tempSetBoost = [];
-                            tempSetBoost.push(
-                              JobsComponent(
-                                linkjob,
-                                doc.id,
-                                doc.data().startupId,
-                                name,
-                                jobtitle,
-                                img,
-                                location,
-                                toast,
-                                mine,
-                                router
-                              )
-                            );
-                            setBoost((prevBoost) =>
-                              prevBoost.concat(tempSetBoost)
-                            );
-                          } else {
-                            const tempSetJobs = [];
-                            tempSetJobs.push(
-                              JobsComponent(
-                                linkjob,
-                                doc.id,
-                                doc.data().startupId,
-                                name,
-                                jobtitle,
-                                img,
-                                location,
-                                toast,
-                                mine,
-                                router
-                              )
-                            );
-                            setJobs((prevJobs) => prevJobs.concat(tempSetJobs));
-                          }
-                        } else {
-                          const tempSetJobs = [];
-                          tempSetJobs.push(
-                            JobsComponent(
-                              linkjob,
-                              doc.id,
-                              doc.data().startupId,
-                              name,
-                              jobtitle,
-                              img,
-                              location,
-                              toast,
-                              mine,
-                              router
-                            )
-                          );
-                          setJobs((prevJobs) => prevJobs.concat(tempSetJobs));
-                        }
-                      });
-                  });
-                setLoading(false);
+                setProdRev([]);
+                // setBoostRev([]);
+                yal.forEach(function (doc) {
+                  let stid = doc.data().startupId;
+                  let cathp = doc.data().updateName;
+                  let cathdes = doc.data().updatePhrase;
+                  let commentss = Object.values(doc.data().comments);
+                  let likess = Object.values(doc.data().likes);
+                  let title = doc.data().startupName;
+                  let hashtags = Object.values(doc.data().hashtags);
+                  let website = doc.data().website;
+                  let img = doc.data().img;
+                  let liked = false;
+                  if (
+                    likess.length > 0 &&
+                    likess.includes(localStorage.getItem("id"))
+                  ) {
+                    liked = true;
+                  } else {
+                    liked = false;
+                  }
+                  let to = false;
+                  if (n.includes(stid)) {
+                    to = true;
+                  } else {
+                    to = false;
+                  }
+
+                  setProdRev((prevRows) => [
+                    ...prevRows,
+                    ProdRevComponent(
+                      doc.id,
+                      stid,
+                      website,
+                      img,
+                      title,
+                      cathp,
+                      cathdes,
+                      hashtags,
+                      commentss,
+                      likess,
+                      liked,
+                      to,
+                      router
+                    ),
+                  ]);
+                  // setProdRev((prevProd) =>
+                  //   prevProd.concat(tempSetProdRev)
+                  // );
+                  setLoading(false);
+                });
               });
-            });
-        });
+          });
+      } else {
+        router.push("/c/main");
+      }
     }
-  }, []);
+  }, [db, router]);
 
   if (loading) {
     return <MyLoadingScreen />;
@@ -308,7 +266,7 @@ const Jobs = () => {
             colorScheme={"transparent"}
           >
             {/* 📦&nbsp;&nbsp;Product Review */}
-            💻&nbsp;&nbsp;Jobs
+            🆕&nbsp;&nbsp;Update Review
           </Button>
           <Button
             border={"none"}
@@ -319,7 +277,7 @@ const Jobs = () => {
             fontWeight={100}
             color={"#202020"}
             colorScheme={"transparent"}
-            onClick={() => router.push("/app/jobsreg")}
+            onClick={() => router.push("/app/updatereviewreg")}
           >
             +
           </Button>
@@ -349,6 +307,7 @@ const Jobs = () => {
           </Button>
           <Flex direction={"column"} width={"100%"} gap={2}>
             <Button
+              // background={"transparent"}
               background={"transparent"}
               border={"none"}
               colorScheme={"transparent"}
@@ -372,7 +331,7 @@ const Jobs = () => {
               </Text>
             </Button>
             <Button
-              background={"transparent"}
+              background={"#efefef"}
               border={"none"}
               colorScheme={"transparent"}
               width={"100%"}
@@ -418,8 +377,7 @@ const Jobs = () => {
               </Text>
             </Button>
             <Button
-              //background={"transparent"}
-              background={"#efefef"}
+              background={"transparent"}
               border={"none"}
               colorScheme={"transparent"}
               width={"100%"}
@@ -577,12 +535,11 @@ const Jobs = () => {
           height={"83vh"}
           gap={3}
         >
-          {boost}
-          {jobs}
+          {prodRev}
         </Flex>
       </Flex>
     );
   }
 };
 
-export default Jobs;
+export default UpdateReview;

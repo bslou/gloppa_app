@@ -437,6 +437,29 @@ const Forum = () => {
               backgroundColor: "#efefef",
               cursor: "pointer",
             }}
+            onClick={() => router.push("/app/updatereview")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              🆕&nbsp;&nbsp;Update Review
+            </Text>
+          </Button>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
             onClick={() => router.push("/app/funding")}
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
@@ -464,6 +487,31 @@ const Forum = () => {
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
               💻&nbsp;&nbsp;Jobs
+            </Text>
+          </Button>
+        </Flex>
+        <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() => router.push("/app/fundingcam")}
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              ⏺️&nbsp;&nbsp;Record Funding Pitch
             </Text>
           </Button>
         </Flex>
@@ -574,8 +622,8 @@ const Forum = () => {
         marginLeft={{ base: 150, md: 175, lg: 250 }}
         width={"80%"}
         top={{ base: 53, md: 63, lg: 73 }}
-        overflowY={'scroll'}
-        height = {'83vh'}
+        overflowY={"scroll"}
+        height={"83vh"}
         gap={3}
       >
         {fors}
