@@ -252,6 +252,100 @@ const Main = () => {
             fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
             textAlign={"center"}
           >
+            Record Funding Pitches
+          </Text>
+          <Text
+            color={"black"}
+            fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
+            textAlign={"center"}
+          >
+            Record funding pitches to investors through Gloppa using our
+            recording function.
+          </Text>
+        </Flex>
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
+          <Image
+            src={"/assets/eight.png"}
+            alt={"Gloppa companies"}
+            width={900}
+            height={500}
+            layout={"responsive"}
+          />
+        </Flex>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100vw"}
+        height={{ base: "70vh", md: "80vh", lg: "90vh" }}
+        gap={10}
+      >
+        <Flex
+          width={"60%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+        >
+          <Image
+            src={"/assets/nine.png"}
+            alt={"Gloppa Companies"}
+            width={900}
+            height={500}
+            layout={"responsive"}
+          />
+        </Flex>
+        <Flex
+          width={"30%"}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={5}
+        >
+          <Text
+            color={"black"}
+            fontWeight={800}
+            fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
+            textAlign={"center"}
+          >
+            Get update feedback
+          </Text>
+          <Text
+            color={"black"}
+            fontSize={{ base: "12pt", md: "15pt", lg: "18pt" }}
+            textAlign={"center"}
+          >
+            Write down update name and description and receive feedback about it
+            on Gloppa.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100vw"}
+        height={{ base: "70vh", md: "80vh", lg: "90vh" }}
+        gap={10}
+      >
+        <Flex
+          width={"30%"}
+          direction={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={5}
+        >
+          <Text
+            color={"black"}
+            fontWeight={800}
+            fontSize={{ base: "17pt", md: "21pt", lg: "25pt" }}
+            textAlign={"center"}
+          >
             Receive funds
           </Text>
           <Text
