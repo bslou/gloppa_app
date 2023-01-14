@@ -35,7 +35,7 @@ const Main = () => {
         <Flex width={"33%"}>
           <Image
             src={"/assets/left.png"}
-            alt={"Left factory"}
+            alt={"Gloppa Left factory"}
             width={350}
             height={350}
             layout={"responsive"}
@@ -83,7 +83,7 @@ const Main = () => {
         <Flex width={"33%"}>
           <Image
             src={"/assets/right.png"}
-            alt={"Right factory"}
+            alt={"Gloppa Right factory"}
             width={250}
             height={250}
             layout={"responsive"}
@@ -107,7 +107,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/one.png"}
-            alt={"One"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -177,7 +177,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/four.png"}
-            alt={"Four"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -200,7 +200,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/two.png"}
-            alt={"Two"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -270,7 +270,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/three.png"}
-            alt={"Three"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -293,7 +293,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/five.png"}
-            alt={"Five"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -364,7 +364,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/six.png"}
-            alt={"Six"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
@@ -387,7 +387,7 @@ const Main = () => {
         >
           <Image
             src={"/assets/seven.png"}
-            alt={"Seven"}
+            alt={"Gloppa Startups"}
             width={900}
             height={500}
             layout={"responsive"}
