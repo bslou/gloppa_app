@@ -31,6 +31,7 @@ import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
 import NavBar from "../navbar";
 import { serverTimestamp } from "firebase/firestore";
+import MyLoadingScreen from "./myloadingscreen";
 
 const Forum = () => {
   const router = useRouter();
@@ -255,6 +256,7 @@ const Forum = () => {
                     //   mine
                     // ),
                   ]);
+                  setLoading(false);
                 });
             });
           });
@@ -412,397 +414,400 @@ const Forum = () => {
                 });
             });
           });
+        setLoading(false);
       }
+    } else {
+      setLoading(true);
     }
   }, [db]);
 
-  // if (loading) {
-  //   return <MyLoadingScreen />;
-  // }
+  if (loading) {
+    return <MyLoadingScreen />;
+  }
 
-  // if (!loading) {
-  return (
-    <Flex
-      direction={"column"}
-      backgroundColor={"#f2f2f2"}
-      width={"100vw"}
-      height={"100vh"}
-    >
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent backgroundColor={"#fff"}>
-          <ModalHeader color={"black"}>My info</ModalHeader>
-          <ModalCloseButton color={"black"} />
-          <ModalBody>
-            <form onSubmit={changeData}>
-              <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"black"}>Username: </Text>
-                  <Input
-                    color={"black"}
-                    value={uname}
-                    onChange={(e) => setUname(e.target.value.toLowerCase())}
-                    minLength={4}
-                    maxLength={12}
-                  />
-                </Flex>
-                <Flex
-                  width={"95%"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"0.3vw"}
-                >
-                  <Text color={"black"}>Email: </Text>
-                  <Input
-                    color={"black"}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    readOnly
-                  />
-                </Flex>
-                <Flex
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  gap={"1vw"}
-                  marginTop={3}
-                  marginBottom={3}
-                >
-                  <Button type="submit" colorScheme={"blue"}>
-                    Change Information
-                  </Button>
-                  <Button
-                    variant={"ghost"}
-                    color={"black"}
-                    colorScheme={"transparent"}
-                    onClick={onClose}
-                  >
-                    Close
-                  </Button>
-                </Flex>
-                <Button onClick={Logout}>Logout</Button>
-              </Flex>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+  if (!loading) {
+    return (
       <Flex
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        backgroundColor={"#fff"}
-        borderBottom={"1px solid #dfdfdf"}
-        padding={"1vw"}
-        paddingLeft={200}
+        direction={"column"}
+        backgroundColor={"#f2f2f2"}
+        width={"100vw"}
+        height={"100vh"}
       >
-        <Button
-          border={"none"}
-          background={"transparent"}
-          fontSize={"13pt"}
-          fontWeight={600}
-          color={"#202020"}
-          colorScheme={"transparent"}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#fff"}>
+            <ModalHeader color={"black"}>My info</ModalHeader>
+            <ModalCloseButton color={"black"} />
+            <ModalBody>
+              <form onSubmit={changeData}>
+                <Flex direction={"column"} alignItems={"center"} gap={"1vh"}>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"black"}>Username: </Text>
+                    <Input
+                      color={"black"}
+                      value={uname}
+                      onChange={(e) => setUname(e.target.value.toLowerCase())}
+                      minLength={4}
+                      maxLength={12}
+                    />
+                  </Flex>
+                  <Flex
+                    width={"95%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"0.3vw"}
+                  >
+                    <Text color={"black"}>Email: </Text>
+                    <Input
+                      color={"black"}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      readOnly
+                    />
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"1vw"}
+                    marginTop={3}
+                    marginBottom={3}
+                  >
+                    <Button type="submit" colorScheme={"blue"}>
+                      Change Information
+                    </Button>
+                    <Button
+                      variant={"ghost"}
+                      color={"black"}
+                      colorScheme={"transparent"}
+                      onClick={onClose}
+                    >
+                      Close
+                    </Button>
+                  </Flex>
+                  <Button onClick={Logout}>Logout</Button>
+                </Flex>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+        <Flex
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          backgroundColor={"#fff"}
+          borderBottom={"1px solid #dfdfdf"}
+          padding={"1vw"}
+          paddingLeft={200}
         >
-          {/* 📦&nbsp;&nbsp;Product Review */}
-          📢&nbsp;&nbsp;Public Forum
-        </Button>
-        {localStorage.getItem("id") !== null ? (
           <Button
             border={"none"}
-            _hover={{
-              backgroundColor: "#efefef",
-            }}
-            fontSize={"25pt"}
-            fontWeight={100}
+            background={"transparent"}
+            fontSize={"13pt"}
+            fontWeight={600}
             color={"#202020"}
             colorScheme={"transparent"}
-            onClick={() => router.push("/app/forumreg")}
           >
-            +
+            {/* 📦&nbsp;&nbsp;Product Review */}
+            📢&nbsp;&nbsp;Public Forum
           </Button>
-        ) : (
-          <Button onClick={() => router.push("/app/register")}>Join</Button>
-        )}
-      </Flex>
-      <Flex
-        position={"fixed"}
-        direction={"column"}
-        alignItems={"flex-start"}
-        backgroundColor={"#fff"}
-        borderRight={"1px solid #dfdfdf"}
-        height={"100vh"}
-        width={200}
-        gap={30}
-        paddingTop={"3vh"}
-        paddingBottom={"3vh"}
-      >
-        <Button
-          border={"none"}
-          background={"transparent"}
-          fontSize={"13pt"}
-          fontWeight={600}
-          color={"#202020"}
-          colorScheme={"transparent"}
-          onClick={() => router.push("/app/startuplist")}
+          {localStorage.getItem("id") !== null ? (
+            <Button
+              border={"none"}
+              _hover={{
+                backgroundColor: "#efefef",
+              }}
+              fontSize={"25pt"}
+              fontWeight={100}
+              color={"#202020"}
+              colorScheme={"transparent"}
+              onClick={() => router.push("/app/forumreg")}
+            >
+              +
+            </Button>
+          ) : (
+            <Button onClick={() => router.push("/app/register")}>Join</Button>
+          )}
+        </Flex>
+        <Flex
+          position={"fixed"}
+          direction={"column"}
+          alignItems={"flex-start"}
+          backgroundColor={"#fff"}
+          borderRight={"1px solid #dfdfdf"}
+          height={"100vh"}
+          width={200}
+          gap={30}
+          paddingTop={"3vh"}
+          paddingBottom={"3vh"}
         >
-          Gloppa
-        </Button>
-        <Flex direction={"column"} width={"100%"} gap={2}>
           <Button
-            background={"transparent"}
             border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() => router.push("/app/productreview")}
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              📦&nbsp;&nbsp;Product Review
-            </Text>
-          </Button>
-          <Button
             background={"transparent"}
-            border={"none"}
+            fontSize={"13pt"}
+            fontWeight={600}
+            color={"#202020"}
             colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() => router.push("/app/updatereview")}
+            onClick={() => router.push("/app/startuplist")}
           >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              🆕&nbsp;&nbsp;Update Review
-            </Text>
+            Gloppa
           </Button>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() => router.push("/app/funding")}
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              💸&nbsp;&nbsp;Funding
-            </Text>
-          </Button>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() => router.push("/app/jobs")}
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              💻&nbsp;&nbsp;Jobs
-            </Text>
-          </Button>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/productreview")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                📦&nbsp;&nbsp;Product Review
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/updatereview")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                🆕&nbsp;&nbsp;Update Review
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/funding")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💸&nbsp;&nbsp;Funding
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/jobs")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💻&nbsp;&nbsp;Jobs
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/fundingcam")
+                  : router.push("/app/register")
+              }
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                ⏺️&nbsp;&nbsp;Record Funding Pitch
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/messages")
+                  : router.push("/app/register")
+              }
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💬&nbsp;&nbsp;Private Messages
+              </Text>
+            </Button>
+            <Button
+              //background={"transparent"}
+              background={"#efefef"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() => router.push("/app/forum")}
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                📢&nbsp;&nbsp;Public Forum
+              </Text>
+            </Button>
+          </Flex>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/education")
+                  : router.push("/app/register")
+              }
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                🎥&nbsp;&nbsp;Educational Videos
+              </Text>
+            </Button>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? onOpen()
+                  : router.push("/app/register")
+              }
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                👤&nbsp;&nbsp;Profile
+              </Text>
+            </Button>
+          </Flex>
         </Flex>
-        <Flex direction={"column"} width={"100%"} gap={2}>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() =>
-              localStorage.getItem("id") !== null
-                ? router.push("/app/fundingcam")
-                : router.push("/app/register")
-            }
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              ⏺️&nbsp;&nbsp;Record Funding Pitch
-            </Text>
-          </Button>
-        </Flex>
-        <Flex direction={"column"} width={"100%"} gap={2}>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() =>
-              localStorage.getItem("id") !== null
-                ? router.push("/app/messages")
-                : router.push("/app/register")
-            }
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              💬&nbsp;&nbsp;Private Messages
-            </Text>
-          </Button>
-          <Button
-            //background={"transparent"}
-            background={"#efefef"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() => router.push("/app/forum")}
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              📢&nbsp;&nbsp;Public Forum
-            </Text>
-          </Button>
-        </Flex>
-        <Flex direction={"column"} width={"100%"} gap={2}>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() =>
-              localStorage.getItem("id") !== null
-                ? router.push("/app/education")
-                : router.push("/app/register")
-            }
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              🎥&nbsp;&nbsp;Educational Videos
-            </Text>
-          </Button>
-          <Button
-            background={"transparent"}
-            border={"none"}
-            colorScheme={"transparent"}
-            width={"100%"}
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            paddingLeft={"1.25vw"}
-            paddingTop={5}
-            paddingBottom={5}
-            borderRadius={0}
-            _hover={{
-              backgroundColor: "#efefef",
-              cursor: "pointer",
-            }}
-            onClick={() =>
-              localStorage.getItem("id") !== null
-                ? onOpen()
-                : router.push("/app/register")
-            }
-          >
-            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
-              👤&nbsp;&nbsp;Profile
-            </Text>
-          </Button>
+        <Flex
+          position={"absolute"}
+          direction={"column"}
+          alignItems={"center"}
+          paddingTop={0.5}
+          paddingBottom={0.5}
+          marginLeft={{ base: 150, md: 175, lg: 250 }}
+          width={"80%"}
+          top={{ base: 53, md: 63, lg: 73 }}
+          overflowY={"scroll"}
+          height={"83vh"}
+          gap={3}
+        >
+          {fors}
         </Flex>
       </Flex>
-      <Flex
-        position={"absolute"}
-        direction={"column"}
-        alignItems={"center"}
-        paddingTop={0.5}
-        paddingBottom={0.5}
-        marginLeft={{ base: 150, md: 175, lg: 250 }}
-        width={"80%"}
-        top={{ base: 53, md: 63, lg: 73 }}
-        overflowY={"scroll"}
-        height={"83vh"}
-        gap={3}
-      >
-        {fors}
-      </Flex>
-    </Flex>
-  );
+    );
+  }
 };
-//   };
 
 export default Forum;
