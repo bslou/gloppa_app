@@ -25,7 +25,8 @@ const Direction = () => {
             });
           router.push("/app/startuplist");
         } else {
-          router.push("/app/startuplist");
+          // router.push("/app/startuplist");
+          router.push("/app/productreview");
           //router.push("/c/main");
         }
       }
