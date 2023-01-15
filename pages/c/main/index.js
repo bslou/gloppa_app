@@ -51,10 +51,10 @@ const Main = () => {
           <Text
             fontWeight={900}
             color={"black"}
-            fontSize={{ base: "20pt", md: "30pt", lg: "40pt" }}
+            fontSize={{ base: "13pt", md: "23pt", lg: "33pt" }}
             textAlign={"center"}
           >
-            The secret ingredient for company success
+            Analyzing and managing your company reimagined
           </Text>
           <Text
             fontWeight={300}
@@ -62,8 +62,8 @@ const Main = () => {
             fontSize={{ base: "12pt", md: "18pt", lg: "23pt" }}
             textAlign={"center"}
           >
-            Gloppa provides all the necessary resources and support for
-            companies to achieve success.
+            We're more than product review or a productivity enhancer, customize
+            Gloppa to work best for you.
           </Text>
           <Button
             backgroundColor={"white"}
