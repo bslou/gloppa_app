@@ -15,6 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Tag,
   Text,
   Tooltip,
   useDisclosure,
@@ -25,10 +26,8 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
-import StartupComponent from "./startcomp2";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
-import StartupComp from "./startcomp2";
 
 const StartupList = () => {
   const router = useRouter();
@@ -115,6 +114,57 @@ const StartupList = () => {
         console.log("Error " + err);
       });
   };
+
+  const deleteIt = (name, id) => {
+    if (window.confirm("Do you really want to delete " + name + "?")) {
+      let idd = localStorage.getItem("id");
+      db.collection("startups")
+        .doc(id)
+        .get()
+        .then((val) => {
+          let fundid = val.get("fundingId");
+          let prodid = val.get("productReviewId");
+          if (prodid != "" && fundid != "") {
+            db.collection("productReview").doc(prodid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ productReviewStartupId: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ fundingStartupId: arrayRemove(idd) });
+            db.collection("funding").doc(fundid).delete();
+          } else if (prodid != "") {
+            db.collection("productReview").doc(prodid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ productReviewStartupId: arrayRemove(id) });
+          } else if (fundid != "") {
+            db.collection("funding").doc(fundid).delete();
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+            db.collection("users")
+              .doc(idd)
+              .update({ fundingStartupId: arrayRemove(idd) });
+          } else {
+            db.collection("startups").doc(id).delete();
+            db.collection("users")
+              .doc(idd)
+              .update({ startups: arrayRemove(id) });
+          }
+        });
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (localStorage.getItem("id") !== null) {
@@ -155,15 +205,90 @@ const StartupList = () => {
                       let jobs = res.get("jobs");
                       let prodrev = String(res.get("productReviewId"));
                       setRows((prevRows) => [
-                        StartupComp(
-                          url,
-                          startupName,
-                          des,
-                          jobs,
-                          prodrev,
-                          funds,
-                          String(document)
-                        ),
+                        <Flex
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                          backgroundColor={"#fff"}
+                          width={"70%"}
+                          paddingTop={2}
+                          paddingBottom={2}
+                          paddingLeft={2}
+                          //borderRadius={3}
+                          boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                        >
+                          <Flex
+                            direction={"row"}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                            gap={3}
+                          >
+                            <img
+                              src={url}
+                              alt={"Gloppa spacer"}
+                              width={50}
+                              height={50}
+                            />
+                            <Flex
+                              direction={"column"}
+                              justifyContent={"center"}
+                              gap={1}
+                            >
+                              <Text color={"black"} fontWeight={600}>
+                                {startupName}
+                              </Text>
+
+                              {/* <Button
+              as={"a"}
+              colorScheme={"transparent"}
+              maxWidth={"45vw"}
+            > */}
+                              <Link
+                                color={"black"}
+                                fontWeight={300}
+                                fontSize={{ base: "5pt", md: "7pt", lg: "9pt" }}
+                              >
+                                {des}
+                              </Link>
+                              {/* </Button> */}
+                              <Flex
+                                direction={"row"}
+                                alignItems={"center"}
+                                gap={2}
+                              >
+                                <Tag colorScheme="teal" size={"md"}>
+                                  {prodrev.length == 0
+                                    ? "0 Product Reviews"
+                                    : "1 Product Review"}
+                                </Tag>
+                                <Tag colorScheme="teal" size={"md"}>
+                                  {jobs.length} Jobs
+                                </Tag>
+                                <Tag colorScheme="teal" size={"md"}>
+                                  {funds.length == 0 ? "0 Funds" : "1 Fund"}
+                                </Tag>
+                              </Flex>
+                            </Flex>
+                          </Flex>
+                          <Tooltip
+                            label={"Delete " + startupName + "..."}
+                            aria-label="A tooltip"
+                          >
+                            <Button
+                              onClick={() =>
+                                deleteIt(startupName, String(document))
+                              }
+                              colorScheme={"transparent"}
+                            >
+                              <Image
+                                src={"/assets/trash.png"}
+                                alt={"Gloppa menu"}
+                                width={35}
+                                height={35}
+                              />
+                            </Button>
+                          </Tooltip>
+                        </Flex>,
                         ...prevRows,
                       ]);
                       setLoading(false);
