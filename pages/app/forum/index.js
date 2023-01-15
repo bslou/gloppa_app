@@ -190,13 +190,7 @@ const Forum = () => {
                               {val}
                             </Tag>
                           ))}
-                          <Link
-                            href={
-                              localStorage.getItem("id") !== null
-                                ? "/app/forum/" + docs.id
-                                : "/app/register"
-                            }
-                          >
+                          <Link href={"/app/register"}>
                             <Text
                               color={"black"}
                               fontWeight={900}
@@ -225,11 +219,7 @@ const Forum = () => {
                         backgroundColor={"transparent"}
                         paddingBottom={3}
                         paddingTop={3}
-                        onClick={() =>
-                          localStorage.getItem("id") !== null
-                            ? addLikes(docs.id, data.likes)
-                            : router.push("/app/register")
-                        }
+                        onClick={() => router.push("/app/register")}
                         // onClick={addLikes}
                       >
                         <Image
@@ -245,16 +235,6 @@ const Forum = () => {
                         </Text>
                       </Button>
                     </Flex>,
-                    // ForumComponent(
-                    //   val2.get("username"),
-                    //   docs.id,
-                    //   data.statement,
-                    //   data.hashtags,
-                    //   data.likes,
-                    //   thi,
-                    //   data.replies,
-                    //   mine
-                    // ),
                   ]);
                   setLoading(false);
                 });
