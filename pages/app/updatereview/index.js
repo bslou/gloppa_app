@@ -168,7 +168,54 @@ const UpdateReview = () => {
               });
           });
       } else {
-        router.push("/c/main");
+        db.collection("updateReview")
+          .orderBy("timestamp", "desc")
+          .onSnapshot((yal) => {
+            console.log("Length + " + Object.keys(yal).length);
+            if (Object.keys(yal).length < 3) {
+              setLoading(false);
+            }
+            console.log("like");
+
+            setProdRev([]);
+            // setBoostRev([]);
+            yal.forEach(function (doc) {
+              let stid = doc.data().startupId;
+              let cathp = doc.data().updateName;
+              let cathdes = doc.data().updatePhrase;
+              let commentss = Object.values(doc.data().comments);
+              let likess = Object.values(doc.data().likes);
+              let title = doc.data().startupName;
+              let hashtags = Object.values(doc.data().hashtags);
+              let website = doc.data().website;
+              let img = doc.data().img;
+              let liked = false;
+              let to = false;
+
+              setProdRev((prevRows) => [
+                ...prevRows,
+                ProdRevComponent(
+                  doc.id,
+                  stid,
+                  website,
+                  img,
+                  title,
+                  cathp,
+                  cathdes,
+                  hashtags,
+                  commentss,
+                  likess,
+                  liked,
+                  to,
+                  router
+                ),
+              ]);
+              // setProdRev((prevProd) =>
+              //   prevProd.concat(tempSetProdRev)
+              // );
+              setLoading(false);
+            });
+          });
       }
     }
   }, [db, router]);
@@ -268,19 +315,23 @@ const UpdateReview = () => {
             {/* 📦&nbsp;&nbsp;Product Review */}
             🆕&nbsp;&nbsp;Update Review
           </Button>
-          <Button
-            border={"none"}
-            _hover={{
-              backgroundColor: "#efefef",
-            }}
-            fontSize={"25pt"}
-            fontWeight={100}
-            color={"#202020"}
-            colorScheme={"transparent"}
-            onClick={() => router.push("/app/updatereviewreg")}
-          >
-            +
-          </Button>
+          {localStorage.getItem("id") !== null ? (
+            <Button
+              border={"none"}
+              _hover={{
+                backgroundColor: "#efefef",
+              }}
+              fontSize={"25pt"}
+              fontWeight={100}
+              color={"#202020"}
+              colorScheme={"transparent"}
+              onClick={() => router.push("/app/updatereviewreg")}
+            >
+              +
+            </Button>
+          ) : (
+            <Button onClick={() => router.push("/app/register")}>Join</Button>
+          )}
         </Flex>
         <Flex
           position={"fixed"}
@@ -418,7 +469,11 @@ const UpdateReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/fundingcam")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/fundingcam")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 ⏺️&nbsp;&nbsp;Record Funding Pitch
@@ -443,7 +498,11 @@ const UpdateReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/messages")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/messages")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💬&nbsp;&nbsp;Private Messages
@@ -491,7 +550,11 @@ const UpdateReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/education")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/education")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 🎥&nbsp;&nbsp;Educational Videos
@@ -514,7 +577,11 @@ const UpdateReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={onOpen}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? onOpen()
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 👤&nbsp;&nbsp;Profile

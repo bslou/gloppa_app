@@ -85,8 +85,104 @@ const Jobs = () => {
 
   useEffect(() => {
     if (localStorage.getItem("id") === null) {
-      router.push("/");
-      return;
+      db.collection("jobs")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then((val2) => {
+          setJobs([]);
+          setBoost([]);
+          if (Object.keys(val2).length < 1) {
+            setLoading(false);
+          }
+          val2.forEach(function (doc) {
+            let category = doc.data().category;
+            let contactemail = doc.data().contactemail;
+            let jobtitle = doc.data().jobtitle;
+            let linkjob = doc.data().linkjob;
+            let location = doc.data().location;
+            let name = doc.data().startupName;
+            let tagline = doc.data().tagline;
+            let img = doc.data().img;
+            let mine = false;
+            db.collection("startups")
+              .doc(doc.data().startupId)
+              .onSnapshot((val2) => {
+                let dot = val2.data();
+                db.collection("users")
+                  .doc(dot.owner)
+                  .onSnapshot((val3) => {
+                    let dat = val3.data();
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, "0");
+                    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                    var yyyy = today.getFullYear();
+                    today = mm + "/" + dd + "/" + yyyy;
+
+                    if (dat.boost !== undefined) {
+                      const date1 = new Date(String(dat.boost[1]));
+                      const date2 = new Date(String(today));
+                      const diffTime = Math.abs(date2 - date1);
+                      const diffDays = Math.ceil(
+                        diffTime / (1000 * 60 * 60 * 24)
+                      );
+                      if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
+                        const tempSetBoost = [];
+                        tempSetBoost.push(
+                          JobsComponent(
+                            linkjob,
+                            doc.id,
+                            doc.data().startupId,
+                            name,
+                            jobtitle,
+                            img,
+                            location,
+                            toast,
+                            mine,
+                            router
+                          )
+                        );
+                        setBoost((prevBoost) => prevBoost.concat(tempSetBoost));
+                      } else {
+                        const tempSetJobs = [];
+                        tempSetJobs.push(
+                          JobsComponent(
+                            linkjob,
+                            doc.id,
+                            doc.data().startupId,
+                            name,
+                            jobtitle,
+                            img,
+                            location,
+                            toast,
+                            mine,
+                            router
+                          )
+                        );
+                        setJobs((prevJobs) => prevJobs.concat(tempSetJobs));
+                      }
+                    } else {
+                      const tempSetJobs = [];
+                      tempSetJobs.push(
+                        JobsComponent(
+                          linkjob,
+                          doc.id,
+                          doc.data().startupId,
+                          name,
+                          jobtitle,
+                          img,
+                          location,
+                          toast,
+                          mine,
+                          router
+                        )
+                      );
+                      setJobs((prevJobs) => prevJobs.concat(tempSetJobs));
+                    }
+                  });
+              });
+            setLoading(false);
+          });
+        });
     } else {
       db.collection("users")
         .doc(localStorage.getItem("id"))
@@ -310,19 +406,23 @@ const Jobs = () => {
             {/* 📦&nbsp;&nbsp;Product Review */}
             💻&nbsp;&nbsp;Jobs
           </Button>
-          <Button
-            border={"none"}
-            _hover={{
-              backgroundColor: "#efefef",
-            }}
-            fontSize={"25pt"}
-            fontWeight={100}
-            color={"#202020"}
-            colorScheme={"transparent"}
-            onClick={() => router.push("/app/jobsreg")}
-          >
-            +
-          </Button>
+          {localStorage.getItem("id") !== null ? (
+            <Button
+              border={"none"}
+              _hover={{
+                backgroundColor: "#efefef",
+              }}
+              fontSize={"25pt"}
+              fontWeight={100}
+              color={"#202020"}
+              colorScheme={"transparent"}
+              onClick={() => router.push("/app/jobsreg")}
+            >
+              +
+            </Button>
+          ) : (
+            <Button onClick={() => router.push("/app/register")}>Join</Button>
+          )}
         </Flex>
         <Flex
           position={"fixed"}
@@ -460,7 +560,11 @@ const Jobs = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/fundingcam")}
+              onClick={() =>
+                localStorage.getItem("id")
+                  ? router.push("/app/fundingcam")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 ⏺️&nbsp;&nbsp;Record Funding Pitch
@@ -485,7 +589,11 @@ const Jobs = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/messages")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/messages")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💬&nbsp;&nbsp;Private Messages
@@ -533,7 +641,11 @@ const Jobs = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/education")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/education")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 🎥&nbsp;&nbsp;Educational Videos
@@ -556,7 +668,11 @@ const Jobs = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={onOpen}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? onOpen()
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 👤&nbsp;&nbsp;Profile

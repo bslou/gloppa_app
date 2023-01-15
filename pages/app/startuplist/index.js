@@ -160,6 +160,8 @@ const StartupList = () => {
                 });
             });
           });
+      } else {
+        setLoading(false);
       }
     }
   }, []);
@@ -259,19 +261,23 @@ const StartupList = () => {
             {/* 📦&nbsp;&nbsp;Product Review */}
             Company List
           </Button>
-          <Button
-            border={"none"}
-            _hover={{
-              backgroundColor: "#efefef",
-            }}
-            fontSize={"25pt"}
-            fontWeight={100}
-            color={"#202020"}
-            colorScheme={"transparent"}
-            onClick={() => router.push("/app/startupregistration")}
-          >
-            +
-          </Button>
+          {localStorage.getItem("id") !== null ? (
+            <Button
+              border={"none"}
+              _hover={{
+                backgroundColor: "#efefef",
+              }}
+              fontSize={"25pt"}
+              fontWeight={100}
+              color={"#202020"}
+              colorScheme={"transparent"}
+              onClick={() => router.push("/app/startupregistration")}
+            >
+              +
+            </Button>
+          ) : (
+            <Button onClick={() => router.push("/app/register")}>Join</Button>
+          )}
         </Flex>
         <Flex
           position={"fixed"}
@@ -408,7 +414,11 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/fundingcam")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/fundingcam")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 ⏺️&nbsp;&nbsp;Record Funding Pitch
@@ -433,7 +443,11 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/messages")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/messages")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💬&nbsp;&nbsp;Private Messages
@@ -481,7 +495,11 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/education")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/education")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 🎥&nbsp;&nbsp;Educational Videos
@@ -504,7 +522,11 @@ const StartupList = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={onOpen}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? onOpen()
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 👤&nbsp;&nbsp;Profile
@@ -543,7 +565,11 @@ const StartupList = () => {
                 paddingLeft={5}
                 paddingRight={5}
                 backgroundColor={"white"}
-                onClick={() => router.push("/app/startupregistration")}
+                onClick={() =>
+                  localStorage.getItem("id") !== null
+                    ? router.push("/app/startupregistration")
+                    : router.push("/app/register")
+                }
               >
                 Get Started
               </Button>

@@ -112,156 +112,306 @@ const Forum = () => {
   };
   useEffect(() => {
     if (localStorage.getItem("id") === null) {
-      router.push("/");
-      return;
-    }
-    db.collection("users")
-      .doc(localStorage.getItem("id"))
-      .onSnapshot((val) => {
-        let n = val.data();
-        setUname(n.username);
-        setOgUname(n.username);
-        setEmail(n.email);
-      });
-    db.collection("forum")
-      .orderBy("timestamp", "desc")
-      .onSnapshot((val) => {
-        setFors([]);
-        val.forEach((docs) => {
-          let data = docs.data();
-          db.collection("users")
-            .doc(data.ownerId)
-            .get()
-            .then((val2) => {
-              let thi = true;
-              if (data.likes.includes(localStorage.getItem("id"))) {
-                thi = true;
-              } else {
-                thi = false;
-              }
-              let mine = true;
-              if (data.ownerId == localStorage.getItem("id")) {
-                mine = true;
-              } else {
-                mine = false;
-              }
-              setFors((prevF) => [
-                ...prevF,
-                <Flex
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"space-between"}
-                  width={"70%"}
-                  padding={3}
-                  boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
-                  //borderRadius={5}
-                  //backgroundColor={mine ? "#545454" : "#323232"}
-                  backgroundColor={"#fff"}
-                  _hover={{
-                    opacity: 0.8,
-                  }}
-                >
+      db.collection("forum")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((val) => {
+          setFors([]);
+          val.forEach((docs) => {
+            let data = docs.data();
+            db.collection("users")
+              .doc(data.ownerId)
+              .get()
+              .then((val2) => {
+                let thi = false;
+                let mine = false;
+                setFors((prevF) => [
+                  ...prevF,
                   <Flex
-                    direction={"column"}
-                    //alignItems={"left"}
-                    justifyContent={"center"}
-                    width={"80%"}
-                    gap={0.5}
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    width={"70%"}
+                    padding={3}
+                    boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                    //borderRadius={5}
+                    //backgroundColor={mine ? "#545454" : "#323232"}
+                    backgroundColor={"#fff"}
+                    _hover={{
+                      opacity: 0.8,
+                    }}
                   >
-                    <Flex direction={"row"} alignItems={"center"}>
-                      <Text color={"black"} fontWeight={900} fontSize={"10pt"}>
-                        @{val2.get("username")}
-                      </Text>
-                      {mine ? (
-                        <Button
-                          objectFit={"cover"}
-                          height={"2vw"}
-                          colorScheme={"transparent"}
-                          onClick={() => deleteIt(docs.id, data.statement)}
-                        >
-                          <Image
-                            src={"/assets/trash.png"}
-                            alt={"trash"}
-                            layout={"fill"}
-                          />
-                        </Button>
-                      ) : null}
-                    </Flex>
-                    <Text color={"black"} fontSize={"15pt"}>
-                      {data.statement}
-                    </Text>
                     <Flex
-                      direction={"row"}
-                      alignItems={"center"}
-                      //justifyContent={"center"}
-                      gap={2.5}
+                      direction={"column"}
+                      //alignItems={"left"}
+                      justifyContent={"center"}
+                      width={"80%"}
+                      gap={0.5}
                     >
-                      {data.hashtags.map((val) => (
-                        <Tag
-                          colorScheme={"green"}
-                          fontSize={"10pt"}
-                          size={"lg"}
-                        >
-                          {val}
-                        </Tag>
-                      ))}
-                      <Link href={"/app/forum/" + docs.id}>
+                      <Flex direction={"row"} alignItems={"center"}>
                         <Text
                           color={"black"}
                           fontWeight={900}
-                          _hover={{
-                            textDecoration: "underline",
-                          }}
+                          fontSize={"10pt"}
                         >
-                          {data.replies !== undefined ? data.replies.length : 0}{" "}
-                          replies
+                          @{val2.get("username")}
                         </Text>
-                      </Link>
+                        {mine ? (
+                          <Button
+                            objectFit={"cover"}
+                            height={"2vw"}
+                            colorScheme={"transparent"}
+                            onClick={() => deleteIt(docs.id, data.statement)}
+                          >
+                            <Image
+                              src={"/assets/trash.png"}
+                              alt={"trash"}
+                              layout={"fill"}
+                            />
+                          </Button>
+                        ) : null}
+                      </Flex>
+                      <Text color={"black"} fontSize={"15pt"}>
+                        {data.statement}
+                      </Text>
+                      <Flex
+                        direction={"row"}
+                        alignItems={"center"}
+                        //justifyContent={"center"}
+                        gap={2.5}
+                      >
+                        {data.hashtags.map((val) => (
+                          <Tag
+                            colorScheme={"green"}
+                            fontSize={"10pt"}
+                            size={"lg"}
+                          >
+                            {val}
+                          </Tag>
+                        ))}
+                        <Link
+                          href={
+                            localStorage.getItem("id") !== null
+                              ? "/app/forum/" + docs.id
+                              : "/app/register"
+                          }
+                        >
+                          <Text
+                            color={"black"}
+                            fontWeight={900}
+                            _hover={{
+                              textDecoration: "underline",
+                            }}
+                          >
+                            {data.replies !== undefined
+                              ? data.replies.length
+                              : 0}{" "}
+                            replies
+                          </Text>
+                        </Link>
+                      </Flex>
                     </Flex>
-                  </Flex>
-                  <Button
-                    display={"flex"}
-                    flexDirection={"column"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    border={thi ? "1px solid #1F90FF" : "1px solid black"}
-                    borderRadius={3}
-                    colorScheme={"transparent"}
-                    height={"100%"}
-                    // backgroundColor={mine ? "#545454" : "#323232"}
-                    backgroundColor={"transparent"}
-                    paddingBottom={3}
-                    paddingTop={3}
-                    onClick={() => addLikes(docs.id, data.likes)}
-                    // onClick={addLikes}
-                  >
-                    <Image
-                      src={thi ? "/assets/blueup.png" : "/assets/up.png"}
-                      alt="Gloppa up"
-                      width={40}
-                      height={40}
-                    />
-                    <Text color={"#000"} fontSize={"17pt"}>
-                      {Object.keys(data.likes).length === 0
-                        ? 0
-                        : data.likes.length}
-                    </Text>
-                  </Button>
-                </Flex>,
-                // ForumComponent(
-                //   val2.get("username"),
-                //   docs.id,
-                //   data.statement,
-                //   data.hashtags,
-                //   data.likes,
-                //   thi,
-                //   data.replies,
-                //   mine
-                // ),
-              ]);
-            });
+                    <Button
+                      display={"flex"}
+                      flexDirection={"column"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      border={thi ? "1px solid #1F90FF" : "1px solid black"}
+                      borderRadius={3}
+                      colorScheme={"transparent"}
+                      height={"100%"}
+                      // backgroundColor={mine ? "#545454" : "#323232"}
+                      backgroundColor={"transparent"}
+                      paddingBottom={3}
+                      paddingTop={3}
+                      onClick={() =>
+                        localStorage.getItem("id") !== null
+                          ? addLikes(docs.id, data.likes)
+                          : router.push("/app/register")
+                      }
+                      // onClick={addLikes}
+                    >
+                      <Image
+                        src={thi ? "/assets/blueup.png" : "/assets/up.png"}
+                        alt="Gloppa up"
+                        width={40}
+                        height={40}
+                      />
+                      <Text color={"#000"} fontSize={"17pt"}>
+                        {Object.keys(data.likes).length === 0
+                          ? 0
+                          : data.likes.length}
+                      </Text>
+                    </Button>
+                  </Flex>,
+                  // ForumComponent(
+                  //   val2.get("username"),
+                  //   docs.id,
+                  //   data.statement,
+                  //   data.hashtags,
+                  //   data.likes,
+                  //   thi,
+                  //   data.replies,
+                  //   mine
+                  // ),
+                ]);
+              });
+          });
         });
-      });
+    } else {
+      db.collection("users")
+        .doc(localStorage.getItem("id"))
+        .onSnapshot((val) => {
+          let n = val.data();
+          setUname(n.username);
+          setOgUname(n.username);
+          setEmail(n.email);
+        });
+      db.collection("forum")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((val) => {
+          setFors([]);
+          val.forEach((docs) => {
+            let data = docs.data();
+            db.collection("users")
+              .doc(data.ownerId)
+              .get()
+              .then((val2) => {
+                let thi = true;
+                if (data.likes.includes(localStorage.getItem("id"))) {
+                  thi = true;
+                } else {
+                  thi = false;
+                }
+                let mine = true;
+                if (data.ownerId == localStorage.getItem("id")) {
+                  mine = true;
+                } else {
+                  mine = false;
+                }
+                setFors((prevF) => [
+                  ...prevF,
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    width={"70%"}
+                    padding={3}
+                    boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                    //borderRadius={5}
+                    //backgroundColor={mine ? "#545454" : "#323232"}
+                    backgroundColor={"#fff"}
+                    _hover={{
+                      opacity: 0.8,
+                    }}
+                  >
+                    <Flex
+                      direction={"column"}
+                      //alignItems={"left"}
+                      justifyContent={"center"}
+                      width={"80%"}
+                      gap={0.5}
+                    >
+                      <Flex direction={"row"} alignItems={"center"}>
+                        <Text
+                          color={"black"}
+                          fontWeight={900}
+                          fontSize={"10pt"}
+                        >
+                          @{val2.get("username")}
+                        </Text>
+                        {mine ? (
+                          <Button
+                            objectFit={"cover"}
+                            height={"2vw"}
+                            colorScheme={"transparent"}
+                            onClick={() => deleteIt(docs.id, data.statement)}
+                          >
+                            <Image
+                              src={"/assets/trash.png"}
+                              alt={"trash"}
+                              layout={"fill"}
+                            />
+                          </Button>
+                        ) : null}
+                      </Flex>
+                      <Text color={"black"} fontSize={"15pt"}>
+                        {data.statement}
+                      </Text>
+                      <Flex
+                        direction={"row"}
+                        alignItems={"center"}
+                        //justifyContent={"center"}
+                        gap={2.5}
+                      >
+                        {data.hashtags.map((val) => (
+                          <Tag
+                            colorScheme={"green"}
+                            fontSize={"10pt"}
+                            size={"lg"}
+                          >
+                            {val}
+                          </Tag>
+                        ))}
+                        <Link href={"/app/forum/" + docs.id}>
+                          <Text
+                            color={"black"}
+                            fontWeight={900}
+                            _hover={{
+                              textDecoration: "underline",
+                            }}
+                          >
+                            {data.replies !== undefined
+                              ? data.replies.length
+                              : 0}{" "}
+                            replies
+                          </Text>
+                        </Link>
+                      </Flex>
+                    </Flex>
+                    <Button
+                      display={"flex"}
+                      flexDirection={"column"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      border={thi ? "1px solid #1F90FF" : "1px solid black"}
+                      borderRadius={3}
+                      colorScheme={"transparent"}
+                      height={"100%"}
+                      // backgroundColor={mine ? "#545454" : "#323232"}
+                      backgroundColor={"transparent"}
+                      paddingBottom={3}
+                      paddingTop={3}
+                      onClick={() => addLikes(docs.id, data.likes)}
+                      // onClick={addLikes}
+                    >
+                      <Image
+                        src={thi ? "/assets/blueup.png" : "/assets/up.png"}
+                        alt="Gloppa up"
+                        width={40}
+                        height={40}
+                      />
+                      <Text color={"#000"} fontSize={"17pt"}>
+                        {Object.keys(data.likes).length === 0
+                          ? 0
+                          : data.likes.length}
+                      </Text>
+                    </Button>
+                  </Flex>,
+                  // ForumComponent(
+                  //   val2.get("username"),
+                  //   docs.id,
+                  //   data.statement,
+                  //   data.hashtags,
+                  //   data.likes,
+                  //   thi,
+                  //   data.replies,
+                  //   mine
+                  // ),
+                ]);
+              });
+          });
+        });
+    }
   }, [db]);
 
   // if (loading) {
@@ -359,19 +509,23 @@ const Forum = () => {
           {/* 📦&nbsp;&nbsp;Product Review */}
           📢&nbsp;&nbsp;Public Forum
         </Button>
-        <Button
-          border={"none"}
-          _hover={{
-            backgroundColor: "#efefef",
-          }}
-          fontSize={"25pt"}
-          fontWeight={100}
-          color={"#202020"}
-          colorScheme={"transparent"}
-          onClick={() => router.push("/app/forumreg")}
-        >
-          +
-        </Button>
+        {localStorage.getItem("id") !== null ? (
+          <Button
+            border={"none"}
+            _hover={{
+              backgroundColor: "#efefef",
+            }}
+            fontSize={"25pt"}
+            fontWeight={100}
+            color={"#202020"}
+            colorScheme={"transparent"}
+            onClick={() => router.push("/app/forumreg")}
+          >
+            +
+          </Button>
+        ) : (
+          <Button onClick={() => router.push("/app/register")}>Join</Button>
+        )}
       </Flex>
       <Flex
         position={"fixed"}
@@ -508,7 +662,11 @@ const Forum = () => {
               backgroundColor: "#efefef",
               cursor: "pointer",
             }}
-            onClick={() => router.push("/app/fundingcam")}
+            onClick={() =>
+              localStorage.getItem("id") !== null
+                ? router.push("/app/fundingcam")
+                : router.push("/app/register")
+            }
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
               ⏺️&nbsp;&nbsp;Record Funding Pitch
@@ -533,7 +691,11 @@ const Forum = () => {
               backgroundColor: "#efefef",
               cursor: "pointer",
             }}
-            onClick={() => router.push("/app/messages")}
+            onClick={() =>
+              localStorage.getItem("id") !== null
+                ? router.push("/app/messages")
+                : router.push("/app/register")
+            }
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
               💬&nbsp;&nbsp;Private Messages
@@ -582,7 +744,11 @@ const Forum = () => {
               backgroundColor: "#efefef",
               cursor: "pointer",
             }}
-            onClick={() => router.push("/app/education")}
+            onClick={() =>
+              localStorage.getItem("id") !== null
+                ? router.push("/app/education")
+                : router.push("/app/register")
+            }
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
               🎥&nbsp;&nbsp;Educational Videos
@@ -605,7 +771,11 @@ const Forum = () => {
               backgroundColor: "#efefef",
               cursor: "pointer",
             }}
-            onClick={onOpen}
+            onClick={() =>
+              localStorage.getItem("id") !== null
+                ? onOpen()
+                : router.push("/app/register")
+            }
           >
             <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
               👤&nbsp;&nbsp;Profile

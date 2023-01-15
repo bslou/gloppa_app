@@ -107,9 +107,11 @@ const ProdRevComponent = (
                 display={"flex"}
                 flexDirection={"row"}
                 color={"black"}
-                onClick={() => {
-                  router.push("/app/prodrevcomments/" + id);
-                }}
+                onClick={() =>
+                  localStorage.getItem("id") !== null
+                    ? router.push("/app/prodrevcomments/" + id)
+                    : router.push("/app/register")
+                }
               >
                 <img
                   style={{ filter: "brightness(0)" }}
@@ -155,7 +157,11 @@ const ProdRevComponent = (
           colorScheme={"transparent"}
           height={"100%"}
           backgroundColor={"transparent"}
-          onClick={addLikes}
+          onClick={() =>
+            localStorage.getItem("id") !== null
+              ? addLikes()
+              : router.push("/app/register")
+          }
           paddingBottom={3}
           paddingTop={3}
         >

@@ -239,7 +239,119 @@ const ProductReview = () => {
               });
           });
       } else {
-        router.push("/c/main");
+        db.collection("productReview")
+          .orderBy("timestamp", "desc")
+          .onSnapshot((yal) => {
+            console.log("Length + " + Object.keys(yal).length);
+            if (Object.keys(yal).length < 3) {
+              setLoading(false);
+            }
+            console.log("like");
+
+            setProdRev([]);
+            setBoostRev([]);
+            yal.forEach(function (doc) {
+              let stid = doc.data().startupId;
+              let cathp = doc.data().catchPhrase;
+              let commentss = Object.values(doc.data().comments);
+              let likess = Object.values(doc.data().likes);
+              let title = doc.data().startupName;
+              let hashtags = Object.values(doc.data().hashtags);
+              let website = doc.data().website;
+              let img = doc.data().img;
+              let liked = false;
+              let to = false;
+
+              db.collection("startups")
+                .doc(stid)
+                .onSnapshot((val2) => {
+                  let dot = val2.data();
+                  db.collection("users")
+                    .doc(dot.owner)
+                    .onSnapshot((val3) => {
+                      let dat = val3.data();
+                      var today = new Date();
+                      var dd = String(today.getDate()).padStart(2, "0");
+                      var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                      var yyyy = today.getFullYear();
+                      today = mm + "/" + dd + "/" + yyyy;
+
+                      if (dat.boost !== undefined) {
+                        const date1 = new Date(String(dat.boost[1]));
+                        const date2 = new Date(String(today));
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24)
+                        );
+                        if (dat.boost[0] == "yes" && diffDays <= dat.boost[2]) {
+                          setBoostRev((prevRows) => [
+                            ...prevRows,
+                            ProdRevComponent(
+                              doc.id,
+                              stid,
+                              website,
+                              img,
+                              title,
+                              cathp,
+                              hashtags,
+                              commentss,
+                              likess,
+                              liked,
+                              to,
+                              router
+                            ),
+                          ]);
+                          setLoading(false);
+                        } else {
+                          setProdRev((prevRows) => [
+                            ...prevRows,
+                            ProdRevComponent(
+                              doc.id,
+                              stid,
+                              website,
+                              img,
+                              title,
+                              cathp,
+                              hashtags,
+                              commentss,
+                              likess,
+                              liked,
+                              to,
+                              router
+                            ),
+                          ]);
+                          // setProdRev((prevProd) =>
+                          //   prevProd.concat(tempSetProdRev)
+                          // );
+                          setLoading(false);
+                        }
+                      } else {
+                        setProdRev((prevRows) => [
+                          ...prevRows,
+                          ProdRevComponent(
+                            doc.id,
+                            stid,
+                            website,
+                            img,
+                            title,
+                            cathp,
+                            hashtags,
+                            commentss,
+                            likess,
+                            liked,
+                            to,
+                            router
+                          ),
+                        ]);
+                        // setProdRev((prevProd) =>
+                        //   prevProd.concat(tempSetProdRev)
+                        // );
+                        setLoading(false);
+                      }
+                    });
+                });
+            });
+          });
       }
     }
   }, [db, router]);
@@ -339,19 +451,23 @@ const ProductReview = () => {
             {/* 📦&nbsp;&nbsp;Product Review */}
             📦&nbsp;&nbsp;Product Review
           </Button>
-          <Button
-            border={"none"}
-            _hover={{
-              backgroundColor: "#efefef",
-            }}
-            fontSize={"25pt"}
-            fontWeight={100}
-            color={"#202020"}
-            colorScheme={"transparent"}
-            onClick={() => router.push("/app/productreviewreg")}
-          >
-            +
-          </Button>
+          {localStorage.getItem("id") !== null ? (
+            <Button
+              border={"none"}
+              _hover={{
+                backgroundColor: "#efefef",
+              }}
+              fontSize={"25pt"}
+              fontWeight={100}
+              color={"#202020"}
+              colorScheme={"transparent"}
+              onClick={() => router.push("/app/productreviewreg")}
+            >
+              +
+            </Button>
+          ) : (
+            <Button onClick={() => router.push("/app/register")}>Join</Button>
+          )}
         </Flex>
         <Flex
           position={"fixed"}
@@ -489,7 +605,11 @@ const ProductReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/fundingcam")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/fundingcam")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 ⏺️&nbsp;&nbsp;Record Funding Pitch
@@ -514,7 +634,11 @@ const ProductReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/messages")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/messages")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 💬&nbsp;&nbsp;Private Messages
@@ -562,7 +686,11 @@ const ProductReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={() => router.push("/app/education")}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/education")
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 🎥&nbsp;&nbsp;Educational Videos
@@ -585,7 +713,11 @@ const ProductReview = () => {
                 backgroundColor: "#efefef",
                 cursor: "pointer",
               }}
-              onClick={onOpen}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? onOpen()
+                  : router.push("/app/register")
+              }
             >
               <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
                 👤&nbsp;&nbsp;Profile

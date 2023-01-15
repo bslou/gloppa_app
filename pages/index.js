@@ -25,7 +25,8 @@ const Direction = () => {
             });
           router.push("/app/startuplist");
         } else {
-          router.push("/c/main");
+          router.push("/app/startuplist");
+          //router.push("/c/main");
         }
       }
     }
