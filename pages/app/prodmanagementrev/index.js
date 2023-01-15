@@ -119,8 +119,7 @@ const StartupRegistration = () => {
         db.collection("users")
           .doc(id)
           .update({ startups: arrayUnion(docRef.id) });
-        //router.push("/app/productivitymanagement/" + docRef.id);
-        router.push("/app/startuplist");
+        router.push("/app/" + docRef.id);
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);

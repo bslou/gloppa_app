@@ -262,6 +262,7 @@ const RecordPitch = () => {
       </Flex>
       <Flex
         position={"fixed"}
+        overflowY={"auto"}
         direction={"column"}
         alignItems={"flex-start"}
         backgroundColor={"#fff"}
@@ -378,6 +379,33 @@ const RecordPitch = () => {
           </Button>
         </Flex>
         <Flex direction={"column"} width={"100%"} gap={2}>
+          <Button
+            background={"transparent"}
+            border={"none"}
+            colorScheme={"transparent"}
+            width={"100%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            paddingLeft={"1.25vw"}
+            paddingTop={5}
+            paddingBottom={5}
+            borderRadius={0}
+            _hover={{
+              backgroundColor: "#efefef",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              localStorage.getItem("id") !== null
+                ? router.push("/app/productivitymanagement")
+                : router.push("/app/register")
+            }
+          >
+            <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+              💼&nbsp;&nbsp;Productivity
+            </Text>
+          </Button>
           <Button
             backgroundColor="#efefef"
             border={"none"}

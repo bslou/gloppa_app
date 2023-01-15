@@ -24,7 +24,7 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { auth, db } from "../../api/firebaseconfig";
+import { auth, db, storage } from "../../api/firebaseconfig";
 import StartupComponent from "./startcomp2";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
@@ -145,18 +145,29 @@ const StartupList = () => {
                 .doc(document)
                 .get()
                 .then((res) => {
-                  let startupName = String(res.get("startupName"));
-                  let lvl = String(Math.floor(res.get("level") / 100) + 1);
-                  setRows((prevRows) => [
-                    StartupComp(
-                      accessories[res.get("selectedAccessory")][1],
-                      lvl,
-                      startupName,
-                      String(document)
-                    ),
-                    ...prevRows,
-                  ]);
-                  setLoading(false);
+                  storage
+                    .ref(String(res.get("img")))
+                    .getDownloadURL()
+                    .then((url) => {
+                      let startupName = String(res.get("startupName"));
+                      let des = String(res.get("description"));
+                      let funds = String(res.get("fundingId"));
+                      let jobs = res.get("jobs");
+                      let prodrev = String(res.get("productReviewId"));
+                      setRows((prevRows) => [
+                        StartupComp(
+                          url,
+                          startupName,
+                          des,
+                          jobs,
+                          prodrev,
+                          funds,
+                          String(document)
+                        ),
+                        ...prevRows,
+                      ]);
+                      setLoading(false);
+                    });
                 });
             });
           });
@@ -259,7 +270,9 @@ const StartupList = () => {
             colorScheme={"transparent"}
           >
             {/* 📦&nbsp;&nbsp;Product Review */}
-            Company List
+            {localStorage.getItem("id") !== null
+              ? "🚀 @" + oguname + " Companies"
+              : "Company list"}
           </Button>
           {localStorage.getItem("id") !== null ? (
             <Button
@@ -285,6 +298,7 @@ const StartupList = () => {
           alignItems={"flex-start"}
           backgroundColor={"#fff"}
           borderRight={"1px solid #dfdfdf"}
+          overflowY={"auto"}
           height={"100vh"}
           width={200}
           gap={30}
@@ -397,6 +411,33 @@ const StartupList = () => {
             </Button>
           </Flex>
           <Flex direction={"column"} width={"100%"} gap={2}>
+            <Button
+              background={"transparent"}
+              border={"none"}
+              colorScheme={"transparent"}
+              width={"100%"}
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"center"}
+              paddingLeft={"1.25vw"}
+              paddingTop={5}
+              paddingBottom={5}
+              borderRadius={0}
+              _hover={{
+                backgroundColor: "#efefef",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                localStorage.getItem("id") !== null
+                  ? router.push("/app/productivitymanagement")
+                  : router.push("/app/register")
+              }
+            >
+              <Text color={"#474747"} fontSize="11pt" fontWeight={400}>
+                💼&nbsp;&nbsp;Productivity
+              </Text>
+            </Button>
             <Button
               background={"transparent"}
               border={"none"}

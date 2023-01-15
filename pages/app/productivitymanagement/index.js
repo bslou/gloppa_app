@@ -20,34 +20,70 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
-import { db, storage } from "../../api/firebaseconfig";
-import Router, { useRouter } from "next/router";
-import ProdRevComponent from "./updrevcomponent2";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { auth, db } from "../../api/firebaseconfig";
+import StartupComponent from "./startcomp2";
 import MyLoadingScreen from "./myloadingscreen";
 import NavBar from "../navbar";
-import { serverTimestamp } from "firebase/firestore";
+import StartupComp from "./startcomp2";
 
-const UpdateReview = () => {
+const ProdManagement = () => {
   const router = useRouter();
-  const toast = useToast();
 
-  const [loading, setLoading] = useState(true);
-  const [prodRev, setProdRev] = useState([]);
-  // const [boostRev, setBoostRev] = useState([]);
-
-  const [uname, setUname] = useState("");
   const [oguname, setOgUname] = useState("");
+  const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const dataFetchedRef = useRef(false);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: onOpen2,
+    onClose: onClose2,
+  } = useDisclosure();
+  const toast = useToast();
   const Logout = () => {
     localStorage.removeItem("id");
     router.push("/");
   };
 
+  const accessories = [
+    [
+      "/assets/spacer.png",
+      "/assets/spacer1.png",
+      "Beginner factory (producing 5 coins a day)",
+      0,
+    ],
+    [
+      "/assets/spacert.png",
+      "/assets/spacer2.png",
+      "Medium factory (producing 10 coins a day)",
+      100,
+    ],
+    [
+      "/assets/spacerth.png",
+      "/assets/spacer3.png",
+      "Comfort-Zone factory (producing 25 coins a day)",
+      1000,
+    ],
+    [
+      "/assets/spacerf.png",
+      "/assets/spacer4.png",
+      "Semi-advanced factory (producing 50 coins a day)",
+      10000,
+    ],
+    [
+      "/assets/spacerfi.png",
+      "/assets/spacer5.png",
+      "Advanced factory (producing 100 coins a day)",
+      100000,
+    ],
+  ];
   const changeData = (e) => {
     e.preventDefault();
     let nummers = db.collection("users").where("username", "==", uname);
@@ -73,20 +109,17 @@ const UpdateReview = () => {
             duration: 9000,
             isClosable: true,
           });
-          // window.location.reload();
-          onClose();
-          setProdRev([]);
-          // setBoostRev([]);
         }
       })
       .catch((err) => {
         console.log("Error " + err);
       });
   };
-
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") !== null && db && router) {
+      if (localStorage.getItem("id") !== null) {
+        // if (dataFetchedRef.current) return;
+        // dataFetchedRef.current = true;
         db.collection("users")
           .doc(localStorage.getItem("id"))
           .onSnapshot((val) => {
@@ -95,130 +128,43 @@ const UpdateReview = () => {
             setOgUname(n.username);
             setEmail(n.email);
           });
-        console.log(serverTimestamp());
         db.collection("users")
           .doc(localStorage.getItem("id"))
-          .get()
-          .then((val) => {
-            //setLoading(false);
-            if (!val.exists) return;
-            let n = val.get("startups");
-            n.reverse();
-            //if (n.length < 1) setLoading(false);
-            db.collection("updateReview")
-              .orderBy("timestamp", "desc")
-              .onSnapshot((yal) => {
-                console.log("Length + " + Object.keys(yal).length);
-                if (Object.keys(yal).length < 3) {
-                  setLoading(false);
-                }
-                console.log("like");
-
-                setProdRev([]);
-                // setBoostRev([]);
-                yal.forEach(function (doc) {
-                  let stid = doc.data().startupId;
-                  let cathp = doc.data().updateName;
-                  let cathdes = doc.data().updatePhrase;
-                  let commentss = Object.values(doc.data().comments);
-                  let likess = Object.values(doc.data().likes);
-                  let title = doc.data().startupName;
-                  let hashtags = Object.values(doc.data().hashtags);
-                  let website = doc.data().website;
-                  let img = doc.data().img;
-                  let liked = false;
-                  if (
-                    likess.length > 0 &&
-                    likess.includes(localStorage.getItem("id"))
-                  ) {
-                    liked = true;
-                  } else {
-                    liked = false;
-                  }
-                  let to = false;
-                  if (n.includes(stid)) {
-                    to = true;
-                  } else {
-                    to = false;
-                  }
-
-                  setProdRev((prevRows) => [
-                    ...prevRows,
-                    ProdRevComponent(
-                      doc.id,
-                      stid,
-                      website,
-                      img,
-                      title,
-                      cathp,
-                      cathdes,
-                      hashtags,
-                      commentss,
-                      likess,
-                      liked,
-                      to,
-                      router
+          .onSnapshot((snapshot) => {
+            setRows([]);
+            const data = snapshot.data();
+            let n = data.startups;
+            if (Object.keys(n).length == 0) {
+              setLoading(false);
+              return;
+            }
+            //n.reverse();
+            if (n.length < 1) setLoading(false);
+            n.forEach((document) => {
+              db.collection("startups")
+                .doc(document)
+                .get()
+                .then((res) => {
+                  let startupName = String(res.get("startupName"));
+                  let lvl = String(Math.floor(res.get("level") / 100) + 1);
+                  setRows((prevRows) => [
+                    StartupComp(
+                      accessories[res.get("selectedAccessory")][1],
+                      lvl,
+                      startupName,
+                      String(document)
                     ),
+                    ...prevRows,
                   ]);
-                  // setProdRev((prevProd) =>
-                  //   prevProd.concat(tempSetProdRev)
-                  // );
                   setLoading(false);
                 });
-              });
-          });
-      } else {
-        db.collection("updateReview")
-          .orderBy("timestamp", "desc")
-          .onSnapshot((yal) => {
-            console.log("Length + " + Object.keys(yal).length);
-            if (Object.keys(yal).length < 3) {
-              setLoading(false);
-            }
-            console.log("like");
-
-            setProdRev([]);
-            // setBoostRev([]);
-            yal.forEach(function (doc) {
-              let stid = doc.data().startupId;
-              let cathp = doc.data().updateName;
-              let cathdes = doc.data().updatePhrase;
-              let commentss = Object.values(doc.data().comments);
-              let likess = Object.values(doc.data().likes);
-              let title = doc.data().startupName;
-              let hashtags = Object.values(doc.data().hashtags);
-              let website = doc.data().website;
-              let img = doc.data().img;
-              let liked = false;
-              let to = false;
-
-              setProdRev((prevRows) => [
-                ...prevRows,
-                ProdRevComponent(
-                  doc.id,
-                  stid,
-                  website,
-                  img,
-                  title,
-                  cathp,
-                  cathdes,
-                  hashtags,
-                  commentss,
-                  likess,
-                  liked,
-                  to,
-                  router
-                ),
-              ]);
-              // setProdRev((prevProd) =>
-              //   prevProd.concat(tempSetProdRev)
-              // );
-              setLoading(false);
             });
           });
+      } else {
+        setLoading(false);
       }
     }
-  }, [db, router]);
+  }, []);
 
   if (loading) {
     return <MyLoadingScreen />;
@@ -313,7 +259,7 @@ const UpdateReview = () => {
             colorScheme={"transparent"}
           >
             {/* 📦&nbsp;&nbsp;Product Review */}
-            🆕&nbsp;&nbsp;Update Review
+            💼&nbsp;&nbsp;Productivity
           </Button>
           {localStorage.getItem("id") !== null ? (
             <Button
@@ -325,7 +271,7 @@ const UpdateReview = () => {
               fontWeight={100}
               color={"#202020"}
               colorScheme={"transparent"}
-              onClick={() => router.push("/app/updatereviewreg")}
+              onClick={() => router.push("/app/prodmanagementrev")}
             >
               +
             </Button>
@@ -359,7 +305,6 @@ const UpdateReview = () => {
           </Button>
           <Flex direction={"column"} width={"100%"} gap={2}>
             <Button
-              // background={"transparent"}
               background={"transparent"}
               border={"none"}
               colorScheme={"transparent"}
@@ -383,7 +328,7 @@ const UpdateReview = () => {
               </Text>
             </Button>
             <Button
-              background={"#efefef"}
+              background={"transparent"}
               border={"none"}
               colorScheme={"transparent"}
               width={"100%"}
@@ -454,7 +399,7 @@ const UpdateReview = () => {
           </Flex>
           <Flex direction={"column"} width={"100%"} gap={2}>
             <Button
-              background={"transparent"}
+              background={"#efefef"}
               border={"none"}
               colorScheme={"transparent"}
               width={"100%"}
@@ -621,20 +566,47 @@ const UpdateReview = () => {
           position={"absolute"}
           direction={"column"}
           alignItems={"center"}
-          paddingTop={0.5}
-          paddingBottom={0.5}
+          paddingTop={5}
+          paddingBottom={5}
           marginLeft={{ base: 150, md: 175, lg: 250 }}
           width={"80%"}
-          top={{ base: 53, md: 63, lg: 73 }}
-          overflowY={"scroll"}
-          height={"83vh"}
+          top={{ base: 45, md: 53, lg: 61 }}
           gap={3}
         >
-          {prodRev}
+          {rows.length > 0 ? (
+            rows
+          ) : (
+            <Flex direction={"column"} alignItems={"center"} gap={5}>
+              <Image
+                src={"/assets/nodata2.png"}
+                alt={"No data"}
+                width={1000}
+                height={1000}
+                layout={"responsive"}
+              />
+              <Text fontSize={"24pt"}>No companies here 😭</Text>
+              <Button
+                boxShadow={"0 2px 5px rgba(0, 0, 0, 0.5)"}
+                borderRadius={0}
+                fontSize={"20pt"}
+                height={65}
+                paddingLeft={5}
+                paddingRight={5}
+                backgroundColor={"white"}
+                onClick={() =>
+                  localStorage.getItem("id") !== null
+                    ? router.push("/app/prodmanagementrev")
+                    : router.push("/app/register")
+                }
+              >
+                Get Started
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     );
   }
 };
 
-export default UpdateReview;
+export default ProdManagement;
