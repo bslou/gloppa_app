@@ -398,7 +398,7 @@ const Jobs = () => {
           <Button
             border={"none"}
             background={"transparent"}
-            fontSize={"13pt"}
+            fontSize={{ base: "8pt", md: "10.5pt", lg: "13pt" }}
             fontWeight={600}
             color={"#202020"}
             colorScheme={"transparent"}
@@ -412,7 +412,7 @@ const Jobs = () => {
               _hover={{
                 backgroundColor: "#efefef",
               }}
-              fontSize={"25pt"}
+              fontSize={{ base: "18pt", md: "21pt", lg: "25pt" }}
               fontWeight={100}
               color={"#202020"}
               colorScheme={"transparent"}

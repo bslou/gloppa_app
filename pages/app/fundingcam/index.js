@@ -238,7 +238,7 @@ const RecordPitch = () => {
         <Button
           border={"none"}
           background={"transparent"}
-          fontSize={"13pt"}
+          fontSize={{ base: "8pt", md: "10.5pt", lg: "13pt" }}
           fontWeight={600}
           color={"#202020"}
           colorScheme={"transparent"}
@@ -540,7 +540,13 @@ const RecordPitch = () => {
       >
         {/**Put code here */}
         <>
-          <video ref={videoRef} autoPlay /*playsInline*/ controls={false} />
+          <video
+            width={"55%"}
+            height={"55%"}
+            ref={videoRef}
+            autoPlay
+            /*playsInline*/ controls={false}
+          />
           {isRecording ? (
             <Tooltip label="Stop Recording">
               <Button
@@ -548,12 +554,12 @@ const RecordPitch = () => {
                 onClick={stopRecording}
                 color={"black"}
                 position={"absolute"}
-                top={420}
+                top={{ base: "50%", md: "60%", lg: "70%" }}
               >
                 <img
                   src="/assets/stoprec.png"
-                  width={70}
-                  height={70}
+                  width={"60%"}
+                  height={"60%"}
                   alt={"Recording"}
                 />
               </Button>
@@ -565,12 +571,12 @@ const RecordPitch = () => {
                 onClick={startRecording}
                 color={"black"}
                 position={"absolute"}
-                top={420}
+                top={{ base: "50%", md: "60%", lg: "70%" }}
               >
                 <img
                   src="/assets/startrec.png"
-                  width={95}
-                  height={95}
+                  width={"90%"}
+                  height={"90%"}
                   alt={"Recording"}
                 />
               </Button>

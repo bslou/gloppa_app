@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
+    screen.orientation.lock("landscape");
     if (process.env.NODE_ENV === "production") {
       console.log("In production mode...");
       hotjar.initialize(3300873, 6);

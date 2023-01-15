@@ -229,8 +229,8 @@ const StartupList = () => {
                             <img
                               src={url}
                               alt={"Gloppa spacer"}
-                              width={50}
-                              height={50}
+                              width={"15%"}
+                              height={"15%"}
                             />
                             <Flex
                               direction={"column"}
@@ -273,15 +273,36 @@ const StartupList = () => {
                                 alignItems={"center"}
                                 gap={2}
                               >
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {prodrev.length == 0
                                     ? "0 Product Reviews"
                                     : "1 Product Review"}
                                 </Tag>
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {jobs.length} Jobs
                                 </Tag>
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {funds.length == 0 ? "0 Funds" : "1 Fund"}
                                 </Tag>
                               </Flex>
@@ -365,8 +386,8 @@ const StartupList = () => {
                             <img
                               src={url}
                               alt={"Gloppa spacer"}
-                              width={50}
-                              height={50}
+                              width={"15%"}
+                              height={"15%"}
                             />
                             <Flex
                               direction={"column"}
@@ -409,15 +430,36 @@ const StartupList = () => {
                                 alignItems={"center"}
                                 gap={2}
                               >
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {prodrev.length == 0
                                     ? "0 Product Reviews"
                                     : "1 Product Review"}
                                 </Tag>
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {jobs.length} Jobs
                                 </Tag>
-                                <Tag colorScheme="teal" size={"md"}>
+                                <Tag
+                                  colorScheme="teal"
+                                  fontSize={{
+                                    base: "4pt",
+                                    md: "7pt",
+                                    lg: "10pt",
+                                  }}
+                                >
                                   {funds.length == 0 ? "0 Funds" : "1 Fund"}
                                 </Tag>
                               </Flex>
@@ -541,7 +583,7 @@ const StartupList = () => {
           <Button
             border={"none"}
             background={"transparent"}
-            fontSize={"13pt"}
+            fontSize={{ base: "8pt", md: "10.5pt", lg: "13pt" }}
             fontWeight={600}
             color={"#202020"}
             colorScheme={"transparent"}

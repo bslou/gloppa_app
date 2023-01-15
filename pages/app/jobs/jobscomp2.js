@@ -90,20 +90,35 @@ const JobsComponent = (
       >
         <img src={image} alt={company} width={70} height={70} />
         <Flex direction={"column"} justifyContent={"center"}>
-          <Text color={"#333"}>{company}</Text>
-          <Text color={"#000"} fontWeight={800}>
+          <Text
+            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+            color={"#333"}
+          >
+            {company}
+          </Text>
+          <Text
+            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+            color={"#000"}
+            fontWeight={800}
+          >
             {position}
           </Text>
-          <Text color={"#333"}>{location}</Text>
+          <Text
+            fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+            color={"#333"}
+          >
+            {location}
+          </Text>
         </Flex>
       </Flex>
       <Flex
         direction={"row"}
         alignItems={"center"}
         justifyContent={"center"}
-        gap={3}
+        gap={{ base: 0.5, md: 1.5, lg: 3 }}
       >
         <Button
+          fontSize={{ base: "6pt", md: "8pt", lg: "11pt" }}
           onClick={() => {
             {
               navigator.clipboard.writeText(
@@ -121,7 +136,12 @@ const JobsComponent = (
           Share
         </Button>
         {!mine ? (
-          <Button as={"a"} href={website} target={"_blank"}>
+          <Button
+            fontSize={{ base: "6pt", md: "8pt", lg: "11pt" }}
+            as={"a"}
+            href={website}
+            target={"_blank"}
+          >
             Apply
           </Button>
         ) : (

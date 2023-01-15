@@ -10,27 +10,27 @@ const Direction = () => {
   const router = useRouter();
   useEffect(() => {
     //localStorage.removeItem("id");
-    if (isMobile) {
-    } else {
-      if (typeof window !== "undefined") {
-        if (localStorage.getItem("id") !== null) {
-          db.collection("users")
-            .doc(localStorage.getItem("id"))
-            .get()
-            .then((val) => {
-              if (!val.exists) {
-                localStorage.removeItem("id");
-                return;
-              }
-            });
-          router.push("/app/startuplist");
-        } else {
-          // router.push("/app/startuplist");
-          router.push("/app/productreview");
-          //router.push("/c/main");
-        }
+    // if (isMobile) {
+    // } else {
+    if (typeof window !== "undefined") {
+      if (localStorage.getItem("id") !== null) {
+        db.collection("users")
+          .doc(localStorage.getItem("id"))
+          .get()
+          .then((val) => {
+            if (!val.exists) {
+              localStorage.removeItem("id");
+              return;
+            }
+          });
+        router.push("/app/startuplist");
+      } else {
+        // router.push("/app/startuplist");
+        router.push("/app/productreview");
+        //router.push("/c/main");
       }
     }
+    // }
   });
   if (isMobile) {
     return (
