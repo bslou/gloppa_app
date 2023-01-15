@@ -259,7 +259,10 @@ const StartupList = () => {
                                           "_blank"
                                         )
                                       : null
-                                    : null
+                                    : window.open(
+                                        String(res.get("website")),
+                                        "_blank"
+                                      )
                                 }
                               >
                                 {des}
@@ -392,7 +395,10 @@ const StartupList = () => {
                                           "_blank"
                                         )
                                       : null
-                                    : null
+                                    : window.open(
+                                        String(res.get("website")),
+                                        "_blank"
+                                      )
                                 }
                               >
                                 {des}
