@@ -223,14 +223,14 @@ const StartupList = () => {
                           <Flex
                             direction={"row"}
                             alignItems={"center"}
-                            justifyContent={"center"}
+                            // justifyContent={"center"}
                             gap={3}
                           >
                             <img
                               src={url}
                               alt={"Gloppa spacer"}
-                              width={"15%"}
-                              height={"15%"}
+                              width={50}
+                              height={50}
                             />
                             <Flex
                               direction={"column"}
@@ -380,14 +380,14 @@ const StartupList = () => {
                           <Flex
                             direction={"row"}
                             alignItems={"center"}
-                            justifyContent={"center"}
+                            // justifyContent={"center"}
                             gap={3}
                           >
                             <img
                               src={url}
                               alt={"Gloppa spacer"}
-                              width={"15%"}
-                              height={"15%"}
+                              width={50}
+                              height={50}
                             />
                             <Flex
                               direction={"column"}
