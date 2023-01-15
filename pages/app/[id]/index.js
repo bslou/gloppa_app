@@ -250,6 +250,17 @@ const StartupList = () => {
                                 color={"black"}
                                 fontWeight={300}
                                 fontSize={{ base: "5pt", md: "7pt", lg: "9pt" }}
+                                onClick={() =>
+                                  localStorage.getItem("id") !== null &&
+                                  router.query.id != localStorage.getItem("id")
+                                    ? String(res.get("website"))
+                                      ? window.open(
+                                          String(res.get("website")),
+                                          "_blank"
+                                        )
+                                      : null
+                                    : null
+                                }
                               >
                                 {des}
                               </Link>
@@ -273,21 +284,25 @@ const StartupList = () => {
                               </Flex>
                             </Flex>
                           </Flex>
-                          <Tooltip label={"Delete " + startupName + "..."}>
-                            <Button
-                              onClick={() =>
-                                deleteIt(startupName, String(document))
-                              }
-                              colorScheme={"transparent"}
-                            >
-                              <Image
-                                src={"/assets/trash.png"}
-                                alt={"Gloppa menu"}
-                                width={35}
-                                height={35}
-                              />
-                            </Button>
-                          </Tooltip>
+                          {localStorage.getItem("id") !== null ? (
+                            router.query.id == localStorage.getItem("id") ? (
+                              <Tooltip label={"Delete " + startupName + "..."}>
+                                <Button
+                                  onClick={() =>
+                                    deleteIt(startupName, String(document))
+                                  }
+                                  colorScheme={"transparent"}
+                                >
+                                  <Image
+                                    src={"/assets/trash.png"}
+                                    alt={"Gloppa menu"}
+                                    width={35}
+                                    height={35}
+                                  />
+                                </Button>
+                              </Tooltip>
+                            ) : null
+                          ) : null}
                         </Flex>,
                         ...prevRows,
                       ]);
@@ -368,6 +383,17 @@ const StartupList = () => {
                                 color={"black"}
                                 fontWeight={300}
                                 fontSize={{ base: "5pt", md: "7pt", lg: "9pt" }}
+                                onClick={() =>
+                                  localStorage.getItem("id") !== null &&
+                                  router.query.id != localStorage.getItem("id")
+                                    ? String(res.get("website"))
+                                      ? window.open(
+                                          String(res.get("website")),
+                                          "_blank"
+                                        )
+                                      : null
+                                    : null
+                                }
                               >
                                 {des}
                               </Link>
@@ -391,21 +417,25 @@ const StartupList = () => {
                               </Flex>
                             </Flex>
                           </Flex>
-                          <Tooltip label={"Delete " + startupName + "..."}>
-                            <Button
-                              onClick={() =>
-                                deleteIt(startupName, String(document))
-                              }
-                              colorScheme={"transparent"}
-                            >
-                              <Image
-                                src={"/assets/trash.png"}
-                                alt={"Gloppa menu"}
-                                width={35}
-                                height={35}
-                              />
-                            </Button>
-                          </Tooltip>
+                          {localStorage.getItem("id") !== null ? (
+                            router.query.id == localStorage.getItem("id") ? (
+                              <Tooltip label={"Delete " + startupName + "..."}>
+                                <Button
+                                  onClick={() =>
+                                    deleteIt(startupName, String(document))
+                                  }
+                                  colorScheme={"transparent"}
+                                >
+                                  <Image
+                                    src={"/assets/trash.png"}
+                                    alt={"Gloppa menu"}
+                                    width={35}
+                                    height={35}
+                                  />
+                                </Button>
+                              </Tooltip>
+                            ) : null
+                          ) : null}
                         </Flex>,
                         ...prevRows,
                       ]);
