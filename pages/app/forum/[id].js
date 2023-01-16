@@ -225,13 +225,20 @@ const ForumReplies = () => {
                         alignItems={"flex-start"}
                         justifyContent={"center"}
                       >
-                        <Text
+                        <Link
+                          as={"a"}
+                          onClick={() => router.push("/app/" + data.ownerId)}
+                          colorScheme={"transparent"}
+                          _hover={{
+                            color: "black",
+                            textDecoration: "underline",
+                          }}
                           fontSize={"12pt"}
                           color={"black"}
                           fontWeight={800}
                         >
                           @{val4.username}
-                        </Text>
+                        </Link>
                         <Text
                           color={"black"}
                           fontSize={"13pt"}
@@ -537,6 +544,8 @@ const ForumReplies = () => {
         alignItems={"center"}
         backgroundColor={"#fff"}
         height={"89%"}
+        overflowY={"scroll"}
+        gap={3}
         width={"65vw"}
         borderTopLeftRadius={10}
         borderTopRightRadius={10}
@@ -570,9 +579,20 @@ const ForumReplies = () => {
             gap={0.5}
           >
             <Flex direction={"row"} alignItems={"center"}>
-              <Text color={"black"} fontWeight={900} fontSize={"10pt"}>
+              <Link
+                _hover={{
+                  color: "black",
+                  textDecoration: "underline",
+                }}
+                as={"a"}
+                onClick={() => router.push("/app/" + ownerId)}
+                colorScheme={"transparent"}
+                color={"black"}
+                fontWeight={900}
+                fontSize={"10pt"}
+              >
                 @{usname}
-              </Text>
+              </Link>
               {typeof window !== "undefined" ? (
                 localStorage.getItem("id") == ownerId ? (
                   <Button
@@ -669,7 +689,6 @@ const ForumReplies = () => {
         <Flex
           width={"90%"}
           direction={"row"}
-          marginTop={5}
           alignItems={"center"}
           justifyContent={"center"}
           borderTop={"1px solid black"}
@@ -693,22 +712,16 @@ const ForumReplies = () => {
             }}
           />
           {/*onClick={submitComment}*/}
-          <Button type="submit" onClick={submitComment}>
+          <Button
+            fontSize={{ base: "7pt", md: "10pt", lg: "12pt" }}
+            type="submit"
+            onClick={submitComment}
+          >
             Submit Comment
           </Button>
         </Flex>
-        <Flex
-          direction={"column"}
-          alignItems={"center"}
-          gap={"2vh"}
-          width={"100%"}
-          overflowY={"scroll"}
-          paddingBottom={5}
-          paddingTop={3}
-        >
-          {/* {commento} */}
-          {comments}
-        </Flex>
+        {/* {commento} */}
+        {comments}
       </Flex>
     </Flex>
   );

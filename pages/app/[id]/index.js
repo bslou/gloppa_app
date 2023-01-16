@@ -240,12 +240,6 @@ const StartupList = () => {
                               <Text color={"black"} fontWeight={600}>
                                 {startupName}
                               </Text>
-
-                              {/* <Button
-              as={"a"}
-              colorScheme={"transparent"}
-              maxWidth={"45vw"}
-            > */}
                               <Link
                                 color={"black"}
                                 fontWeight={300}
@@ -259,15 +253,11 @@ const StartupList = () => {
                                           "_blank"
                                         )
                                       : null
-                                    : window.open(
-                                        String(res.get("website")),
-                                        "_blank"
-                                      )
+                                    : null
                                 }
                               >
                                 {des}
                               </Link>
-                              {/* </Button> */}
                               <Flex
                                 direction={"row"}
                                 alignItems={"center"}
@@ -416,10 +406,7 @@ const StartupList = () => {
                                           "_blank"
                                         )
                                       : null
-                                    : window.open(
-                                        String(res.get("website")),
-                                        "_blank"
-                                      )
+                                    : null
                                 }
                               >
                                 {des}

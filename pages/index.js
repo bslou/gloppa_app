@@ -1,6 +1,6 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { db } from "./api/firebaseconfig";
 import { isMobile } from "react-device-detect";
 import Link from "next/link";
@@ -8,29 +8,50 @@ import Image from "next/image";
 
 const Direction = () => {
   const router = useRouter();
+  const toast = useToast();
+  //const [orientation, setOrientation] = useState(null);
+
   useEffect(() => {
     //localStorage.removeItem("id");
-    // if (isMobile) {
-    // } else {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem("id") !== null) {
-        db.collection("users")
-          .doc(localStorage.getItem("id"))
-          .get()
-          .then((val) => {
-            if (!val.exists) {
-              localStorage.removeItem("id");
-              return;
-            }
+    if (isMobile) {
+      function handleOrientationChange() {
+        if (window.matchMedia("(orientation: portrait)").matches) {
+          //setOrientation("vertical");
+          toast({
+            title: "Please flip horiontally for full experience",
+            info: "error",
+            duration: 9000,
           });
-        router.push("/app/startuplist");
-      } else {
-        // router.push("/app/startuplist");
-        router.push("/app/productreview");
-        //router.push("/c/main");
+        } else if (window.matchMedia("(orientation: landscape)").matches) {
+          //setOrientation("horizontal");
+          router.push("/app/productreview");
+        }
+      }
+      window.addEventListener("resize", handleOrientationChange);
+      handleOrientationChange();
+      return () => {
+        window.removeEventListener("resize", handleOrientationChange);
+      };
+    } else {
+      if (typeof window !== "undefined") {
+        if (localStorage.getItem("id") !== null) {
+          db.collection("users")
+            .doc(localStorage.getItem("id"))
+            .get()
+            .then((val) => {
+              if (!val.exists) {
+                localStorage.removeItem("id");
+                return;
+              }
+            });
+          router.push("/app/startuplist");
+        } else {
+          // router.push("/app/startuplist");
+          router.push("/app/productreview");
+          //router.push("/c/main");
+        }
       }
     }
-    // }
   });
   if (isMobile) {
     return (

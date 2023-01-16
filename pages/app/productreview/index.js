@@ -425,7 +425,17 @@ const ProductReview = () => {
                       Close
                     </Button>
                   </Flex>
-                  <Button onClick={Logout}>Logout</Button>
+                  <Flex
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    gap={"1vw"}
+                  >
+                    <Button onClick={() => router.push("/app/email")}>
+                      Email
+                    </Button>
+                    <Button onClick={Logout}>Logout</Button>
+                  </Flex>
                 </Flex>
               </form>
             </ModalBody>

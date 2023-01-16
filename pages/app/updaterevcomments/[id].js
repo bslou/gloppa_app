@@ -102,13 +102,20 @@ const UpdateRevComments = () => {
                         alignItems={"center"}
                         justifyContent={"space-between"}
                       >
-                        <Text
+                        <Link
+                          as={"a"}
+                          onClick={() => router.push("/app/" + comment.id)}
+                          colorScheme={"transparent"}
+                          _hover={{
+                            color: "black",
+                            textDecoration: "underline",
+                          }}
                           fontSize={"17pt"}
                           color={"black"}
                           fontWeight={700}
                         >
                           @{doto.username}
-                        </Text>
+                        </Link>
                         <Text fontSize={"10pt"} color={"#dfdfdf"}>
                           {String(comment.time)}
                         </Text>
@@ -419,6 +426,7 @@ const UpdateRevComments = () => {
           width={"65vw"}
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
+          gap={3}
           paddingTop={8}
         >
           {/* <Flex
@@ -454,7 +462,6 @@ const UpdateRevComments = () => {
           <Flex
             width={"90%"}
             direction={"row"}
-            marginTop={5}
             alignItems={"center"}
             justifyContent={"center"}
             borderTop={"1px solid black"}
@@ -477,21 +484,16 @@ const UpdateRevComments = () => {
                 setComment(e.target.value);
               }}
             />
-            <Button type="submit" onClick={submitComment} borderRadius={5}>
+            <Button
+              fontSize={{ base: "7pt", md: "10pt", lg: "12pt" }}
+              type="submit"
+              onClick={submitComment}
+              borderRadius={5}
+            >
               Submit Comment
             </Button>
           </Flex>
-          <Flex
-            direction={"column"}
-            alignItems={"center"}
-            gap={"2vh"}
-            width={"100%"}
-            overflowY={"scroll"}
-            paddingTop={3}
-            paddingBottom={3}
-          >
-            {commento}
-          </Flex>
+          {commento}
         </Flex>
       </Flex>
     );

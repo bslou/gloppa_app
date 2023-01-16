@@ -3,7 +3,6 @@ import NextLink from "next/link";
 import Image from "next/image";
 import { db } from "../../api/firebaseconfig";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
-import { useRouter } from "next/router";
 
 const ProdRevComponent = (
   id,
@@ -79,7 +78,11 @@ const ProdRevComponent = (
             gap={0.75}
           >
             <Flex alignItems={"center"} direction={"row"}>
-              <Link color={"black"} fontWeight={700} fontSize={"15pt"}>
+              <Link
+                color={"black"}
+                fontWeight={700}
+                fontSize={{ base: "9pt", md: "12pt", lg: "15pt" }}
+              >
                 <NextLink href={website} passHref target={"_blank"}>
                   {title}
                 </NextLink>
@@ -95,13 +98,16 @@ const ProdRevComponent = (
                 </Button>
               ) : null}
             </Flex>
-            <Text color={"black"} fontSize={"13pt"}>
+            <Text
+              color={"black"}
+              fontSize={{ base: "7pt", md: "10pt", lg: "13pt" }}
+            >
               {phrase}
             </Text>
             <Flex direction={"row"} alignItems={"center"} gap={4}>
               <Link
                 colorScheme={"transparent"}
-                alignItems={"left"}
+                alignItems={"center"}
                 gap={1}
                 display={"flex"}
                 flexDirection={"row"}
@@ -114,7 +120,11 @@ const ProdRevComponent = (
                   width={25}
                   height={25}
                 />
-                <Text color={"black"} fontWeight={900}>
+                <Text
+                  color={"black"}
+                  fontSize={{ base: "8pt", md: "10pt", lg: "12pt" }}
+                  fontWeight={900}
+                >
                   {Object.keys(comments).length === 0 ? 0 : comments.length}
                 </Text>
               </Link>
@@ -130,8 +140,11 @@ const ProdRevComponent = (
                     <Tag
                       key={index}
                       colorScheme={"green"}
-                      fontSize={"12pt"}
-                      size={"lg"}
+                      fontSize={{
+                        base: "4pt",
+                        md: "8pt",
+                        lg: "12pt",
+                      }}
                     >
                       {String(tag)}
                     </Tag>
@@ -152,8 +165,8 @@ const ProdRevComponent = (
           height={"100%"}
           backgroundColor={"transparent"}
           onClick={addLikes}
-          paddingBottom={3}
-          paddingTop={3}
+          paddingBottom={{ base: 0.5, md: 1.5, lg: 3 }}
+          paddingTop={{ base: 0.5, md: 1.5, lg: 3 }}
         >
           <img
             src={liked ? "/assets/blueup.png" : "/assets/up.png"}
@@ -161,7 +174,10 @@ const ProdRevComponent = (
             width={40}
             height={40}
           />
-          <Text color={"#000"} fontSize={"17pt"}>
+          <Text
+            color={"#000"}
+            fontSize={{ base: "11pt", md: "14pt", lg: "17pt" }}
+          >
             {Object.keys(likes).length === 0 ? 0 : likes.length}
           </Text>
         </Button>

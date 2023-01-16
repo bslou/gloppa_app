@@ -25,7 +25,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db, storage } from "../../api/firebaseconfig";
-import ProdRevComponent2 from "./prodrevcomponent";
+import ProdRevComponent2 from "./prodrevcomponent2";
 import { arrayUnion } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 
@@ -100,13 +100,20 @@ const ProdRevComments = () => {
                         alignItems={"center"}
                         justifyContent={"space-between"}
                       >
-                        <Text
+                        <Link
+                          as={"a"}
+                          onClick={() => router.push("/app/" + comment.id)}
+                          colorScheme={"transparent"}
+                          _hover={{
+                            color: "black",
+                            textDecoration: "underline",
+                          }}
                           fontSize={"17pt"}
                           color={"black"}
                           fontWeight={700}
                         >
                           @{doto.username}
-                        </Text>
+                        </Link>
                         <Text fontSize={"10pt"} color={"#dfdfdf"}>
                           {String(comment.time)}
                         </Text>
@@ -414,10 +421,12 @@ const ProdRevComments = () => {
           alignItems={"center"}
           backgroundColor={"#fff"}
           height={"89%"}
+          overflowY={"scroll"}
           width={"65vw"}
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
           paddingTop={8}
+          gap={3}
         >
           {/* <Flex
             direction={"row"}
@@ -451,7 +460,6 @@ const ProdRevComments = () => {
           <Flex
             width={"90%"}
             direction={"row"}
-            marginTop={5}
             alignItems={"center"}
             justifyContent={"center"}
             borderTop={"1px solid black"}
@@ -474,21 +482,16 @@ const ProdRevComments = () => {
                 setComment(e.target.value);
               }}
             />
-            <Button type="submit" onClick={submitComment} borderRadius={5}>
+            <Button
+              fontSize={{ base: "7pt", md: "10pt", lg: "12pt" }}
+              type="submit"
+              onClick={submitComment}
+              borderRadius={5}
+            >
               Submit Comment
             </Button>
           </Flex>
-          <Flex
-            direction={"column"}
-            alignItems={"center"}
-            gap={"2vh"}
-            width={"100%"}
-            overflowY={"scroll"}
-            paddingTop={3}
-            paddingBottom={3}
-          >
-            {commento}
-          </Flex>
+          {commento}
         </Flex>
       </Flex>
     );

@@ -71,7 +71,7 @@ const ProdRevComponent = (
           direction={"row"}
           alignItems={"center"}
           justifyContent={"center"}
-          gap={5}
+          gap={2}
         >
           <img src={img} alt={title} width={70} height={70} />
           <Flex
@@ -81,7 +81,11 @@ const ProdRevComponent = (
             gap={0.75}
           >
             <Flex alignItems={"center"} direction={"row"}>
-              <Link color={"black"} fontWeight={700} fontSize={"15pt"}>
+              <Link
+                color={"black"}
+                fontWeight={700}
+                fontSize={{ base: "11pt", md: "13pt", lg: "15pt" }}
+              >
                 <NextLink href={website} passHref target={"_blank"}>
                   {title}
                 </NextLink>
@@ -97,10 +101,18 @@ const ProdRevComponent = (
                 </Button>
               ) : null}
             </Flex>
-            <Text color={"black"} fontSize={"13pt"} fontWeight={700}>
+            <Text
+              color={"black"}
+              fontSize={{ base: "9pt", md: "11pt", lg: "13pt" }}
+              fontWeight={700}
+            >
               {phrase}
             </Text>
-            <Text maxWidth={"40vw"} color={"#808080"} fontSize={"10pt"}>
+            <Text
+              maxWidth={"40vw"}
+              color={"#808080"}
+              fontSize={{ base: "6pt", md: "8pt", lg: "10pt" }}
+            >
               {desphrase}
             </Text>
             <Flex direction={"row"} alignItems={"center"} gap={4}>
@@ -140,8 +152,12 @@ const ProdRevComponent = (
                     <Tag
                       key={index}
                       colorScheme={"green"}
-                      fontSize={"12pt"}
                       size={"lg"}
+                      fontSize={{
+                        base: "6pt",
+                        md: "8pt",
+                        lg: "10pt",
+                      }}
                     >
                       {String(tag)}
                     </Tag>
