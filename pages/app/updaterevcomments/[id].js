@@ -423,11 +423,12 @@ const UpdateRevComments = () => {
           alignItems={"center"}
           backgroundColor={"#fff"}
           height={"89%"}
+          overflowY={"scroll"}
           width={"65vw"}
           borderTopLeftRadius={10}
           borderTopRightRadius={10}
-          gap={3}
           paddingTop={8}
+          gap={3}
         >
           {/* <Flex
             direction={"row"}

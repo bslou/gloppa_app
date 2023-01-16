@@ -11,24 +11,23 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   useEffect(() => {
     //screen.orientation.lock("landscape");
-    if (isMobile) {
+    if (typeof window !== "undefined") {
       function handleOrientationChange() {
-        if (window.matchMedia("(orientation: portrait)").matches) {
-          //setOrientation("vertical");
-          toast({
-            title: "Please flip horiontally for full experience",
-            info: "error",
-            duration: 9000,
-          });
-          router.push("/");
+        if (window.innerWidth < window.innerHeight) {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            //setOrientation("vertical");
+            toast({
+              title: "Please flip horiontally for full experience",
+              info: "error",
+              duration: 9000,
+            });
+            router.push("/");
+          }
         }
       }
-      window.addEventListener("resize", handleOrientationChange);
-      handleOrientationChange();
-      return () => {
-        window.removeEventListener("resize", handleOrientationChange);
-      };
+      window.addEventListener("orientationchange", handleOrientationChange);
     }
+
     if (process.env.NODE_ENV === "production") {
       console.log("In production mode...");
       hotjar.initialize(3300873, 6);
