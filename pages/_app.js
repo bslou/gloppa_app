@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useToast } from "@chakra-ui/react";
 import "../styles/globals.css";
 import Head from "next/head";
 import SEO from "./SEO";
@@ -9,23 +9,22 @@ import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const toast = useToast();
   useEffect(() => {
     //screen.orientation.lock("landscape");
-    if (typeof window !== "undefined") {
+    console.log("Test");
+    if (isMobile) {
       function handleOrientationChange() {
-        if (window.innerWidth < window.innerHeight) {
-          if (window.matchMedia("(orientation: portrait)").matches) {
-            //setOrientation("vertical");
-            toast({
-              title: "Please flip horiontally for full experience",
-              info: "error",
-              duration: 9000,
-            });
-            router.push("/");
-          }
+        if (window.matchMedia("(orientation: portrait)").matches) {
+          //setOrientation("vertical");
+          router.push("/");
         }
       }
-      window.addEventListener("orientationchange", handleOrientationChange);
+      window.addEventListener("resize", handleOrientationChange);
+      handleOrientationChange();
+      return () => {
+        window.removeEventListener("resize", handleOrientationChange);
+      };
     }
 
     if (process.env.NODE_ENV === "production") {

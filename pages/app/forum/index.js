@@ -26,6 +26,7 @@ import {
 import NextLink from "next/link";
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
+import { isMobile } from "react-device-detect";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
 import { db, storage } from "../../api/firebaseconfig";
 import Router, { useRouter } from "next/router";
@@ -113,6 +114,19 @@ const Forum = () => {
   };
   useEffect(() => {
     if (typeof window !== "undefined") {
+      if (isMobile) {
+        function handleOrientationChange() {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            //setOrientation("vertical");
+            router.push("/");
+          }
+        }
+        window.addEventListener("resize", handleOrientationChange);
+        handleOrientationChange();
+        return () => {
+          window.removeEventListener("resize", handleOrientationChange);
+        };
+      }
       if (localStorage.getItem("id") === null) {
         db.collection("forum")
           .orderBy("timestamp", "desc")

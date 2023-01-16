@@ -23,6 +23,7 @@ import {
 import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { isMobile } from "react-device-detect";
 import { useEffect, useRef, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import StartupComponent from "./startcomp2";
@@ -117,6 +118,19 @@ const ProdManagement = () => {
   };
   useEffect(() => {
     if (typeof window !== "undefined") {
+      if (isMobile) {
+        function handleOrientationChange() {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            //setOrientation("vertical");
+            router.push("/");
+          }
+        }
+        window.addEventListener("resize", handleOrientationChange);
+        handleOrientationChange();
+        return () => {
+          window.removeEventListener("resize", handleOrientationChange);
+        };
+      }
       if (localStorage.getItem("id") !== null) {
         // if (dataFetchedRef.current) return;
         // dataFetchedRef.current = true;

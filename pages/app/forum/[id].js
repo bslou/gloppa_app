@@ -24,6 +24,7 @@ import {
 import NextLink from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { isMobile } from "react-device-detect";
 import { use, useEffect, useState } from "react";
 import { db } from "../../api/firebaseconfig";
 import { arrayRemove, arrayUnion } from "firebase/firestore";
@@ -119,6 +120,21 @@ const ForumReplies = () => {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (isMobile) {
+        function handleOrientationChange() {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            //setOrientation("vertical");
+            router.push("/");
+          }
+        }
+        window.addEventListener("resize", handleOrientationChange);
+        handleOrientationChange();
+        return () => {
+          window.removeEventListener("resize", handleOrientationChange);
+        };
+      }
+    }
     if (localStorage.getItem("id") === null) {
       router.push("/");
       return;

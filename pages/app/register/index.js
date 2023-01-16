@@ -1,6 +1,7 @@
 import { Button, Flex, Input, Link, Text, useToast } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -12,6 +13,21 @@ const Register = () => {
   const [pwd, setPwd] = useState("");
   const [uname, setUname] = useState("");
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (isMobile) {
+        function handleOrientationChange() {
+          if (window.matchMedia("(orientation: portrait)").matches) {
+            //setOrientation("vertical");
+            router.push("/");
+          }
+        }
+        window.addEventListener("resize", handleOrientationChange);
+        handleOrientationChange();
+        return () => {
+          window.removeEventListener("resize", handleOrientationChange);
+        };
+      }
+    }
     if (localStorage.getItem("id") !== null) {
       router.push("/app/startuplist");
     }

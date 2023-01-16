@@ -17,11 +17,6 @@ const Direction = () => {
       function handleOrientationChange() {
         if (window.matchMedia("(orientation: portrait)").matches) {
           //setOrientation("vertical");
-          toast({
-            title: "Please flip horiontally for full experience",
-            info: "error",
-            duration: 9000,
-          });
         } else if (window.matchMedia("(orientation: landscape)").matches) {
           //setOrientation("horizontal");
           router.push("/app/productreview");
@@ -74,8 +69,8 @@ const Direction = () => {
         </Flex>
         <Heading textAlign={"center"}>Hey, Mobile Friend!</Heading>
         <Text textAlign={"center"}>
-          The Gloppa Website is best viewed on a tablet or desktop computer. We
-          do not support usage of our website on mobile at this moment!
+          Please flip your screen to landscape (horizontally) for the best
+          experience and in order to view the application. Thank you :)
         </Text>
         <Flex direction={"row"} alignItems={"center"} justifyContent={"center"}>
           <Text textAlign={"center"}>Check us out on Twitter meanwhile?</Text>
