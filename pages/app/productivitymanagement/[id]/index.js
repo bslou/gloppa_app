@@ -39,6 +39,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import NextLink from "next/link";
 import { forwardRef, useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { arrayUnion, arrayRemove, increment } from "firebase/firestore";
 import MyLoadingScreen from "./myloadingscreen";
 import { Draggable, DragDropContext, Droppable } from "react-beautiful-dnd";
@@ -742,7 +743,7 @@ const Game = () => {
       direction={"column"}
       alignItems={"center"}
       width={"100vw"}
-      height={"100vh"}
+      height={!isMobile ? "100vh" : "100%"}
       backgroundColor={"#dfdfdf"}
     >
       <Modal isOpen={isOpen13} onClose={onClose13}>
@@ -1070,14 +1071,18 @@ const Game = () => {
                     color={"black"}
                     value={startupText}
                     placeHolder={"This should be simple..."}
-                    width={"20vw"}
+                    width={{ base: "40vw", md: "30vw", lg: "20vw" }}
                     onChange={(e) => setStartupText(e.target.value)}
                     minLength={3}
                     maxLength={45}
                     required
                   />
                 </Flex>
-                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                <Flex
+                  width={{ base: "40vw", md: "30vw", lg: "20vw" }}
+                  gap={"0.5vh"}
+                  direction={"column"}
+                >
                   <Text color={"black"}>Urgency</Text>
                   <Select
                     required
@@ -1105,7 +1110,7 @@ const Game = () => {
                     min={maxDate}
                     required
                     onChange={(e) => setDate(e.target.value)}
-                    width={"20vw"}
+                    width={{ base: "40vw", md: "30vw", lg: "20vw" }}
                     color={"black"}
                   />
                 </Flex>
@@ -1137,7 +1142,7 @@ const Game = () => {
                   <Input
                     value={startupText2}
                     placeHolder={"This should be simple..."}
-                    width={"20vw"}
+                    width={{ base: "40vw", md: "30vw", lg: "20vw" }}
                     color="black"
                     minLength={3}
                     maxLength={45}
@@ -1145,7 +1150,11 @@ const Game = () => {
                     required
                   />
                 </Flex>
-                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                <Flex
+                  width={{ base: "40vw", md: "30vw", lg: "20vw" }}
+                  gap={"0.5vh"}
+                  direction={"column"}
+                >
                   <Text color={"black"}>Probability of Reality</Text>
                   <Select
                     color={"black"}
@@ -1198,32 +1207,46 @@ const Game = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
                 paddingBottom={"1vh"}
-                maxHeight={"65vh"}
+                height={{ base: "80vh", md: "65vh", lg: "50vh" }}
+                overflowY={"scroll"}
               >
-                <Flex gap={"0.5vh"} direction={"column"}>
+                <Flex
+                  width={{ base: "40vw", md: "30vw", lg: "20vw" }}
+                  gap={"0.5vh"}
+                  direction={"column"}
+                  paddingTop={{ base: 6, md: 3, lg: 0 }}
+                >
                   <Text color={"black"}>Company Name</Text>
                   <Input
                     minLength={3}
                     value={startupName2}
-                    width={"20vw"}
+                    width={"100%"}
                     color={"black"}
                     required
                     onChange={(e) => setStartupName2(e.target.value)}
                   />
                 </Flex>
-                <Flex gap={"0.5vh"} direction={"column"}>
+                <Flex
+                  width={{ base: "40vw", md: "30vw", lg: "20vw" }}
+                  gap={"0.5vh"}
+                  direction={"column"}
+                >
                   <Text color={"black"}>Company Location</Text>
                   <Input
                     type="text"
                     color={"black"}
                     required
                     value={startupLocation}
-                    width={"20vw"}
+                    width={"100%"}
                     minLength={3}
                     onChange={(e) => setStartupLocation(e.target.value)}
                   />
                 </Flex>
-                <Flex width={"20vw"} gap={"0.5vh"} direction={"column"}>
+                <Flex
+                  width={{ base: "40vw", md: "30vw", lg: "20vw" }}
+                  gap={"0.5vh"}
+                  direction={"column"}
+                >
                   <Text color={"black"}>Company Description</Text>
                   <Textarea
                     autoComplete="on"
@@ -1231,7 +1254,7 @@ const Game = () => {
                     value={startupDes}
                     color={"black"}
                     required
-                    width={"20vw"}
+                    width={"100%"}
                     minHeight={"10vh"}
                     maxHeight={"20vh"}
                     onChange={(e) => setStartupDes(e.target.value)}
@@ -1714,6 +1737,8 @@ const Game = () => {
                 gap={"1vh"}
                 alignItems={"center"}
                 flexDirection={"column"}
+                paddingBottom={3}
+                paddingTop={3}
                 // {...provided.droppableProps}
                 // ref={provided.innerRef}
               >
@@ -1729,7 +1754,7 @@ const Game = () => {
                     flexDirection={"row"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
-                    backgroundColor={"#fff"}
+                    backgroundColor={"#f2f2f2"}
                     width={"90%"}
                     marginRight={"2.5%"}
                     paddingTop={0.5}
@@ -1739,7 +1764,7 @@ const Game = () => {
                     // ref={provided.innerRef}
                     // {...provided.draggableProps}
                     // {...provided.dragHandleProps}
-                    boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                    boxShadow={"0 1px 5px rgba(0, 0, 0, 0.5)"}
                     _hover={{
                       opacity: 0.8,
                     }}
@@ -1884,12 +1909,14 @@ const Game = () => {
                 width={"90%"}
                 height={"90%"}
               >
-                <Image
-                  src={"/assets/nodata.png"}
-                  alt={"No data"}
-                  width={170}
-                  height={170}
-                />
+                {!isMobile ? (
+                  <Image
+                    src={"/assets/nodata.png"}
+                    alt={"No data"}
+                    width={170}
+                    height={170}
+                  />
+                ) : null}
                 <Text color={"black"} textAlign={"center"} fontSize={"12pt"}>
                   No brainstorms <br />
                   found here... 😔
@@ -1949,6 +1976,8 @@ const Game = () => {
                 alignItems={"center"}
                 flexDirection={"column"}
                 marginLeft={"10%"}
+                paddingTop={3}
+                paddingBottom={3}
               >
                 {todos2.map((todo) => (
                   <ListItem width={"100%"}>
@@ -1956,14 +1985,14 @@ const Game = () => {
                       direction={"row"}
                       alignItems={"center"}
                       justifyContent={"space-between"}
-                      backgroundColor={"#fff"}
+                      backgroundColor={"#f2f2f2"}
                       width={"90%"}
                       paddingTop={2}
                       paddingBottom={2}
                       paddingLeft={2}
                       borderRadius={2}
                       gap={5}
-                      boxShadow={"0 5px 5px rgba(0, 0, 0, 0.5)"}
+                      boxShadow={"0 1px 5px rgba(0, 0, 0, 0.5)"}
                       _hover={{
                         opacity: 0.8,
                       }}
@@ -2063,12 +2092,14 @@ const Game = () => {
                 width={"90%"}
                 height={"90%"}
               >
-                <Image
-                  src={"/assets/nodata.png"}
-                  alt={"No data"}
-                  width={170}
-                  height={170}
-                />
+                {!isMobile ? (
+                  <Image
+                    src={"/assets/nodata.png"}
+                    alt={"No data"}
+                    width={170}
+                    height={170}
+                  />
+                ) : null}
                 <Text color={"black"} textAlign={"center"} fontSize={"12pt"}>
                   No brainstorms <br />
                   found here... 😔
