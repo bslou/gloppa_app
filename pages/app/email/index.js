@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 import emailjs from "@emailjs/browser";
 import Image from "next/image";
-import { isMobile } from "react-device-detect";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -128,19 +127,6 @@ const StartupList = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isMobile) {
-        function handleOrientationChange() {
-          if (window.matchMedia("(orientation: portrait)").matches) {
-            //setOrientation("vertical");
-            router.push("/");
-          }
-        }
-        window.addEventListener("resize", handleOrientationChange);
-        handleOrientationChange();
-        return () => {
-          window.removeEventListener("resize", handleOrientationChange);
-        };
-      }
       if (localStorage.getItem("id") !== null) {
         // if (dataFetchedRef.current) return;
         // dataFetchedRef.current = true;

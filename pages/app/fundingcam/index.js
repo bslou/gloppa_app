@@ -21,7 +21,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { isMobile } from "react-device-detect";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -90,19 +89,6 @@ const RecordPitch = () => {
         videoRef.current.srcObject = stream;
       });
     if (typeof window !== "undefined") {
-      if (isMobile) {
-        function handleOrientationChange() {
-          if (window.matchMedia("(orientation: portrait)").matches) {
-            //setOrientation("vertical");
-            router.push("/");
-          }
-        }
-        window.addEventListener("resize", handleOrientationChange);
-        handleOrientationChange();
-        return () => {
-          window.removeEventListener("resize", handleOrientationChange);
-        };
-      }
       return () => {
         window.location.reload();
       };

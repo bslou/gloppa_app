@@ -15,7 +15,6 @@ import {
 import Image from "next/image";
 import NextLink from "next/link";
 import Router, { useRouter } from "next/router";
-import { isMobile } from "react-device-detect";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
@@ -55,19 +54,6 @@ const FundingRegistration = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isMobile) {
-        function handleOrientationChange() {
-          if (window.matchMedia("(orientation: portrait)").matches) {
-            //setOrientation("vertical");
-            router.push("/");
-          }
-        }
-        window.addEventListener("resize", handleOrientationChange);
-        handleOrientationChange();
-        return () => {
-          window.removeEventListener("resize", handleOrientationChange);
-        };
-      }
       if (localStorage.getItem("id") !== null) {
         db.collection("users")
           .doc(localStorage.getItem("id"))

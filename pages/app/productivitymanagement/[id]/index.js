@@ -188,19 +188,6 @@ const Game = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isMobile) {
-        function handleOrientationChange() {
-          if (window.matchMedia("(orientation: portrait)").matches) {
-            //setOrientation("vertical");
-            router.push("/");
-          }
-        }
-        window.addEventListener("resize", handleOrientationChange);
-        handleOrientationChange();
-        return () => {
-          window.removeEventListener("resize", handleOrientationChange);
-        };
-      }
       if (localStorage.getItem("id") === null) {
         router.push("/c/main");
       }
