@@ -1511,7 +1511,7 @@ const Game = () => {
         padding={5}
       >
         <Flex alignItems={"center"} justifyContent={"center"}>
-          <NextLink href={"/app/startuplist"}>
+          <NextLink href={"/app/productivitymanagement"}>
             <Link color={"black"} fontSize={"20pt"}>
               Gloppa
             </Link>
