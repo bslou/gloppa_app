@@ -1918,7 +1918,7 @@ const Game = () => {
                   />
                 ) : null}
                 <Text color={"black"} textAlign={"center"} fontSize={"12pt"}>
-                  No brainstorms <br />
+                  No tasks <br />
                   found here... 😔
                 </Text>
               </Flex>
