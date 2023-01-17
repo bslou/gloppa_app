@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db } from "../../api/firebaseconfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { isMobile } from "react-device-detect";
 
 const Register = () => {
   const router = useRouter();
@@ -82,7 +83,7 @@ const Register = () => {
     <Flex
       direction={"column"}
       width={"100vw"}
-      height={"100vh"}
+      height={!isMobile ? "100vh" : "100%"}
       backgroundColor={"#f2f2f2"}
       alignItems={"center"}
       justifyContent={"center"}
@@ -91,7 +92,7 @@ const Register = () => {
         <Flex
           direction={"column"}
           width={{ base: "70vw", md: "50vw", lg: "50vw" }}
-          height={"95vh"}
+          height={!isMobile ? "95vh" : "auto"}
           backgroundColor={"#fff"}
           alignItems={"center"}
           justifyContent={"center"}

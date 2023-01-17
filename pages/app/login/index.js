@@ -4,6 +4,7 @@ import { arrayRemove } from "firebase/firestore";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { auth, db } from "../../api/firebaseconfig";
 
 const Login = () => {
@@ -113,7 +114,7 @@ const Login = () => {
     <Flex
       direction={"column"}
       width={"100vw"}
-      height={"100vh"}
+      height={!isMobile ? "100vh" : "100%"}
       backgroundColor={"#f2f2f2"}
       alignItems={"center"}
       justifyContent={"center"}
@@ -122,7 +123,7 @@ const Login = () => {
         <Flex
           direction={"column"}
           width={{ base: "70vw", md: "50vw", lg: "50vw" }}
-          height={"95vh"}
+          height={!isMobile ? "95vh" : "auto"}
           backgroundColor={"#fff"}
           alignItems={"center"}
           justifyContent={"center"}

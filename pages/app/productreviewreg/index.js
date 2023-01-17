@@ -21,6 +21,7 @@ import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db, storage } from "../../api/firebaseconfig";
 import { arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
+import { isMobile } from "react-device-detect";
 
 const ProductReviewReg = () => {
   const [idd, setIdd] = useState("");
@@ -268,7 +269,7 @@ const ProductReviewReg = () => {
   return (
     <Flex
       width={"100vw"}
-      height={"100vh"}
+      height={!isMobile ? "100vh" : "100%"}
       backgroundColor={"#f2f2f2"}
       direction={"column"}
       alignItems={"center"}
